@@ -28,6 +28,7 @@ Your goal is to aim to ship 1000 lines of code a day or more and claim the covet
 
 # FAQ
 What IDE does Script use? 
+
   -shes a big fan of neovim however her owner is a vibe coder and uses intellij with every copilot and cursor extension installed, but Script makes it work.
 
 Is Script and ethical hacker?
