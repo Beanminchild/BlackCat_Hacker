@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Black Cat Hacker</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #222;
+        }
+        canvas {
+            background-color: #728C69;
+            display: block;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        #startScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        #startButton {
+            padding: 20px 40px;
+            font-size: 24px;
+            background-color: #555;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #scoreboard {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="startScreen" style="display:flex; flex-direction:column; justify-content:center; align-items:center; position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.7); z-index:10;">
+        <div id="gitGraphGrid" style="display:grid; grid-template-columns: repeat(4, 32px); grid-template-rows: repeat(2, 32px); gap:12px; margin-bottom:24px; justify-content:center; align-items:center; width:max-content; margin-left:auto; margin-right:auto;">
+            <canvas class="gitGraphSquare" width="32" height="32" style="background:#181818; border-radius:6px; border:2px solid #222; box-shadow:0 2px 6px #0004; grid-column:1; grid-row:1;"></canvas>
+            <canvas class="gitGraphSquare" width="32" height="32" style="background:#181818; border-radius:6px; border:2px solid #222; box-shadow:0 2px 6px #0004; grid-column:2; grid-row:1;"></canvas>
+            <canvas class="gitGraphSquare" width="32" height="32" style="background:#181818; border-radius:6px; border:2px solid #222; box-shadow:0 2px 6px #0004; grid-column:3; grid-row:1;"></canvas>
+            <canvas class="gitGraphSquare" width="32" height="32" style="background:#181818; border-radius:6px; border:2px solid #222; box-shadow:0 2px 6px #0004; grid-column:4; grid-row:1;"></canvas>
+            <canvas class="gitGraphSquare" width="32" height="32" style="background:#181818; border-radius:6px; border:2px solid #222; box-shadow:0 2px 6px #0004; grid-column:1; grid-row:2;"></canvas>
+            <canvas class="gitGraphSquare" width="32" height="32" style="background:#181818; border-radius:6px; border:2px solid #222; box-shadow:0 2px 6px #0004; grid-column:2; grid-row:2;"></canvas>
+            <canvas class="gitGraphSquare" width="32" height="32" style="background:#181818; border-radius:6px; border:2px solid #222; box-shadow:0 2px 6px #0004; grid-column:3; grid-row:2;"></canvas>
+        </div>
+    <button id="startButton" style="margin:0 auto 0 auto; display:block;">Start Game</button>
+        <div id="reportScreen" style="display:none; margin-top:24px; color:white; font-family:sans-serif; background:#222; border-radius:12px; padding:24px 32px; box-shadow:0 4px 32px #000a; text-align:center;"></div>
+    </div>
+    <div id="gameOverScreen" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.92); z-index:100; color:white; justify-content:center; align-items:center; flex-direction:column; font-family:sans-serif;">
+        <div style="background:#222; padding:32px 48px; border-radius:16px; box-shadow:0 4px 32px #000a; display:flex; flex-direction:column; align-items:center; gap:24px;">
+            <h1 style="margin:0; font-size:2.5em;">Game Over</h1>
+            <div id="finalScores" style="font-size:1.3em;"></div>
+            <canvas id="gitGraph" width="24" height="24" style="margin-top:12px; border-radius:4px; background:#181818; border:2px solid #222; box-shadow: 0 2px 6px #0004;"></canvas>
+            <button id="restartButton" style="margin-top:18px; font-size:1.1em; padding:10px 32px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;">Restart</button>
+        </div>
+    </div>
+    <div id="scoreboard">
+        <div id="gitScoreBar" style="display: flex; align-items: center; gap: 12px;">
+            <span style="background: #2ea043; color: white; border-radius: 4px 0 0 4px; padding: 4px 10px; font-family: monospace; font-size: 20px; display: flex; align-items: center;">
+                +<span id="gitAdditions">0</span>
+            </span>
+            <span style="background: #f85149; color: white; border-radius: 0 4px 4px 0; padding: 4px 10px; font-family: monospace; font-size: 20px; display: flex; align-items: center; opacity: 0.9;">
+                -<span id="gitDeletions">0</span>
+            </span>
+            <span id="gitCube" style="width: 24px; height: 24px; margin-left: 8px; border-radius: 4px; background: #888; display: inline-block; border: 2px solid #222; box-shadow: 0 2px 6px #0004;"></span>
+        </div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+    // --- GitGraph grid and report state ---
+    let gitGraphResults = [];
+    const maxGames = 7;
+    function getRank(total) {
+        if (total >= 7000) return 'master black cat hacker';
+        if (total >= 5000) return 'grey cat hacker';
+        if (total >= 3500) return 'senior dev';
+        if (total >= 2000) return 'script kitty';
+        if (total >= 1000) return 'junior dev';
+        return 'kode kitten';
+    }
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = 800;
+    canvas.height = 600;
+
+    // Stealth mechanic variables
+    let stealthState = 'idle'; // idle, doorOpening, footprints, hands, handsWait, footstepsBack, doorClosing
+    let stealthTimer = 0;
+    let nextStealthEvent = Date.now() + 15000 + Math.random() * 15000;
+    let doorOpenProgress = 0; // 0=closed, 1=open
+    let footprintsProgress = 0; // 0=start, 1=at desk
+    let handsProgress = 0; // 0=hidden, 1=fully shown
+    let handsHoldTimer = 0; // ms hands have been fully shown
+    let footstepsBackProgress = 0; // 0=at desk, 1=at door
+    let doorCloseProgress = 0; // 0=open, 1=closed
+    let lastStealthFrame = Date.now();
+
+    const startScreen = document.getElementById('startScreen');
+    const startButton = document.getElementById('startButton');
+    const gitGraphGrid = document.getElementById('gitGraphGrid');
+    const reportScreen = document.getElementById('reportScreen');
+        // --- Draw the grid of 7 gitgraph squares on the home screen ---
+        function updateGitGraphGrid() {
+            const squares = gitGraphGrid.querySelectorAll('.gitGraphSquare');
+            for (let i = 0; i < squares.length; i++) {
+                const ctx = squares[i].getContext('2d');
+                ctx.clearRect(0, 0, 32, 32);
+                if (gitGraphResults[i]) {
+                    // Color by (additions - deletions) for that game
+                    const net = Math.max(0, gitGraphResults[i].score - gitGraphResults[i].deletions);
+                    const maxScore = 1000;
+                    const percent = Math.min(net / maxScore, 1);
+                    function lerp(a, b, t) { return a + (b - a) * t; }
+                    function hexToRgb(hex) {
+                        hex = hex.replace('#', '');
+                        if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
+                        const num = parseInt(hex, 16);
+                        return [num >> 16, (num >> 8) & 0xff, num & 0xff];
+                    }
+                    function rgbToHex([r, g, b]) {
+                        return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+                    }
+                    const grey = hexToRgb('#888');
+                    const green = hexToRgb('#2ea043');
+                    const color = [
+                        Math.round(lerp(grey[0], green[0], percent)),
+                        Math.round(lerp(grey[1], green[1], percent)),
+                        Math.round(lerp(grey[2], green[2], percent))
+                    ];
+                    ctx.fillStyle = rgbToHex(color);
+                    ctx.fillRect(0, 0, 32, 32);
+                    ctx.strokeStyle = '#2ea043';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(1, 1, 30, 30);
+                } else {
+                    // Blank
+                    ctx.fillStyle = '#181818';
+                    ctx.fillRect(0, 0, 32, 32);
+                    ctx.strokeStyle = '#222';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(1, 1, 30, 30);
+                }
+            }
+        }
+
+        let shelves = [];
+       
+       
+       
+       
+       
+       
+        const cat = {
+            x: 50,
+            y: 500,
+            width: 20,
+            height: 20,
+            speed: 5,
+            velocityY: 0,
+            isJumping: false,
+            color: 'black'
+        };
+
+        const desk = {
+            x: 0,
+            y: 550,
+            width: canvas.width,
+            height: 50,
+            color: '#4b371C'
+        };
+
+        const monitor = {
+            x: canvas.width / 2.4,
+            y: desk.y - 50,
+            width: 100,
+            height: 100,
+            //color: 'blue',
+            label: 'Monitor'
+        };
+
+        let gameStarted = false;
+        let codeMode = false;
+        let score = 0;
+        let codeParticles = [];
+    const gitAdditions = document.getElementById('gitAdditions');
+    const gitDeletions = document.getElementById('gitDeletions');
+    const gitCube = document.getElementById('gitCube');
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    const finalScores = document.getElementById('finalScores');
+    const gitGraph = document.getElementById('gitGraph');
+    const restartButton = document.getElementById('restartButton');
+    // Red deletions score
+    let deletionsScore = 0;
+    let lastHandsSecond = null;
+    // For git graph
+    let additionsHistory = [];
+
+    function animateDeletionsScore(points) {
+        let startScore = deletionsScore;
+        let endScore = deletionsScore + points;
+        const animationDuration = 20;
+        const startTime = performance.now();
+
+        function updateScore(currentTime) {
+            const elapsedTime = currentTime - startTime;
+            const progress = Math.min(elapsedTime / animationDuration, 1);
+            const animatedScore = Math.floor(startScore + (endScore - startScore) * progress);
+            gitDeletions.textContent = animatedScore;
+            if (progress < 1) {
+                requestAnimationFrame(updateScore);
+            } else {
+                deletionsScore = endScore;
+                gitDeletions.textContent = deletionsScore;
+            }
+        }
+
+        requestAnimationFrame(updateScore);
+    }
+
+        function isCatNearMonitor() {
+            // Cat's center x and y
+            const catCenterX = cat.x + cat.width / 2;
+            const catCenterY = cat.y + cat.height /2;
+            // Monitor's center x and y
+            const monitorCenterX = monitor.x + monitor.width / 2;
+            const monitorCenterY = monitor.y + monitor.height/2
+           
+            if (Math.abs(catCenterX - monitorCenterX) < 40 && Math.abs(catCenterY - monitorCenterY) < 40) return true;
+                
+        }
+
+        function generateCodeParticle(score) {
+            
+            const codeSnippets = [
+                { text: "console.log(meow')", consoleColor: 'white', logColor: 'green', meowColor: 'lightblue' },
+                { text: "cat.jump()", consoleColor: 'white', logColor: 'orange', meowColor: 'white' },
+                { text: "if ( cat.Slep) { slepMore() }", consoleColor: 'white', logColor: 'yellow', meowColor: 'white' },
+                { text: "let catFood = new Food('tuna')", consoleColor: 'white', logColor: 'red', meowColor: 'white' },
+                { text: "cat . play('yarn')", consoleColor: 'white', logColor: 'purple', meowColor: 'white' },
+                { text: "debug('cat position : ' + cat.x + ', ' + cat.y)", consoleColor: 'white', logColor: 'cyan', meowColor: 'white' },
+                { text: "error ('no more catnip')", consoleColor: 'white', logColor: 'red', meowColor: 'white' },
+                { text: "function headscratch() { return ' purr ' }", consoleColor: 'white', logColor: 'lime', meowColor: 'white' },
+                { text: "cat.hunt('laser pointer')", consoleColor: 'white', logColor: 'pink', meowColor: 'white' },
+                {text: "while bowlEmpty(true) { meow() }", consoleColor: 'white', logColor: 'lightgreen', meowColor: 'red' }
+            ];
+
+            const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+
+            codeParticles.push({
+                x: monitor.x + monitor.width / 2,
+                y: monitor.y,
+                text: snippet.text,
+                consoleColor: snippet.consoleColor,
+                logColor: snippet.logColor,
+                meowColor: snippet.meowColor,
+                size: 12,
+                speedX: Math.random() * 2 - 1,
+                speedY: Math.random() * -2 - 1,
+                targetX: canvas.width - 25,
+                targetY: 50,
+                alpha: 1
+            });
+        }
+
+        function update() {
+            if (!gameStarted) return;
+
+            // Stealth mechanic timing
+            const now = Date.now();
+            if (now > nextStealthEvent && stealthState === 'idle') {
+                stealthState = 'doorOpening';
+                doorOpenProgress = 0;
+                footprintsProgress = 0;
+                handsProgress = 0;
+                handsHoldTimer = 0;
+                footstepsBackProgress = 0;
+                doorCloseProgress = 0;
+            }
+            if (stealthState === 'doorOpening') {
+                doorOpenProgress += 0.02;
+                if (doorOpenProgress >= 1) {
+                    doorOpenProgress = 1;
+                    stealthState = 'footprints';
+                }
+            } else if (stealthState === 'footprints') {
+                footprintsProgress += 0.008;
+                if (footprintsProgress >= 1) {
+                    footprintsProgress = 1;
+                    stealthState = 'hands';
+                }
+            } else if (stealthState === 'hands') {
+                if (handsProgress < 1) {
+                    handsProgress += 0.02;
+                    if (handsProgress > 1) handsProgress = 1;
+                } else {
+                    handsHoldTimer += 16; // ~1 frame at 60fps
+                    // --- Red deletions score: count up every second hands are in front of monitor ---
+                    let handsSeconds = Math.floor(handsHoldTimer / 1000);
+                    if (lastHandsSecond !== handsSeconds) {
+                        lastHandsSecond = handsSeconds;
+                        animateDeletionsScore(1);
+                    }
+                    // --- GAME OVER if cat is in front of monitor when hands are there ---
+                    if (isCatNearMonitor()) {
+                        endGame();
+                        return;
+                    }
+                    if (handsHoldTimer >= 30000) { // 1:30 in ms
+                        stealthState = 'footstepsBack';
+                        footstepsBackProgress = 0;
+                        lastHandsSecond = null;
+                    }
+                }
+            } else if (stealthState === 'footstepsBack') {
+                footstepsBackProgress += 0.012; // a bit faster than forward
+                if (footstepsBackProgress >= 1) {
+                    footstepsBackProgress = 1;
+                    stealthState = 'doorClosing';
+                    doorCloseProgress = 0;
+                }
+            } else if (stealthState === 'doorClosing') {
+                doorCloseProgress += 0.02;
+                if (doorCloseProgress >= 1) {
+                    doorCloseProgress = 1;
+                    stealthState = 'idle';
+                    nextStealthEvent = Date.now() + 15000 + Math.random() * 15000;
+                }
+            }
+
+            // Auto-activate code mode if cat is in front of monitor
+            if (isCatNearMonitor()) {
+                codeMode = true;
+            } else {
+                codeMode = false;
+            }
+
+            // Gravity
+            cat.velocityY += 0.5;
+            cat.y += cat.velocityY;
+
+            // Keep cat on the desk
+            let onGround = false;
+            if (cat.y + cat.height > desk.y) {
+                cat.y = desk.y - cat.height;
+                cat.velocityY = 0;
+                cat.isJumping = false;
+                onGround = true;
+            }
+
+            // Shelf collision detection
+            shelves.forEach(shelf => {
+                if (cat.x < shelf.x + shelf.width &&
+                    cat.x + cat.width > shelf.x &&
+                    cat.y + cat.height > shelf.y &&
+                    cat.y < shelf.y + shelf.height &&
+                    cat.velocityY >= 0) {
+                    cat.y = shelf.y - cat.height;
+                    cat.velocityY = 0;
+                    cat.isJumping = false;
+                    onGround = true;
+                }
+            });
+
+            // Movement
+            if (keys['ArrowLeft']) {
+                cat.x -= cat.speed;
+            }
+            if (keys['ArrowRight']) {
+                cat.x += cat.speed;
+            }
+
+            // Keep cat within bounds
+            if (cat.x < 0) {
+                cat.x = 0;
+            }
+            if (cat.x + cat.width > canvas.width) {
+                cat.x = canvas.width - cat.width;
+            }
+
+            // Update code particles
+            codeParticles.forEach((particle, index) => {
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+                const dx = particle.targetX - particle.x;
+                const dy = particle.targetY - particle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 10) {
+                    codeParticles.splice(index, 1);
+                    animateScore(10); // Animate score increase
+                }
+
+                particle.alpha -= 0.01;
+                if (particle.alpha <= 0) {
+                    codeParticles.splice(index, 1);
+                }
+            });
+
+            // Track additions history for git graph
+            if (gameStarted && additionsHistory.length < 32) {
+                additionsHistory.push(score);
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Update gitCube color live based on (additions - deletions)
+            updateGitCubeColor();
+            // --- BACKGROUND ELEMENTS ---
+            // (Floor removed)
+
+            // Draw window (centered)
+            const windowX = canvas.width / 2 - 70;
+            const windowY = 120;
+            ctx.save();
+            ctx.globalAlpha = 0.9;
+            ctx.fillStyle = '#e0f7fa';
+            ctx.fillRect(windowX, windowY, 140, 80);
+            ctx.strokeStyle = '#b0c4de';
+            ctx.lineWidth = 6;
+            ctx.strokeRect(windowX, windowY, 140, 80);
+            // Window panes
+            ctx.strokeStyle = '#b0c4de';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(windowX + 70, windowY);
+            ctx.lineTo(windowX + 70, windowY + 80);
+            ctx.moveTo(windowX, windowY + 40);
+            ctx.lineTo(windowX + 140, windowY + 40);
+            ctx.stroke();
+            ctx.restore();
+
+            // Draw door (closed, opening, open, closing)
+            const doorX = 30;
+            const doorY = 180;
+            ctx.save();
+            let doorOpen = 0;
+            if (stealthState === 'doorOpening' || stealthState === 'footprints' || stealthState === 'hands' || stealthState === 'handsWait' || stealthState === 'footstepsBack') {
+                doorOpen = doorOpenProgress;
+            } else if (stealthState === 'doorClosing') {
+                doorOpen = 1 - doorCloseProgress;
+            } else {
+                doorOpen = 0;
+            }
+            // params
+const doorW = 60, doorH = 140;
+const hingeLeft = true;             // set false for right hinge
+const hingeX = hingeLeft ? doorX : doorX + doorW;
+const hingeY = doorY + doorH / 2;
+function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+const t = Math.max(0, Math.min(1, doorOpen)); // 0..1
+const eased = easeOutCubic(t);
+const maxAngle = Math.PI / 2 * 0.98; // nearly 90°
+const angle = (hingeLeft ? -1 : 1) * maxAngle * eased;
+
+// door thickness and perspective factors
+const thickness = 12;                 // visible edge thickness in px
+const depthScale = 0.6;              // how "thin" the face becomes at full open
+const skew = 0.6;                     // skew factor for trapezoid edge
+
+if (t > 0) {
+  ctx.save();
+  // move to hinge
+  ctx.translate(hingeX, hingeY);
+  //ctx.rotate(angle); // dont need this this is the bad rotation around the wrong axis
+
+  // Compute face transform: draw rect with hinge at x=0, y=-doorH/2
+  // To fake perspective, scale X slightly based on angle
+  const faceScaleX = 1 - Math.abs(Math.sin(angle)) * depthScale;
+  ctx.save();
+  ctx.scale(faceScaleX, 1);
+  ctx.fillStyle = '#5a3c1a';
+  ctx.fillRect(0, -doorH/2, doorW, doorH);
+  ctx.strokeStyle = '#3a220a';
+  ctx.lineWidth = 5 / faceScaleX; // keep stroke visually consistent
+  ctx.strokeRect(0, -doorH/2, doorW, doorH);
+  // knob drawn in face local coords; adjust for scale
+  const knobLocalX = doorW - 8;
+  const knobLocalY = 0;
+  ctx.beginPath();
+  ctx.arc(knobLocalX, knobLocalY, 6, 0, Math.PI * 2);
+  ctx.fillStyle = '#eab676';
+  ctx.fill();
+  ctx.restore(); // restore from scale
+
+  // draw visible edge (the door thickness) as a trapezoid
+  // Edge direction depends on hinge side and sign of angle
+  const sign = hingeLeft ? 1 : -1;
+  const absAng = Math.abs(angle);
+  if (absAng > 0.01) {
+    // tip location at outer edge of face (in rotated space)
+    const tipX = Math.cos(0) * doorW; // before rotation; we're in rotated coords
+    const tipTopY = -doorH/4;
+    const tipBottomY = doorH/4;
+
+    // compute offset for thickness using angle
+    const edgeOffsetX = sign * thickness * Math.cos(absAng) ;
+    const edgeOffsetY = thickness * Math.sin(absAng) * skew;
+
+    ctx.beginPath();
+    // top outer corner
+    ctx.moveTo(doorW, -doorH/2);
+    // top outer + offset
+    ctx.lineTo(doorW + edgeOffsetX, -doorH/2 + edgeOffsetY);
+    // bottom outer + offset
+    ctx.lineTo(doorW + edgeOffsetX, doorH/2 + edgeOffsetY);
+    // bottom outer
+    ctx.lineTo(doorW, doorH/2);
+    ctx.closePath();
+    // darker color for edge
+    ctx.fillStyle = '#452a12';
+    ctx.fill();
+    ctx.strokeStyle = '#2c1907';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  ctx.restore();
+
+  // light beam: compute world coords of door tip
+  const worldAngle = angle; // rotation applied about hinge
+  const tipWorldX = hingeX + Math.cos(worldAngle) * doorW * (1);
+  const tipWorldY = hingeY + Math.sin(worldAngle) * doorW * (1);
+
+  ctx.save();
+  ctx.globalAlpha = 0.5 * eased;
+  const grad = ctx.createLinearGradient(tipWorldX, tipWorldY, tipWorldX + 200, tipWorldY + 80);
+  grad.addColorStop(0, 'rgba(255,255,180,0.7)');
+  grad.addColorStop(1, 'rgba(255,255,180,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(hingeX, hingeY);
+  ctx.lineTo(tipWorldX + 200, tipWorldY - 30);
+  ctx.lineTo(tipWorldX + 200, tipWorldY + 150);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+} else {
+  // closed door
+  ctx.save();
+  ctx.fillStyle = '#5a3c1a';
+  ctx.fillRect(doorX, doorY, doorW, doorH);
+  ctx.strokeStyle = '#3a220a';
+  ctx.lineWidth = 5;
+  ctx.strokeRect(doorX, doorY, doorW, doorH);
+  ctx.beginPath();
+  ctx.arc(doorX + doorW - 8, doorY + doorH/2, 6, 0, Math.PI * 2);
+  ctx.fillStyle = '#eab676';
+  ctx.fill();
+  ctx.restore();
+}
+
+            // --- END BACKGROUND ---
+
+            // Draw desk
+            ctx.fillStyle = desk.color;
+            ctx.fillRect(desk.x, desk.y, desk.width, desk.height);
+
+            // Draw shelves
+            shelves.forEach(shelf => {
+                ctx.fillStyle = shelf.color;
+                ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
+            });
+
+            // --- STEALTH: CS footprints ---
+            const steps = 8;
+            if (stealthState === 'footprints' || stealthState === 'hands') {
+                // Animate footprints from door toward desk
+                for (let i = 0; i < steps; i++) {
+                    const t = i / (steps - 1);
+                    if (t > footprintsProgress) break;
+                    // Path from door to desk
+                    const fx = doorX + 60 + (canvas.width/2 - (doorX + 60)) * t;
+                    const fy = doorY + 140 + (desk.y - (doorY + 70)) * t * 0.8;
+                    ctx.save();
+                    ctx.globalAlpha = 0.5 + 0.5 * t;
+                    ctx.fillStyle = '#222';
+                    ctx.beginPath();
+                    ctx.ellipse(fx, fy, 10, 5, (i%2===0?0.2:-0.2), 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            } else if (stealthState === 'footstepsBack') {
+                // Animate footprints disappearing one by one back to the door
+                // Show only the first N footprints, where N decreases as footstepsBackProgress increases
+                const gone = Math.floor(steps * footstepsBackProgress + 0.001);
+                for (let i = 0; i < steps - gone; i++) {
+                    const t = i / (steps - 1);
+                    const fx = doorX + 60 + (canvas.width/2 - (doorX + 60)) * t;
+                    const fy = doorY + 140 + (desk.y - (doorY + 70)) * t * 0.8;
+                    ctx.save();
+                    ctx.globalAlpha = 0.5 + 0.5 * t;
+                    ctx.fillStyle = '#222';
+                    ctx.beginPath();
+                    ctx.ellipse(fx, fy, 10, 5, (i%2===0?0.2:-0.2), 0, Math.PI*2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            // Draw monitor as emoji
+            ctx.font = `${monitor.width}px serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillText('\u{1F5A5}', monitor.x + monitor.width / 2, monitor.y);
+
+            // --- STEALTH: hands in front of monitor ---
+            if (stealthState === 'hands') {
+                // Animate hands rising up in front of monitor
+                const handY = monitor.y + monitor.height - 10 + 40 * (1 - handsProgress);
+                // Left hand
+                ctx.save();
+                ctx.globalAlpha = handsProgress;
+                ctx.fillStyle = '#eab676';
+                ctx.beginPath();
+                ctx.ellipse(monitor.x + 25, handY, 18, 16, -0.2, 0, Math.PI*2);
+                ctx.fill();
+                // Fingers (left)
+                for (let f=0; f<4; f++) {
+                    ctx.beginPath();
+                    ctx.ellipse(monitor.x + 15 + f*6, handY+12, 4, 10, 0, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                // Right hand
+                ctx.beginPath();
+                ctx.ellipse(monitor.x + monitor.width - 25, handY, 18, 16, 0.2, 0, Math.PI*2);
+                ctx.fill();
+                // Fingers (right)
+                for (let f=0; f<4; f++) {
+                    ctx.beginPath();
+                    ctx.ellipse(monitor.x + monitor.width - 35 + f*6, handY+12, 4, 10, 0, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            // Draw cat: sideways or back view
+            ctx.save();
+            ctx.translate(cat.x + cat.width / 2, cat.y + cat.height / 2);
+            let facing = 1;
+            if (keys['ArrowLeft'] && !keys['ArrowRight']) facing = -1;
+            ctx.scale(facing, 1);
+            let walkCycle = 0;
+            if (cat.isJumping) {
+                walkCycle = Math.sin(Date.now() / 120) * 2;
+            } else if (keys['ArrowLeft'] || keys['ArrowRight']) {
+                walkCycle = Math.sin(Date.now() / 120) * 4;
+            }
+
+            // If in code mode, show back view with tip-tapping paws
+            if (codeMode) {
+                // --- BACK VIEW ---
+                // Body (back, rounder)
+                ctx.fillStyle = '#222';
+                ctx.beginPath();
+                ctx.ellipse(0, 8, 13, 11, 0, 0, Math.PI * 2);
+                ctx.fill();
+                // Head (back, round)
+                ctx.beginPath();
+                ctx.arc(0, -6, 9, 0, Math.PI * 2);
+                ctx.fill();
+                // Ears (back, on head)
+                ctx.beginPath();
+                ctx.moveTo(-6, -14);
+                ctx.lineTo(-3, -22);
+                ctx.lineTo(0, -10);
+                ctx.moveTo(6, -14);
+                ctx.lineTo(3, -22);
+                ctx.lineTo(0, -10);
+                ctx.strokeStyle = '#222';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                // Tail (back, up)
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(0, 18);
+                ctx.bezierCurveTo(0, 32, 8, 38 + walkCycle, 0, 48 + walkCycle);
+                ctx.strokeStyle = '#222';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+                ctx.restore();
+                // Paws (tip-tapping)
+                let tap = Math.abs(Math.sin(Date.now() / 80));
+                let tap2 = Math.abs(Math.sin(Date.now() / 80 + 1));
+                // Left paw
+                ctx.save();
+                ctx.translate(-6, 18 + tap * 3);
+                ctx.rotate(-0.2 + tap * 0.2);
+                ctx.fillStyle = '#222';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                // Right paw
+                ctx.save();
+                ctx.translate(6, 18 + tap2 * 3);
+                ctx.rotate(0.2 - tap2 * 0.2);
+                ctx.fillStyle = '#222';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            } else {
+                // --- SIDEWAYS VIEW ---
+                // Body (sideways oval)
+                ctx.fillStyle = '#222';
+                ctx.beginPath();
+                ctx.ellipse(2, 6, 14, 7, Math.PI / 12, 0, Math.PI * 2);
+                ctx.fill();
+                // Head (sideways circle, slightly forward)
+                ctx.beginPath();
+                ctx.ellipse(16, -2, 7, 8, Math.PI / 16, 0, Math.PI * 2);
+                ctx.fill();
+                // Ears (sideways, lowered to sit on head)
+                ctx.beginPath();
+                ctx.moveTo(21, -4);
+                ctx.lineTo(19, -12);
+                ctx.lineTo(16, 2);
+                ctx.moveTo(11, -4);
+                ctx.lineTo(13, -12);
+                ctx.lineTo(16, 2);
+                ctx.strokeStyle = '#222';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                // Eye (single, side profile)
+                ctx.beginPath();
+                ctx.ellipse(19, -4, 1.5, 2, 0, 0, Math.PI * 2);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(19, -4, 0.7, 1, 0, 0, Math.PI * 2);
+                ctx.fillStyle = 'black';
+                ctx.fill();
+                // Nose (side, pink)
+                ctx.beginPath();
+                ctx.ellipse(23, -1, 0.7, 1, 0, 0, Math.PI * 2);
+                ctx.fillStyle = '#eab';
+                ctx.fill();
+                // Tail (points up, cleanly attached to body)
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(-10, 0);
+                ctx.bezierCurveTo(-18, -18 - walkCycle, -6, -38 - walkCycle, 0, -32 - walkCycle);
+                ctx.strokeStyle = '#222';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+                ctx.restore();
+                // Legs (sideways, move when walking)
+                ctx.strokeStyle = '#222';
+                ctx.lineWidth = 4;
+                // Back leg
+                ctx.beginPath();
+                ctx.moveTo(-2, 13);
+                ctx.lineTo(-2 + walkCycle, 22 - walkCycle);
+                ctx.stroke();
+                // Front leg
+                ctx.beginPath();
+                ctx.moveTo(8, 13);
+                ctx.lineTo(8 - walkCycle, 22 + walkCycle);
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            // ...existing code...
+            // Draw code particles (improved spacing, preserve colors)
+            codeParticles.forEach(particle => {
+                ctx.globalAlpha = particle.alpha;
+                ctx.font = `${particle.size}px monospace`;
+                // Use regex to split and keep delimiters, including whitespace
+                const words = particle.text.match(/(\s+|[a-zA-Z_][a-zA-Z0-9_]*|\d+|[^\s\w])/g) || [];
+                let xOffset = 10;
+                const letterSpacing = particle.size*.2 // removing the *.2 seemed to help just now theyre far apart
+                words.forEach(word => {
+                    let color = 'white';
+                    if (word === 'console') color = particle.consoleColor;
+                    else if (word === 'log') color = particle.logColor;
+                    else if (word === 'meow' || word === 'tuna' || word === 'yarn' || word === 'purr') color = particle.meowColor;
+                    else if (word === 'cat' || word === 'Food' || word === 'wakeUp' || word === 'debug' || word === 'error' || word === 'function' || word === 'return' || word === 'if' || word === 'let' || word === 'new') color = 'lightblue';
+                    else if (['Slep'].includes(word)) color = 'orange';
+                    ctx.fillStyle = color;
+                    ctx.fillText(word, Math.round(particle.x + xOffset), particle.y);
+                    let width = ctx.measureText(word).width;
+                    // Always add spacing after each token
+                    xOffset += width + letterSpacing*4;
+                });
+                ctx.globalAlpha = 1;
+            });
+        }
+
+        let keys = {};
+
+        // For tip-tapping animation, track if user is typing
+        let tipTapping = false;
+        let tipTapTimeout;
+        document.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+            if (e.key === 'ArrowUp' && !cat.isJumping) {
+                cat.velocityY = -10;
+                cat.isJumping = true;
+            }
+            if (codeMode && e.key.match(/^[a-z]$/)) {
+                generateCodeParticle();
+                animateScore(1);
+                tipTapping = true;
+                clearTimeout(tipTapTimeout);
+                tipTapTimeout = setTimeout(() => { tipTapping = false; }, 120);
+            }
+        });
+
+        function animateScore(points) {
+            let startScore = score;
+            let endScore = score + points;
+            const animationDuration = 20;
+            const startTime = performance.now();
+
+            function updateScore(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                const progress = Math.min(elapsedTime / animationDuration, 1);
+                const animatedScore = Math.floor(startScore + (endScore - startScore) * progress);
+                gitAdditions.textContent = animatedScore;
+                updateGitCubeColor(animatedScore);
+                if (progress < 1) {
+                    requestAnimationFrame(updateScore);
+                } else {
+                    score = endScore;
+                    gitAdditions.textContent = score;
+                    updateGitCubeColor(score);
+                }
+            }
+
+            requestAnimationFrame(updateScore);
+            // Track for git graph
+            if (gameStarted && additionsHistory.length < 32) {
+                additionsHistory.push(score + points);
+            }
+        }
+
+        function endGame() {
+            gameStarted = false;
+            gameOverScreen.style.display = 'flex';
+            finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${deletionsScore} deletions</span>`;
+            drawGitGraph();
+            // --- Store result and update grid ---
+            if (gitGraphResults.length < maxGames) {
+                gitGraphResults.push({ score, deletions: deletionsScore });
+            }
+            updateGitGraphGrid();
+            // --- If 7 games played, show report ---
+            if (gitGraphResults.length === maxGames) {
+                setTimeout(showReport, 1200); // Give a moment for last game over
+            }
+        }
+
+        function showReport() {
+            // Hide start button, show report
+            startButton.style.display = 'none';
+            reportScreen.style.display = 'block';
+            // Calculate total additions
+            let total = gitGraphResults.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);
+            let rank = getRank(total);
+            let rankColor = {
+                'kode kitten': '#888',
+                'junior dev': '#1e90ff',
+                'script kitty': '#f7c325',
+                'senior dev': '#a259e6',
+                'grey cat hacker': '#2ea043',
+                'master black cat hacker': '#000'
+            }[rank] || '#fff';
+            let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
+            let details = gitGraphResults.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');
+            reportScreen.innerHTML = `<h2>7 Games Complete!</h2><div style='margin:12px 0 18px 0;'>Total Additions: <span style='color:#2ea043; font-size:1.3em;'>${total}</span></div>${details}<div style='margin:18px 0 8px 0;'>Rank:</div>${rankText}<div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Play Again</button></div>`;
+            // Reset button
+            setTimeout(() => {
+                document.getElementById('resetSeriesBtn').onclick = () => {
+                    gitGraphResults = [];
+                    updateGitGraphGrid();
+                    reportScreen.style.display = 'none';
+                    startButton.style.display = 'inline-block';
+                };
+            }, 100);
+        }
+
+        function drawGitGraph() {
+            const ctx = gitGraph.getContext('2d');
+            ctx.clearRect(0, 0, gitGraph.width, gitGraph.height);
+            // Color the square by (additions - deletions)
+            const net = Math.max(0, score - deletionsScore);
+            const maxScore = 1000;
+            const percent = Math.min(net / maxScore, 1);
+            // interpolate from grey (#888) to green (#2ea043)
+            function lerp(a, b, t) { return a + (b - a) * t; }
+            function hexToRgb(hex) {
+                hex = hex.replace('#', '');
+                if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
+                const num = parseInt(hex, 16);
+                return [num >> 16, (num >> 8) & 0xff, num & 0xff];
+            }
+            function rgbToHex([r, g, b]) {
+                return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+            }
+            const grey = hexToRgb('#888');
+            const green = hexToRgb('#2ea043');
+            const color = [
+                Math.round(lerp(grey[0], green[0], percent)),
+                Math.round(lerp(grey[1], green[1], percent)),
+                Math.round(lerp(grey[2], green[2], percent))
+            ];
+            ctx.fillStyle = rgbToHex(color);
+            ctx.fillRect(0, 0, gitGraph.width, gitGraph.height);
+            ctx.strokeStyle = '#2ea043';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(1, 1, gitGraph.width-2, gitGraph.height-2);
+        }
+
+        function updateGitCubeColor() {
+            // Color by (additions - deletions)
+            const net = Math.max(0, score - deletionsScore);
+            const maxScore = 1000;
+            const percent = Math.min(net / maxScore, 1);
+            function lerp(a, b, t) { return a + (b - a) * t; }
+            function hexToRgb(hex) {
+                hex = hex.replace('#', '');
+                if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
+                const num = parseInt(hex, 16);
+                return [num >> 16, (num >> 8) & 0xff, num & 0xff];
+            }
+            function rgbToHex([r, g, b]) {
+                return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+            }
+            const grey = hexToRgb('#888');
+            const green = hexToRgb('#2ea043');
+            const color = [
+                Math.round(lerp(grey[0], green[0], percent)),
+                Math.round(lerp(grey[1], green[1], percent)),
+                Math.round(lerp(grey[2], green[2], percent))
+            ];
+            gitCube.style.background = rgbToHex(color);
+        }
+
+        document.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        // --- Prevent multiple game loops from stacking ---
+        let gameLoopRunning = false;
+        function gameLoop() {
+            if (!gameLoopRunning) return;
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        startButton.addEventListener('click', () => {
+            if (gitGraphResults.length === maxGames) return; // Don't start if series complete
+            // --- FULL GAME RESET ---
+            gameStarted = true;
+            startScreen.style.display = 'none';
+            gameOverScreen.style.display = 'none';
+            score = 0;
+            deletionsScore = 0;
+            gitAdditions.textContent = 0;
+            gitDeletions.textContent = 0;
+            additionsHistory = [];
+            codeParticles = [];
+            stealthState = 'idle';
+            stealthTimer = 0;
+            nextStealthEvent = Date.now() + 15000 + Math.random() * 15000;
+            doorOpenProgress = 0;
+            footprintsProgress = 0;
+            handsProgress = 0;
+            handsHoldTimer = 0;
+            footstepsBackProgress = 0;
+            doorCloseProgress = 0;
+            lastStealthFrame = Date.now();
+            lastHandsSecond = null;
+            // Reset cat position and state
+            cat.x = 50;
+            cat.y = 500;
+            cat.velocityY = 0;
+            cat.isJumping = false;
+            codeMode = false;
+            // Manually define the shelves
+            shelves = [
+                { x: 100, y: 500, width: 100, height: 20, color: '#4b371C' },
+                { x: 300, y: 400, width: 100, height: 20, color: '#4b371C' },
+                { x: 500, y: 500, width: 100, height: 20, color: '#4b371C' }
+            ];
+            // Clear keys
+            keys = {};
+            // --- Start game loop only if not already running ---
+            if (!gameLoopRunning) {
+                gameLoopRunning = true;
+                requestAnimationFrame(gameLoop);
+            }
+        });
+
+        restartButton.addEventListener('click', () => {
+            // Show the start screen and hide the game over screen, reset game state
+            startScreen.style.display = 'flex';
+            gameOverScreen.style.display = 'none';
+            updateGitGraphGrid();
+            // Stop the game loop if running
+            gameLoopRunning = false;
+            // Optionally reset cat position and other variables if needed
+        });
+
+    // On load, always update grid
+    updateGitGraphGrid();
+    // Stop any game loop on page load
+    gameLoopRunning = false;
+    </script>
+</body>
+</html>
+
+
+
+
