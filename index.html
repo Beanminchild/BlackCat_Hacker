@@ -1002,12 +1002,18 @@ if (t > 0) {
             let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
             let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> use -> <- arrow keys to move left and right and ^ up arrow key to jump, Spam any letter key when infront of the computer to code!</span>`;
             let details = gitGraphResults.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');
-            reportScreen.innerHTML = `<h2>cat -s player_report.txt tutorial.txt > combined.txt</h2><div style='margin:12px 0 18px 0;'>Total Additions: <span style='color:#2ea043; font-size:1.3em;'>${total}</span></div>${details}<div style='margin:18px 0 8px 0;'>Rank:</div>${rankText}<div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
+            reportScreen.innerHTML = `<h2>cat -s player_report.txt tutorial.txt > combined.txt</h2><div style='margin:12px 0 18px 0;'>Total Additions: <span style='color:#2ea043; font-size:1.3em;'>${total}</span></div>${details}<div style='margin:18px 0 8px 0;'>Rank:</div>${rankText}<div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
             // Reset button
             setTimeout(() => {
                 document.getElementById('resetSeriesBtn').onclick = () => {
                     gitGraphResults = [];
                     updateGitGraphGrid();
+                    reportScreen.style.display = 'none';
+                    startButton.style.display = 'inline-block';
+                };
+            }, 100);
+            setTimeout(() => {
+                document.getElementById('closeBtn').onclick = () => {
                     reportScreen.style.display = 'none';
                     startButton.style.display = 'inline-block';
                 };
