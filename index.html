@@ -28,7 +28,18 @@
             z-index: 10;
         }
 
+        
+
         #startButton {
+            padding: 20px 40px;
+            font-size: 24px;
+            background-color: #555;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+         #tutorialButton {
             padding: 20px 40px;
             font-size: 24px;
             background-color: #555;
@@ -47,7 +58,9 @@
     </style>
 </head>
 <body>
-    <div id="startScreen" style="display:flex; flex-direction:column; justify-content:center; align-items:center; position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.7); z-index:10;">
+    <div id="startScreen" style="display:flex; flex-direction:column; justify-content:center; align-items:center; position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgb(0, 0, 0); z-index:10;">
+    <div id="tutorialScreen" style="display:none; flex-direction:column; justify-content:center; align-items:center; position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgb(0, 0, 0); z-index:10;"></div>
+        <h1 style="color:white; font-family:sans-serif; font-size:3em; margin-bottom:24px;">B|ackC4t_H@cker</h1>
         <div id="gitGraphGrid" style="display:grid; grid-template-columns: repeat(4, 32px); grid-template-rows: repeat(2, 32px); gap:12px; margin-bottom:24px; justify-content:center; align-items:center; width:max-content; margin-left:auto; margin-right:auto;">
             <canvas class="gitGraphSquare" width="32" height="32" style="background:#181818; border-radius:6px; border:2px solid #222; box-shadow:0 2px 6px #0004; grid-column:1; grid-row:1;"></canvas>
             <canvas class="gitGraphSquare" width="32" height="32" style="background:#181818; border-radius:6px; border:2px solid #222; box-shadow:0 2px 6px #0004; grid-column:2; grid-row:1;"></canvas>
@@ -58,6 +71,9 @@
             <canvas class="gitGraphSquare" width="32" height="32" style="background:#181818; border-radius:6px; border:2px solid #222; box-shadow:0 2px 6px #0004; grid-column:3; grid-row:2;"></canvas>
         </div>
     <button id="startButton" style="margin:0 auto 0 auto; display:block;">Start Game</button>
+    <p> 
+    <button id="tutorialButton" style="margin:0 auto 0 auto; display:block;">How 2 Play</button>
+    </p>
         <div id="reportScreen" style="display:none; margin-top:24px; color:white; font-family:sans-serif; background:#222; border-radius:12px; padding:24px 32px; box-shadow:0 4px 32px #000a; text-align:center;"></div>
     </div>
     <div id="gameOverScreen" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.92); z-index:100; color:white; justify-content:center; align-items:center; flex-direction:column; font-family:sans-serif;">
@@ -112,6 +128,8 @@
 
     const startScreen = document.getElementById('startScreen');
     const startButton = document.getElementById('startButton');
+    const tutorialButton = document.getElementById('tutorialButton');
+    const tutorialScreen = document.getElementById('reportScreen');
     const gitGraphGrid = document.getElementById('gitGraphGrid');
     const reportScreen = document.getElementById('reportScreen');
         // --- Draw the grid of 7 gitgraph squares on the home screen ---
@@ -201,6 +219,7 @@
     const gitDeletions = document.getElementById('gitDeletions');
     const gitCube = document.getElementById('gitCube');
     const gameOverScreen = document.getElementById('gameOverScreen');
+    //const tutorialScreen = document.getElementById('reportScreen');
     const finalScores = document.getElementById('finalScores');
     const gitGraph = document.getElementById('gitGraph');
     const restartButton = document.getElementById('restartButton');
@@ -457,7 +476,7 @@
             } else {
                 doorOpen = 0;
             }
-            // params
+// params
 const doorW = 60, doorH = 140;
 const hingeLeft = true;             // set false for right hinge
 const hingeX = hingeLeft ? doorX : doorX + doorW;
@@ -826,7 +845,7 @@ if (t > 0) {
         function animateScore(points) {
             let startScore = score;
             let endScore = score + points;
-            const animationDuration = 20;
+            const animationDuration = .2;
             const startTime = performance.now();
 
             function updateScore(currentTime) {
@@ -965,6 +984,42 @@ if (t > 0) {
             draw();
             requestAnimationFrame(gameLoop);
         }
+         
+        tutorialButton.addEventListener('click', () => {
+            tutorialScreen.style.display = 'flex';
+            reportScreen.style.display = 'block';
+            // Calculate total additions
+            let total = gitGraphResults.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);
+            let rank = getRank(total);
+            let rankColor = {
+                'kode kitten': '#888',
+                'junior dev': '#1e90ff',
+                'script kitty': '#f7c325',
+                'senior dev': '#a259e6',
+                'grey cat hacker': '#2ea043',
+                'master black cat hacker': '#000'
+            }[rank] || '#fff';
+            let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
+            let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> use -> <- arrow keys to move left and right and ^ up arrow key to jump, Spam any letter key when infront of the computer to code!</span>`;
+            let details = gitGraphResults.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');
+            reportScreen.innerHTML = `<h2>cat -s player_report.txt tutorial.txt > combined.txt</h2><div style='margin:12px 0 18px 0;'>Total Additions: <span style='color:#2ea043; font-size:1.3em;'>${total}</span></div>${details}<div style='margin:18px 0 8px 0;'>Rank:</div>${rankText}<div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
+            // Reset button
+            setTimeout(() => {
+                document.getElementById('resetSeriesBtn').onclick = () => {
+                    gitGraphResults = [];
+                    updateGitGraphGrid();
+                    reportScreen.style.display = 'none';
+                    startButton.style.display = 'inline-block';
+                };
+            }, 100);
+            setTimeout(() => {
+                document.getElementById('closeBtn').onclick = () => {
+                    reportScreen.style.display = 'none';
+                    startButton.style.display = 'inline-block';
+                };
+            }, 100);
+        }
+         );
 
         startButton.addEventListener('click', () => {
             if (gitGraphResults.length === maxGames) return; // Don't start if series complete
