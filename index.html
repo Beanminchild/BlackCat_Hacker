@@ -58,6 +58,8 @@
     </style>
 </head>
 <body>
+    <div id="timer" style="display:none; position: absolute; top: 10px; left: 10px; font-size: 2em; color: #fff; background: rgba(0,0,0,0.7); padding: 8px 18px; border-radius: 8px; z-index: 1000;">05:00</div>
+    <div id="workday-message" style="display:none; position: absolute; top: 50px; left: 50%; transform: translateX(-50%); font-size: 2.5em; color: #fff; background: rgba(0,0,0,0.85); padding: 20px 40px; border-radius: 12px; z-index: 2000;">work day over</div>
     <div id="startScreen" style="display:flex; flex-direction:column; justify-content:center; align-items:center; position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgb(0, 0, 0); z-index:10;">
     <div id="tutorialScreen" style="display:none; flex-direction:column; justify-content:center; align-items:center; position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgb(0, 0, 0); z-index:10;"></div>
         <h1 style="color:white; font-family:sans-serif; font-size:3em; margin-bottom:24px;">B|ackC4t_H@cker</h1>
@@ -78,7 +80,7 @@
     </div>
     <div id="gameOverScreen" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.92); z-index:100; color:white; justify-content:center; align-items:center; flex-direction:column; font-family:sans-serif;">
         <div style="background:#222; padding:32px 48px; border-radius:16px; box-shadow:0 4px 32px #000a; display:flex; flex-direction:column; align-items:center; gap:24px;">
-            <h1 style="margin:0; font-size:2.5em;">You were petted.</h1>
+            <h1 id="gameOverMessage" style="margin:0; font-size:2.5em;"></h1>
             <div id="finalScores" style="font-size:1.3em;"></div>
             <canvas id="gitGraph" width="24" height="24" style="margin-top:12px; border-radius:4px; background:#181818; border:2px solid #222; box-shadow: 0 2px 6px #0004;"></canvas>
             <button id="restartButton" style="margin-top:18px; font-size:1.1em; padding:10px 32px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;">Restart</button>
@@ -98,6 +100,68 @@
     <canvas id="gameCanvas"></canvas>
     
     <script>
+    // --- Timer Mechanic ---
+    let round = 1;
+    let timerInterval = null;
+    let baseTime = 100; // 5 minutes in seconds
+    let timeDecrease = 20; // seconds decrease per round
+    let currentTime = baseTime;
+
+    function formatTime(secs) {
+        const m = Math.floor(secs / 60).toString().padStart(2, '0');
+        const s = (secs % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    }
+
+    function updateTimerDisplay() {
+        document.getElementById('timer').textContent = formatTime(currentTime);
+    }
+
+    function showTimer(show) {
+        document.getElementById('timer').style.display = show ? 'block' : 'none';
+    }
+
+    function endRound() {
+        clearInterval(timerInterval);
+        showTimer(false);
+        // Show game over screen with 'work day over' as the main message
+        gameStarted = false;
+        gameOverScreen.style.display = 'flex';
+        gameOverScreen.setAttribute('data-reason', 'timeout');
+        document.getElementById('gameOverMessage').textContent = 'work day over';
+        finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${deletionsScore} deletions</span>`;
+        drawGitGraph();
+        // --- Store result and update grid ---
+        if (gitGraphResults.length < maxGames) {
+            gitGraphResults.push({ score, deletions: deletionsScore });
+        }
+        updateGitGraphGrid();
+        // --- If 7 games played, show report ---
+        if (gitGraphResults.length === maxGames) {
+            setTimeout(showReport, 1200); // Give a moment for last game over
+        }
+    }
+
+    function startTimer() {
+        showTimer(true);
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+            currentTime--;
+            updateTimerDisplay();
+            if (currentTime <= 0) {
+                endRound();
+            }
+        }, 1000);
+    }
+
+    function nextRound() {
+        round++;
+        currentTime = Math.max(20, baseTime - (round - 1) * timeDecrease);
+        startTimer();
+    }
+
+    // Only start timer when a round actually starts (e.g., when gameplay begins)
+    // Call startTimer() at the start of each round in your game logic.
     // --- Coffee Cup Mechanic ---
     let coffeeCups = [];
     const coffeeEmoji = '☕';
@@ -201,7 +265,7 @@
     let handsChaseStart = 0;
     let handsChasePos = { x: 0, y: 0 };
     let handsChaseActive = false;
-    let handsChaseSpeed = 2.2; // px per frame
+    let handsChaseSpeed = 2.0; // px per frame
 
     const startScreen = document.getElementById('startScreen');
     const startButton = document.getElementById('startButton');
@@ -683,7 +747,7 @@
         // Draw coffee stain in center
         if (scrubStainActive) {
             const stainX = canvas.width / 2;
-            const stainY = canvas.height / 2 + 40;
+            const stainY = canvas.height / 2 + 80;
             ctx.save();
             ctx.globalAlpha = scrubStainAlpha;
             // Draw stain
@@ -730,7 +794,7 @@
                     ctx.globalAlpha = Math.max(0, Math.min(1, (t-stepT)*2));
                     ctx.beginPath();
                     ctx.ellipse(sx, sy, 8, 4, (i%2===0?0:Math.PI/8), 0, 2*Math.PI);
-                    ctx.fillStyle = '#bca98c';
+                    ctx.fillStyle = '#444';
                     ctx.fill();
                     ctx.restore();
                 }
@@ -765,23 +829,179 @@
     }
 
     function draw() {
+            // --- BACKGROUND LAYERS ---
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw wall (upper background)
+            ctx.fillStyle = '#728C69';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw floor area (lower background, below floorboard)
+            const floorboardY = desk.y - 241;
+            ctx.fillStyle = '#bcae99'; // lighter, warm floor color
+            ctx.fillRect(0, floorboardY, canvas.width, canvas.height - floorboardY);
+
+            // Draw floorboard (horizontal plank)
+            ctx.save();
+            ctx.fillStyle = '#6b4a2b';
+            ctx.fillRect(0, floorboardY - 8, canvas.width, 16);
+            ctx.restore();
+
             // Update gitCube color live based on (additions - deletions)
             updateGitCubeColor();
             // --- BACKGROUND ELEMENTS ---
-            // Draw scrub stain if active
+
+            // Draw extended 3D floor (ellipse) for more depth
+            ctx.save();
+            ctx.globalAlpha = 0.7;
+            // Extended floor ellipse parameters
+            const floorCX = canvas.width / 2;
+            const floorCY = desk.y + desk.height / 2 + 30;
+            const floorRX = canvas.width * 0.48; // wider
+            const floorRY = 300; // deeper
+            const grad = ctx.createRadialGradient(floorCX, floorCY + 30, 60, floorCX, floorCY + 30, floorRX);
+            grad.addColorStop(0, '#b8d6e5'); // light blue
+            grad.addColorStop(0.7, '#99baca'); // medium blue
+            grad.addColorStop(1, '#5a6b8c'); // deep blue
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.ellipse(floorCX, floorCY + 30, floorRX, floorRY, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Draw scrub stain if active (should be above carpet)
             if (scrubStainActive) {
                 drawScrubStain();
             }
-            // (Floor removed)
 
-            // Draw window (centered)
+            // Draw floorboard (a thin, dark ellipse at the back of the floor)
+            ctx.save();
+            ctx.globalAlpha = 0.85;
+            ctx.fillStyle = '#4b371c';
+            ctx.beginPath();
+            ctx.ellipse(floorCX, desk.y + 8, floorRX * 0.98, 13, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Draw sky background and sun (moves diagonally behind the window)
             const windowX = canvas.width / 2 - 70;
             const windowY = 120;
+
+            // Sky color gradient based on sunProgress (0=day, 0.5=orange, 1=purple)
+            let windowSunProgress = 0;
+            if (gameStarted && baseTime > 0) {
+                windowSunProgress = 1 - (currentTime / baseTime);
+                if (windowSunProgress < 0) windowSunProgress = 0;
+                if (windowSunProgress > 1) windowSunProgress = 1;
+            } else {
+                windowSunProgress = 0;
+            }
+            // Interpolate sky color: blue (#7ecfff) -> orange (#ffb347) -> purple (#6a3fa0)
+            function lerpColor(a, b, t) {
+                const ah = parseInt(a.replace('#',''),16), bh = parseInt(b.replace('#',''),16);
+                const ar = (ah>>16)&0xff, ag = (ah>>8)&0xff, ab = ah&0xff;
+                const br = (bh>>16)&0xff, bg = (bh>>8)&0xff, bb = bh&0xff;
+                return '#' + [
+                    Math.round(ar + (br-ar)*t).toString(16).padStart(2,'0'),
+                    Math.round(ag + (bg-ag)*t).toString(16).padStart(2,'0'),
+                    Math.round(ab + (bb-ab)*t).toString(16).padStart(2,'0')
+                ].join('');
+            }
+            let skyColor;
+            if (windowSunProgress < 0.5) {
+                // Blue to orange
+                skyColor = lerpColor('#7ecfff', '#ffb347', windowSunProgress*2);
+            } else {
+                // Orange to purple
+                skyColor = lerpColor('#ffb347', '#6a3fa0', (windowSunProgress-0.5)*2);
+            }
+            // Draw sky background behind window
             ctx.save();
-            ctx.globalAlpha = 0.9;
+            ctx.beginPath();
+            ctx.rect(windowX, windowY, 140, 80);
+            ctx.closePath();
+            ctx.clip();
+            // Gradient sky
+            let windowGrad = ctx.createLinearGradient(windowX, windowY, windowX, windowY+80);
+            windowGrad.addColorStop(0, skyColor);
+            windowGrad.addColorStop(1, '#fff');
+            ctx.fillStyle = windowGrad;
+            ctx.fillRect(windowX, windowY, 140, 80);
+
+            // --- Clouds ---
+            if (!draw.clouds) {
+                draw.clouds = [];
+                for (let i=0; i<3; i++) {
+                    draw.clouds.push({
+                        x: windowX + Math.random()*140,
+                        y: windowY + 10 + Math.random()*50,
+                        speed: 0.15 + Math.random()*0.12,
+                        size: 18 + Math.random()*12,
+                        offset: Math.random()*1000
+                    });
+                }
+            }
+            // Move and draw clouds
+            for (let i=0; i<draw.clouds.length; i++) {
+                let c = draw.clouds[i];
+                // Clouds move only during game
+                if (gameStarted) {
+                    c.x += c.speed;
+                    if (c.x > windowX+140+30) {
+                        c.x = windowX-40;
+                        c.y = windowY + 10 + Math.random()*50;
+                        c.size = 18 + Math.random()*12;
+                        c.speed = 0.15 + Math.random()*0.12;
+                    }
+                }
+                // Draw cloud (simple ellipses)
+                ctx.save();
+                ctx.globalAlpha = 0.7;
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.ellipse(c.x, c.y, c.size, c.size*0.6, 0, 0, 2*Math.PI);
+                ctx.ellipse(c.x+0.6*c.size, c.y+2, c.size*0.7, c.size*0.4, 0, 0, 2*Math.PI);
+                ctx.ellipse(c.x-0.7*c.size, c.y+3, c.size*0.5, c.size*0.3, 0, 0, 2*Math.PI);
+                ctx.fill();
+                ctx.restore();
+            }
+            ctx.restore();
+            // Sun animation: moves from top-left to bottom-right of window as time passes, tied to timer
+            let sunProgress = 0;
+            if (gameStarted && baseTime > 0) {
+                sunProgress = 1 - (currentTime / baseTime);
+                if (sunProgress < 0) sunProgress = 0;
+                if (sunProgress > 1) sunProgress = 1;
+            } else {
+                sunProgress = 0;
+            }
+            // Sun path: from (windowX+20, windowY+20) to (windowX+120, windowY+70)
+            const sunStart = { x: windowX + 20, y: windowY + 20 };
+            const sunEnd = { x: windowX + 120, y: windowY + 70 };
+            const sunX = sunStart.x + (sunEnd.x - sunStart.x) * windowSunProgress;
+            const sunY = sunStart.y + (sunEnd.y - sunStart.y) * windowSunProgress;
+            // Draw sun behind window
+            ctx.save();
+            ctx.globalAlpha = 0.85;
+            ctx.beginPath();
+            ctx.arc(sunX, sunY, 18, 0, 2 * Math.PI);
+            ctx.fillStyle = 'orange';
+            ctx.shadowColor = 'yellow';
+            ctx.shadowBlur = 24;
+            ctx.fill();
+            ctx.restore();
+
+            // Draw window (centered, more transparent so sun is visible) with shadow
+            ctx.save();
+            ctx.shadowColor = '#2226'; // less intense shadow
+            ctx.shadowBlur = 8;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 4;
+            ctx.globalAlpha = 0.55;
             ctx.fillStyle = '#e0f7fa';
             ctx.fillRect(windowX, windowY, 140, 80);
+            ctx.globalAlpha = 1;
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetY = 0;
             ctx.strokeStyle = '#b0c4de';
             ctx.lineWidth = 6;
             ctx.strokeRect(windowX, windowY, 140, 80);
@@ -796,8 +1016,12 @@
             ctx.stroke();
             ctx.restore();
 
-            // Draw door (closed, opening, open, closing)
+            // Draw door (closed, opening, open, closing) with shadow
             ctx.save();
+            ctx.shadowColor = '#222a';
+            ctx.shadowBlur = 18;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 8;
             let doorOpen = 0;
             if (
                 stealthState === 'doorOpening' ||
@@ -816,7 +1040,7 @@
                 doorOpen = 0;
             }
 // params
-const doorW = 60, doorH = 140;
+const doorW = 60, doorH = 135;
 const hingeLeft = true;             // set false for right hinge
 const hingeX = hingeLeft ? doorX : doorX + doorW;
 const hingeY = doorY + doorH / 2;
@@ -831,83 +1055,91 @@ const thickness = 12;                 // visible edge thickness in px
 const depthScale = 0.6;              // how "thin" the face becomes at full open
 const skew = 0.6;                     // skew factor for trapezoid edge
 
+
 if (t > 0) {
-  ctx.save();
-  // move to hinge
-  ctx.translate(hingeX, hingeY);
-  //ctx.rotate(angle); // dont need this this is the bad rotation around the wrong axis
+    // Draw black rectangle behind the open door to simulate a dark room
+        ctx.save();
+        ctx.fillStyle = 'black';
+        // Cover the entire door frame area
+        ctx.fillRect(doorX, doorY, doorW, doorH);
+        ctx.restore();
 
-  // Compute face transform: draw rect with hinge at x=0, y=-doorH/2
-  // To fake perspective, scale X slightly based on angle
-  const faceScaleX = 1 - Math.abs(Math.sin(angle)) * depthScale;
-  ctx.save();
-  ctx.scale(faceScaleX, 1);
-  ctx.fillStyle = '#5a3c1a';
-  ctx.fillRect(0, -doorH/2, doorW, doorH);
-  ctx.strokeStyle = '#3a220a';
-  ctx.lineWidth = 5 / faceScaleX; // keep stroke visually consistent
-  ctx.strokeRect(0, -doorH/2, doorW, doorH);
-  // knob drawn in face local coords; adjust for scale
-  const knobLocalX = doorW - 8;
-  const knobLocalY = 0;
-  ctx.beginPath();
-  ctx.arc(knobLocalX, knobLocalY, 6, 0, Math.PI * 2);
-  ctx.fillStyle = '#eab676';
-  ctx.fill();
-  ctx.restore(); // restore from scale
+    ctx.save();
+    // move to hinge
+    ctx.translate(hingeX, hingeY);
+    //ctx.rotate(angle); // dont need this this is the bad rotation around the wrong axis
 
-  // draw visible edge (the door thickness) as a trapezoid
-  // Edge direction depends on hinge side and sign of angle
-  const sign = hingeLeft ? 1 : -1;
-  const absAng = Math.abs(angle);
-  if (absAng > 0.01) {
-    // tip location at outer edge of face (in rotated space)
-    const tipX = Math.cos(0) * doorW; // before rotation; we're in rotated coords
-    const tipTopY = -doorH/4;
-    const tipBottomY = doorH/4;
-
-    // compute offset for thickness using angle
-    const edgeOffsetX = sign * thickness * Math.cos(absAng) ;
-    const edgeOffsetY = thickness * Math.sin(absAng) * skew;
-
+    // Compute face transform: draw rect with hinge at x=0, y=-doorH/2
+    // To fake perspective, scale X slightly based on angle
+    const faceScaleX = 1 - Math.abs(Math.sin(angle)) * depthScale;
+    ctx.save();
+    ctx.scale(faceScaleX, 1);
+    ctx.fillStyle = '#5a3c1a';
+    ctx.fillRect(0, -doorH/2, doorW, doorH);
+    ctx.strokeStyle = '#3a220a';
+    ctx.lineWidth = 5 / faceScaleX; // keep stroke visually consistent
+    ctx.strokeRect(0, -doorH/2, doorW, doorH);
+    // knob drawn in face local coords; adjust for scale
+    const knobLocalX = doorW - 8;
+    const knobLocalY = 0;
     ctx.beginPath();
-    // top outer corner
-    ctx.moveTo(doorW, -doorH/2);
-    // top outer + offset
-    ctx.lineTo(doorW + edgeOffsetX, -doorH/2 + edgeOffsetY);
-    // bottom outer + offset
-    ctx.lineTo(doorW + edgeOffsetX, doorH/2 + edgeOffsetY);
-    // bottom outer
-    ctx.lineTo(doorW, doorH/2);
-    ctx.closePath();
-    // darker color for edge
-    ctx.fillStyle = '#452a12';
+    ctx.arc(knobLocalX, knobLocalY, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#eab676';
     ctx.fill();
-    ctx.strokeStyle = '#2c1907';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
+    ctx.restore(); // restore from scale
 
-  ctx.restore();
+    // draw visible edge (the door thickness) as a trapezoid
+    // Edge direction depends on hinge side and sign of angle
+    const sign = hingeLeft ? 1 : -1;
+    const absAng = Math.abs(angle);
+    if (absAng > 0.01) {
+        // tip location at outer edge of face (in rotated space)
+        const tipX = Math.cos(0) * doorW; // before rotation; we're in rotated coords
+        const tipTopY = -doorH/4;
+        const tipBottomY = doorH/4;
 
-  // light beam: compute world coords of door tip
-  const worldAngle = angle; // rotation applied about hinge
-  const tipWorldX = hingeX + Math.cos(worldAngle) * doorW * (1);
-  const tipWorldY = hingeY + Math.sin(worldAngle) * doorW * (1);
+        // compute offset for thickness using angle
+        const edgeOffsetX = sign * thickness * Math.cos(absAng) ;
+        const edgeOffsetY = thickness * Math.sin(absAng) * skew;
 
-  ctx.save();
-  ctx.globalAlpha = 0.5 * eased;
-  const grad = ctx.createLinearGradient(tipWorldX, tipWorldY, tipWorldX + 200, tipWorldY + 80);
-  grad.addColorStop(0, 'rgba(255,255,180,0.7)');
-  grad.addColorStop(1, 'rgba(255,255,180,0)');
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.moveTo(hingeX, hingeY);
-  ctx.lineTo(tipWorldX + 200, tipWorldY - 30);
-  ctx.lineTo(tipWorldX + 200, tipWorldY + 150);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
+        ctx.beginPath();
+        // top outer corner
+        ctx.moveTo(doorW, -doorH/2);
+        // top outer + offset
+        ctx.lineTo(doorW + edgeOffsetX, -doorH/2 + edgeOffsetY);
+        // bottom outer + offset
+        ctx.lineTo(doorW + edgeOffsetX, doorH/2 + edgeOffsetY);
+        // bottom outer
+        ctx.lineTo(doorW, doorH/2);
+        ctx.closePath();
+        // darker color for edge
+        ctx.fillStyle = '#452a12';
+        ctx.fill();
+        ctx.strokeStyle = '#2c1907';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    ctx.restore();
+
+    // light beam: compute world coords of door tip
+    const worldAngle = angle; // rotation applied about hinge
+    const tipWorldX = hingeX + Math.cos(worldAngle) * doorW * (1);
+    const tipWorldY = hingeY + Math.sin(worldAngle) * doorW * (1);
+
+    ctx.save();
+    ctx.globalAlpha = 0.5 * eased;
+    const grad = ctx.createLinearGradient(tipWorldX, tipWorldY, tipWorldX + 200, tipWorldY + 80);
+    grad.addColorStop(0, 'rgba(255,255,180,0.7)');
+    grad.addColorStop(1, 'rgba(255,255,180,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(hingeX, hingeY);
+    ctx.lineTo(tipWorldX + 200, tipWorldY - 30);
+    ctx.lineTo(tipWorldX + 200, tipWorldY + 150);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
 
 } else {
   // closed door
@@ -1066,10 +1298,14 @@ if (t > 0) {
 
             // Draw cat: sideways or back view
             ctx.save();
+            ctx.shadowBlur = 0; // No shadow on cat or hands
+            ctx.shadowColor = 'transparent';
             ctx.translate(cat.x + cat.width / 2, cat.y + cat.height / 2);
-            let facing = 1;
-            if (keys['ArrowLeft'] && !keys['ArrowRight']) facing = -1;
-            ctx.scale(facing, 1);
+            // Track last direction
+            if (typeof cat.lastFacing === 'undefined') cat.lastFacing = 1;
+            if (keys['ArrowLeft'] && !keys['ArrowRight']) cat.lastFacing = -1;
+            else if (keys['ArrowRight'] && !keys['ArrowLeft']) cat.lastFacing = 1;
+            ctx.scale(cat.lastFacing, 1);
             let walkCycle = 0;
             if (cat.isJumping) {
                 walkCycle = Math.sin(Date.now() / 120) * 2;
@@ -1189,11 +1425,16 @@ if (t > 0) {
                 ctx.lineTo(8 - walkCycle, 22 + walkCycle);
                 ctx.stroke();
             }
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetY = 0;
             ctx.restore();
 
             // ...existing code...
-            // Draw code particles and meow particles
+            // Draw code particles and meow particles (no shadow)
             codeParticles.forEach(particle => {
+                ctx.save();
+                ctx.shadowBlur = 0;
+                ctx.shadowColor = 'transparent';
                 ctx.globalAlpha = particle.alpha;
                 if (particle.isMeow) {
                     ctx.font = `bold ${particle.size}px monospace`;
@@ -1225,6 +1466,7 @@ if (t > 0) {
                     });
                 }
                 ctx.globalAlpha = 1;
+                ctx.restore();
             });
         }
 
@@ -1353,7 +1595,11 @@ if (t > 0) {
 
         function endGame() {
             gameStarted = false;
+            clearInterval(timerInterval);
+            showTimer(false);
             gameOverScreen.style.display = 'flex';
+            gameOverScreen.setAttribute('data-reason', 'petted');
+            document.getElementById('gameOverMessage').textContent = 'you were petted.';
             finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${deletionsScore} deletions</span>`;
             drawGitGraph();
             // --- Store result and update grid ---
@@ -1469,21 +1715,8 @@ if (t > 0) {
         tutorialButton.addEventListener('click', () => {
             tutorialScreen.style.display = 'flex';
             reportScreen.style.display = 'block';
-            // Calculate total additions
-            let total = gitGraphResults.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);
-            let rank = getRank(total);
-            let rankColor = {
-                'kode kitten': '#888',
-                'junior dev': '#1e90ff',
-                'script kitty': '#f7c325',
-                'senior dev': '#a259e6',
-                'grey cat hacker': '#2ea043',
-                'master black cat hacker': '#000'
-            }[rank] || '#fff';
-            let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
-            let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> use -> <- arrow keys to move left and right and ^ up arrow key to jump, Spam any letter key when infront of the computer to code!</span>`;
-            let details = gitGraphResults.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');
-            reportScreen.innerHTML = `<h2>cat -s player_report.txt tutorial.txt > combined.txt</h2><div style='margin:12px 0 18px 0;'>Total Additions: <span style='color:#2ea043; font-size:1.3em;'>${total}</span></div>${details}<div style='margin:18px 0 8px 0;'>Rank:</div>${rankText}<div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
+            let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups || press -> <- to move left and right and ^ to jump, Spam any letter key when infront of the computer to code!</span>`;
+            reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
             // Reset button
             setTimeout(() => {
                 document.getElementById('resetSeriesBtn').onclick = () => {
@@ -1503,51 +1736,55 @@ if (t > 0) {
          );
 
     startButton.addEventListener('click', () => {
-            // Spawn coffee cups for this round
-            spawnCoffeeCups();
-            if (gitGraphResults.length === maxGames) return; // Don't start if series complete
-            // --- FULL GAME RESET ---
-            chaseSuccessCount = 0;
-            gameStarted = true;
-            startScreen.style.display = 'none';
-            gameOverScreen.style.display = 'none';
-            score = 0;
-            deletionsScore = 0;
-            gitAdditions.textContent = 0;
-            gitDeletions.textContent = 0;
-            additionsHistory = [];
-            codeParticles = [];
-            stealthState = 'idle';
-            stealthTimer = 0;
-            nextStealthEvent = Date.now() + 15000 + Math.random() * 15000;
-            doorOpenProgress = 0;
-            footprintsProgress = 0;
-            handsProgress = 0;
-            handsHoldTimer = 0;
-            footstepsBackProgress = 0;
-            doorCloseProgress = 0;
-            lastStealthFrame = Date.now();
-            lastHandsSecond = null;
-            // Reset cat position and state
-            cat.x = 50;
-            cat.y = 500;
-            cat.velocityY = 0;
-            cat.isJumping = false;
-            codeMode = false;
-            // Manually define the shelves
-            shelves = [
-                { x: 100, y: 500, width: 100, height: 20, color: '#4b371C' },
-                { x: 300, y: 400, width: 100, height: 20, color: '#4b371C' },
-                { x: 500, y: 500, width: 100, height: 20, color: '#4b371C' }
-            ];
-            // Clear keys
-            keys = {};
-            // --- Start game loop only if not already running ---
-            if (!gameLoopRunning) {
-                gameLoopRunning = true;
-                requestAnimationFrame(gameLoop);
-            }
-        });
+        // Spawn coffee cups for this round
+        spawnCoffeeCups();
+        if (gitGraphResults.length === maxGames) return; // Don't start if series complete
+        // --- FULL GAME RESET ---
+        chaseSuccessCount = 0;
+        gameStarted = true;
+        startScreen.style.display = 'none';
+        gameOverScreen.style.display = 'none';
+        score = 0;
+        deletionsScore = 0;
+        gitAdditions.textContent = 0;
+        gitDeletions.textContent = 0;
+        additionsHistory = [];
+        codeParticles = [];
+        stealthState = 'idle';
+        stealthTimer = 0;
+        nextStealthEvent = Date.now() + 15000 + Math.random() * 15000;
+        doorOpenProgress = 0;
+        footprintsProgress = 0;
+        handsProgress = 0;
+        handsHoldTimer = 0;
+        footstepsBackProgress = 0;
+        doorCloseProgress = 0;
+        lastStealthFrame = Date.now();
+        lastHandsSecond = null;
+        // Reset cat position and state
+        cat.x = 50;
+        cat.y = 500;
+        cat.velocityY = 0;
+        cat.isJumping = false;
+        codeMode = false;
+        // Manually define the shelves
+        shelves = [
+            { x: 100, y: 480, width: 100, height: 20, color: '#4b371C' },
+            { x: 325, y: 400, width: 100, height: 20, color: '#4b371C' },
+            { x: 580, y: 480, width: 100, height: 20, color: '#4b371C' }
+        ];
+        // Clear keys
+        keys = {};
+        // --- Reset and start timer for the round ---
+        round = 1;
+        currentTime = baseTime;
+        startTimer();
+        // --- Start game loop only if not already running ---
+        if (!gameLoopRunning) {
+            gameLoopRunning = true;
+            requestAnimationFrame(gameLoop);
+        }
+    });
 
         restartButton.addEventListener('click', () => {
             // Show the start screen and hide the game over screen, reset game state
