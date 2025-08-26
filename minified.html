@@ -33,7 +33,7 @@
         }
         updateGitGraphGrid();
         if (gitGraphResults.length === maxGames) {
-            setTimeout(showReport, 1200); // Give a moment to the last game over
+            setTimeout(showReport, 1200);
         }
     }
 
@@ -59,7 +59,7 @@
     const coffeeEmoji = '\u{2615}';
     function spawnCoffeeCups() {
         coffeeCups = [];
-        const numCups = 1 + Math.floor(Math.random() * 3);
+        const numCups = 1 + Math.floor(Math.random() * 3); // 1-3 cups
         let spots = [];
         [...shelves, ...randomShelves].forEach(shelf => {
             spots.push({
@@ -137,7 +137,7 @@
     let meowCount = 0;
     let meowTarget = 0;
     let chaseSuccessCount = 0;
-    let chaseSuccessThreshold = 1 + Math.floor(Math.random() * 3); // 1-3
+    let chaseSuccessThreshold = 1 + Math.floor(Math.random() * 3);
     let handsChaseTimer = 0;
     let handsChaseStart = 0;
     let handsChasePos = { x: 0, y: 0 };
@@ -206,23 +206,29 @@
             isJumping: false,
             color: 'black'
         };
+
+
         const doorX = 30;
         const doorY = 330;
         const doorW = 60;
         const doorH = 140;
+
         const deskWidth = 120;
         const deskHeight = 60;
         const desk = {
             x: canvas.width - deskWidth,
-            y: canvas.height - deskHeight - 20,
+            y: canvas.height - deskHeight - 20, // 20px above bottom
         };
+
         const monitor = {
-            x: 680,
-            y: 300,
+            x: 680, // rightmost shelf x
+            y: 300, // shelf y minus monitor height
             width: 100,
             height: 100,
             label: 'Monitor'
         };
+
+
         let gameStarted = false;
         let codeMode = false;
         let score = 0;
@@ -332,11 +338,11 @@
 
     function spawnRandomShelves() {
         randomShelves = [];
-        const numShelves = Math.floor(Math.random() * 3); // 0-3,
+        const numShelves = Math.floor(Math.random() * 3);
         for (let i = 0; i < numShelves; i++) {
             const x = 80 + Math.random() * 520;
             const y = 180 + Math.random() * 30;
-            const width = 60 + Math.random() * 40; // 60-140px
+            const width = 60 + Math.random() * 40;
             const height = 20;
             randomShelves.push({ x, y, width, height, color: '#7a5c3c' });
         }
@@ -403,8 +409,8 @@
                 {
                     scrubStainProgress = 1;
                     scrubFootstepsProgress = (scrubStainTimer-120)/150;
-                    scrubStainAlpha = 0; // keep stain gone
-                } else if (scrubStainTimer < 330) // smoother door closing (60 frames)
+                    scrubStainAlpha = 0;
+                } else if (scrubStainTimer < 330)
                 {
                     scrubStainAlpha = 0;
                 } else {
@@ -792,7 +798,7 @@
             ctx.restore();
 
             ctx.save();
-            ctx.shadowColor = '#2226'; // less intense shadow
+            ctx.shadowColor = '#2226';
             ctx.shadowBlur = 8;
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 4;
@@ -841,7 +847,7 @@ const hingeLeft = true;
 const hingeX = hingeLeft ? doorX : doorX + doorW;
 const hingeY = doorY + doorH / 2;
 function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
-const t = Math.max(0, Math.min(1, doorOpen)); // 0..1
+const t = Math.max(0, Math.min(1, doorOpen));
 const eased = easeOutCubic(t);
 const maxAngle = Math.PI / 2 * 0.98;
 const angle = (hingeLeft ? -1 : 1) * maxAngle * eased;
@@ -866,7 +872,7 @@ if (t > 0) {
     ctx.fillStyle = '#5a3c1a';
     ctx.fillRect(0, -doorH/2, doorW, doorH);
     ctx.strokeStyle = '#3a220a';
-    ctx.lineWidth = 5 / faceScaleX; // keep stroke visually consistent
+    ctx.lineWidth = 5 / faceScaleX;
     ctx.strokeRect(0, -doorH/2, doorW, doorH);
     const knobLocalX = doorW - 8;
     const knobLocalY = 0;
@@ -874,12 +880,12 @@ if (t > 0) {
     ctx.arc(knobLocalX, knobLocalY, 6, 0, Math.PI * 2);
     ctx.fillStyle = '#eab676';
     ctx.fill();
-    ctx.restore();
+    ctx.restore(); // restore from scale
 
     const sign = hingeLeft ? 1 : -1;
     const absAng = Math.abs(angle);
     if (absAng > 0.01) {
-        const tipX = Math.cos(0) * doorW;
+        const tipX = Math.cos(0) * doorW; // before rotation; we're in rotated coords
         const tipTopY = -doorH/4;
         const tipBottomY = doorH/4;
 
@@ -931,6 +937,7 @@ if (t > 0) {
   ctx.fillStyle = '#eab676';
   ctx.fill();
   ctx.restore();
+}
             ctx.save();
             ctx.shadowBlur = 0;
             ctx.shadowColor = 'transparent';
@@ -964,6 +971,7 @@ if (t > 0) {
                 ctx.stroke();
             }
             ctx.restore();
+
             coffeeCups.forEach(cup => {
                 ctx.save();
                 ctx.globalAlpha = cup.alpha;
@@ -973,6 +981,7 @@ if (t > 0) {
                 ctx.fillText(coffeeEmoji, cup.x + 16, cup.y + 28);
                 ctx.restore();
             });
+
             const steps = 8;
             if (stealthState === 'footprints' || stealthState === 'hands') {
                 for (let i = 0; i < steps; i++) {
@@ -1007,6 +1016,7 @@ if (t > 0) {
                     ctx.restore();
                 }
             }
+
             ctx.font = `${monitor.width}px serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
@@ -1046,6 +1056,7 @@ if (t > 0) {
                 ctx.strokeStyle = '#fff';
                 ctx.strokeRect(chaseBarX, chaseBarY, chaseBarW, chaseBarH);
                 ctx.restore();
+
             }
             if (stealthState === 'hands') {
                 const handY = monitor.y + monitor.height - 10 + 40 * (1 - handsProgress);
@@ -1070,6 +1081,7 @@ if (t > 0) {
                 }
                 ctx.restore();
             }
+
             ctx.save();
             ctx.translate(cat.x + cat.width / 2, cat.y + cat.height / 2);
             if (typeof cat.lastFacing === 'undefined') cat.lastFacing = 1;
@@ -1179,6 +1191,8 @@ if (t > 0) {
             ctx.shadowBlur = 0;
             ctx.shadowOffsetY = 0;
             ctx.restore();
+
+
             codeParticles.forEach(particle => {
                 ctx.save();
                 ctx.shadowBlur = 0;
@@ -1267,7 +1281,7 @@ if (t > 0) {
                     isMeow: true
                 });
                 if (!meowTarget) {
-                    meowTarget = 2 + Math.floor(Math.random() * 6); // 2-7
+                    meowTarget = 2 + Math.floor(Math.random() * 6);
                     meowCount = 0;
                 }
                 meowCount++;
@@ -1296,7 +1310,7 @@ if (t > 0) {
                     isMeow: true
                 });
                 if (!meowTarget) {
-                    meowTarget = 3 + Math.floor(Math.random() * 4); // 3-7
+                    meowTarget = 3 + Math.floor(Math.random() * 4);
                     meowCount = 0;
                 }
                 meowCount++;
@@ -1464,6 +1478,7 @@ if (t > 0) {
             draw();
             requestAnimationFrame(gameLoop);
         }
+
     tutorialButton.addEventListener('click', () => {
         tutorialScreen.style.display = 'flex';
         reportScreen.style.display = 'block';
@@ -1485,15 +1500,16 @@ if (t > 0) {
         }, 100);
     }
      );
+
     startButton.addEventListener('click', () => {
-        spawnRandomShelves();
+        spawnRandomShelves(); // Spawn random shelves each round
         spawnCoffeeCups();
-        if (gitGraphResults.length === maxGames) return;
+        if (gitGraphResults.length === maxGames) return; // Don't start if series complete
         chaseSuccessCount = 0;
         gameStarted = true;
         startScreen.style.display = 'none';
         gameOverScreen.style.display = 'none';
-        scoreboard.style.display = 'block';
+        scoreboard.style.display = 'block'; // Show scoreboard only during game
         score = 0;
         deletionsScore = 0;
         gitAdditions.textContent = 0;
@@ -1529,10 +1545,11 @@ if (t > 0) {
         restartButton.addEventListener('click', () => {
             startScreen.style.display = 'flex';
             gameOverScreen.style.display = 'none';
-            scoreboard.style.display = 'none';
+            scoreboard.style.display = 'none'; // Hide scoreboard on start screen
             updateGitGraphGrid();
             gameLoopRunning = false;
         });
+
     tutorialButton.addEventListener('click', () => {
         tutorialScreen.style.display = 'flex';
         reportScreen.style.display = 'block';
@@ -1554,6 +1571,7 @@ if (t > 0) {
         }, 100);
     }
      );
+
     function showReport() {
         startButton.style.display = 'none';
         reportScreen.style.display = 'block';
