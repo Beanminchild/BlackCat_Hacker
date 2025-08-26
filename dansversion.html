@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title>Black Cat Hacker</title><style>body{margin:0;overflow:hidden;background-color:#222}canvas{background-color:#728C69;display:block;margin:0 auto;position:relative;z-index:1}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10}#startButton,#tutorialButton{padding:20px 40px;font-size:24px;background-color:#555;color:white;border:none;cursor:pointer}#scoreboard{position:absolute;top:20px;right:20px;font-size:24px;color:white}</style></head><body><div id="timer" style="display:none;position:absolute;top:10px;left:10px;font-size:2em;color:#fff;background:rgba(0,0,0,0.7);padding:8px 18px;border-radius:8px;z-index:1000">05:00</div><div id="workday-message" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.85);padding:20px 40px;border-radius:12px;z-index:2000">work day over</div><div id="startScreen" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"><div id="tutorialScreen" style="display:none;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"></div><h1 style="color:white;font-family:sans-serif;font-size:3em;margin-bottom:24px">B|ackC4t_H@cker</h1><div id="gitGraphGrid" style="display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(2,32px);gap:12px;margin-bottom:24px;justify-content:center;align-items:center;width:max-content;margin-left:auto;margin-right:auto"><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:4;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:2"></canvas></div><button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><p><button id="tutorialButton" style="margin:0 auto 0 auto;display:block">How 2 Play</button></p><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gameOverScreen" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gameOverMessage" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="restartButton" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Restart</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas><script>
+<!DOCTYPE html><html><head><title>Black Cat Hacker</title><style>body{margin:0;overflow:hidden;background-color:#222}canvas{background-color:#728C69;display:block;margin:0 auto;position:relative;z-index:1}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10}#startButton,#tutorialButton{padding:20px 40px;font-size:24px;background-color:#555;color:white;border:none;cursor:pointer}#scoreboard{position:absolute;top:20px;right:20px;font-size:24px;color:white;z-index:20}#gitScoreBar{z-index:21;position:relative;}#gitAdditions,#gitDeletions,#gitCube{z-index:22;position:relative;}</style></head><body><div id="timer" style="display:none;position:absolute;top:10px;left:10px;font-size:2em;color:#fff;background:rgba(0,0,0,0.7);padding:8px 18px;border-radius:8px;z-index:1000">05:00</div><div id="workday-message" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.85);padding:20px 40px;border-radius:12px;z-index:2000">work day over</div><div id="startScreen" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"><div id="tutorialScreen" style="display:none;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index=10"></div><h1 style="color:white;font-family:sans-serif;font-size:3em;margin-bottom:24px">B|ackC4t_H@cker</h1><div id="gitGraphGrid" style="display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(2,32px);gap:12px;margin-bottom:24px;justify-content:center;align-items:center;width:max-content;margin-left:auto;margin-right:auto"><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:4;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:2"></canvas></div><button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><p><button id="tutorialButton" style="margin:0 auto 0 auto;display:block">How 2 Play</button></p><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gameOverScreen" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gameOverMessage" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="restartButton" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Restart</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas><script>
     // --- Timer Mechanic ---
     let round = 1;
     let timerInterval = null;
@@ -37,7 +37,7 @@
         updateGitGraphGrid();
         // --- If 7 games played, show report ---
         if (gitGraphResults.length === maxGames) {
-            setTimeout(showReport, 1200); // Give a moment for last game over
+            setTimeout(showReport, 1200); // Give a moment to the last game over
         }
     }
 
@@ -63,7 +63,7 @@
     // Call startTimer() at the start of each round in your game logic.
     // --- Coffee Cup Mechanic ---
     let coffeeCups = [];
-    const coffeeEmoji = '☕';
+    const coffeeEmoji = '\u{2615}';
     function spawnCoffeeCups() {
         coffeeCups = [];
         const numCups = 1 + Math.floor(Math.random() * 3); // 1-3 cups
@@ -167,6 +167,7 @@
     const tutorialScreen = document.getElementById('reportScreen');
     const gitGraphGrid = document.getElementById('gitGraphGrid');
     const reportScreen = document.getElementById('reportScreen');
+    const scoreboard = document.getElementById('scoreboard');
         // --- Draw the grid of 7 gitgraph squares on the home screen ---
         function updateGitGraphGrid() {
             const squares = gitGraphGrid.querySelectorAll('.gitGraphSquare');
@@ -212,6 +213,7 @@
         }
 
         let shelves = [];
+        let randomShelves = [];
 
 
         const cat = {
@@ -294,7 +296,7 @@
         function isCatNearMonitor() {
             // Cat's center x and y
             const catCenterX = cat.x + cat.width / 2;
-            const catCenterY = cat.y + cat.height /2;
+            const catCenterY = cat.y + cat.height / 2;
             // Monitor's center x and y
             const monitorCenterX = monitor.x + monitor.width / 2;
             const monitorCenterY = monitor.y + monitor.height/2
@@ -308,7 +310,6 @@
             { x: 25, y: 315, width: 65, height: 20, color: 'transparent' },
             { x: 200, y: 400, width: 100, height: 20, color: '#4b371C' },
             { x: 325, y: 290, width: 150, height: 20, color: '#4b371C' },
-            { x: 550, y: 220, width: 100, height: 20, color: '#4b371C' },
             { x: 680, y: 380, width: 150, height: 20, color: '#4b371C' },
         ];
 
@@ -319,7 +320,7 @@
                 { text: "cat.jump()", consoleColor: 'white', logColor: 'orange', meowColor: 'white' },
                 { text: "if ( cat.Slep) { slepMore() }", consoleColor: 'white', logColor: 'yellow', meowColor: 'white' },
                 { text: "let catFood = new Food('tuna')", consoleColor: 'white', logColor: 'red', meowColor: 'white' },
-                { text: "cat . play('yarn')", consoleColor: 'white', logColor: 'purple', meowColor: 'white' },
+                { text: "cat.play('yarn')", consoleColor: 'white', logColor: 'purple', meowColor: 'white' },
                 { text: "debug('cat position : ' + cat.x + ', ' + cat.y)", consoleColor: 'white', logColor: 'cyan', meowColor: 'white' },
                 { text: "error ('no more catnip')", consoleColor: 'white', logColor: 'red', meowColor: 'white' },
                 { text: "function headscratch() { return ' purr ' }", consoleColor: 'white', logColor: 'lime', meowColor: 'white' },
@@ -330,8 +331,8 @@
             const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
 
             codeParticles.push({
-                x: monitor.x + monitor.width / 2,
-                y: monitor.y,
+                x: monitor.x - 100, // spawn to the left of the monitor
+                y: monitor.y + monitor.height / 2, // vertically centered on monitor
                 text: snippet.text,
                 consoleColor: snippet.consoleColor,
                 logColor: snippet.logColor,
@@ -368,8 +369,23 @@
         handsHoldTimer = 0;
     }
 
+    function spawnRandomShelves() {
+        randomShelves = [];
+        const numShelves = Math.floor(Math.random() * 3); // 0-3,
+        for (let i = 0; i < numShelves; i++) {
+            // Define allowed x/y ranges (avoid overlapping desk/door/monitor)
+            // Example: x: 80 to 600, y: 120 to 500
+            const x = 80 + Math.random() * 520;
+            const y = 180 + Math.random() * 30;
+            const width = 60 + Math.random() * 40; // 60-140px
+            const height = 20;
+            randomShelves.push({ x, y, width, height, color: '#7a5c3c' });
+        }
+    }
+
     function update() {
             // Update coffee cups
+            let cupsToRemove = [];
             coffeeCups.forEach((cup, i) => {
                 if (cup.airborne) {
                     cup.x += cup.vx;
@@ -387,6 +403,7 @@
                         if (Math.abs(cup.vy) < 1.2) {
                             cup.vy = 0;
                             cup.airborne = false;
+                            cupsToRemove.push(i); // Mark for removal
                         }
                     }
                     // Shelf collision
@@ -404,13 +421,13 @@
                             if (Math.abs(cup.vy) < 1.2) {
                                 cup.vy = 0;
                                 cup.airborne = false;
+                                cupsToRemove.push(i); // Mark for removal
                             }
                         }
                     });
                     // If cup falls off desk/screen, trigger scrubStain at last position
                     if ((cup.y > canvas.height - 10) && !scrubStainActive) {
                         triggerScrubStain(cup.x + 10, cup.y + 10);
-
                     }
                     // Fade out if off screen
                     if (cup.x < -40 || cup.x > canvas.width + 40 || cup.y > canvas.height + 40) {
@@ -419,6 +436,11 @@
                     }
                 }
             });
+            // Remove cups that landed
+            if (cupsToRemove.length > 0) {
+                // Remove from highest index to lowest to avoid index shift
+                cupsToRemove.sort((a, b) => b - a).forEach(idx => coffeeCups.splice(idx, 1));
+            }
 
             if (!gameStarted) return;
 
@@ -538,7 +560,7 @@
                         let handsSeconds = Math.floor(handsHoldTimer / 1000);
                         if (lastHandsSecond !== handsSeconds) {
                             lastHandsSecond = handsSeconds;
-                            animateDeletionsScore(1);
+                            animateDeletionsScore(5);
                         }
                         // --- GAME OVER if cat is in front of monitor when hands are there ---
                         if (isCatNearMonitor()) {
@@ -589,7 +611,7 @@
             }
 
             // Shelf collision detection
-            shelves.forEach(shelf => {
+            shelves.concat(randomShelves).forEach(shelf => {
                 if (cat.x < shelf.x + shelf.width &&
                     cat.x + cat.width > shelf.x &&
                     cat.y + cat.height > shelf.y &&
@@ -617,7 +639,7 @@
             if (cat.x + cat.width > canvas.width) {
                 cat.x = canvas.width - cat.width;
             }
-<!--
+
 
             // Update code particles and meow particles
             codeParticles.forEach((particle, index) => {
@@ -1077,7 +1099,11 @@ if (t > 0) {
                 ctx.fillStyle = shelf.color;
                 ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
             });
-
+            // Draw random shelves
+            randomShelves.forEach(shelf => {
+                ctx.fillStyle = shelf.color;
+                ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
+            });
             // Draw little black legs from the furthest right shelf to the desk
             const rightShelf = shelves.reduce((a, b) => (a.x > b.x ? a : b));
             const numLegs = 2;
@@ -1373,7 +1399,7 @@ if (t > 0) {
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'bottom';
                     ctx.strokeStyle = '#fff';
-                    ctx.lineWidth = 3;
+                    ctx.lineWidth = 1;
                     ctx.strokeText(particle.text, particle.x, particle.y);
                     ctx.fillStyle = '#4ec9f0';
                     ctx.fillText(particle.text, particle.x, particle.y);
@@ -1382,7 +1408,7 @@ if (t > 0) {
                     // Use regex to split and keep delimiters, including whitespace
                     const words = particle.text.match(/(\s+|[a-zA-Z_][a-zA-Z0-9_]*|\d+|[^\s\w])/g) || [];
                     let xOffset = 10;
-                    const letterSpacing = particle.size*.2
+                    const letterSpacing = particle.size
                     words.forEach(word => {
                         let color = 'white';
                         if (word === 'console') color = particle.consoleColor;
@@ -1394,7 +1420,7 @@ if (t > 0) {
                         ctx.fillText(word, Math.round(particle.x + xOffset), particle.y);
                         let width = ctx.measureText(word).width;
                         // Always add spacing after each token
-                        xOffset += width + letterSpacing*4;
+                        xOffset += width + letterSpacing;
                     });
                 }
                 ctx.globalAlpha = 1;
@@ -1403,6 +1429,11 @@ if (t > 0) {
         }
 
         let keys = {};
+        let scoredKeys = {};
+        let lastKeyPressTime = 1;
+        let comboMultiplier = 1;
+        const comboThreshold = 400; // ms
+        const comboMax = 7;
 
         // For tip-tapping animation, track if user is typing
         let tipTapping = false;
@@ -1549,6 +1580,7 @@ if (t > 0) {
             // Hide start button, show report
             startButton.style.display = 'none';
             reportScreen.style.display = 'block';
+            scoreboard.style.display = 'none'; // Hide scoreboard on report screen
             // Calculate total additions
             let total = gitGraphResults.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);
             let rank = getRank(total);
@@ -1639,43 +1671,66 @@ if (t > 0) {
         let gameLoopRunning = false;
         function gameLoop() {
             if (!gameLoopRunning) return;
+            // --- Multi-key scoring logic with combo ---
+    if (codeMode) {
+        const now = Date.now();
+        Object.keys(keys).forEach(key => {
+            if (keys[key] && key.match(/^[a-z]$/) && !scoredKeys[key]) {
+                // Combo logic
+                if (now - lastKeyPressTime < comboThreshold) {
+                    comboMultiplier = Math.min(comboMultiplier + 1, comboMax);
+                } else {
+                    comboMultiplier = 1;
+                }
+                lastKeyPressTime = now;
+                generateCodeParticle();
+                animateScore(comboMultiplier);
+                scoredKeys[key] = true;
+                tipTapping = true;
+                clearTimeout(tipTapTimeout);
+                tipTapTimeout = setTimeout(() => { tipTapping = false; }, 120);
+            }
+        });
+    }
             update();
             draw();
             requestAnimationFrame(gameLoop);
         }
 
-        tutorialButton.addEventListener('click', () => {
-            tutorialScreen.style.display = 'flex';
-            reportScreen.style.display = 'block';
-            let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups || press -> <- to move left and right and ^ to jump, Spam any letter key when infront of the computer to code!</span>`;
-            reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
-            // Reset button
-            setTimeout(() => {
-                document.getElementById('resetSeriesBtn').onclick = () => {
-                    gitGraphResults = [];
-                    updateGitGraphGrid();
-                    reportScreen.style.display = 'none';
-                    startButton.style.display = 'inline-block';
-                };
-            }, 100);
-            setTimeout(() => {
-                document.getElementById('closeBtn').onclick = () => {
-                    reportScreen.style.display = 'none';
-                    startButton.style.display = 'inline-block';
-                };
-            }, 100);
-        }
-         );
+    tutorialButton.addEventListener('click', () => {
+        tutorialScreen.style.display = 'flex';
+        reportScreen.style.display = 'block';
+        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups || press -> <- to move left and right and ^ to jump, Spam any letter key when infront of the computer to code!</span>`;
+        reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
+        // Reset button
+        setTimeout(() => {
+            document.getElementById('resetSeriesBtn').onclick = () => {
+                gitGraphResults = [];
+                updateGitGraphGrid();
+                reportScreen.style.display = 'none';
+                startButton.style.display = 'inline-block';
+            };
+        }, 100);
+        setTimeout(() => {
+            document.getElementById('closeBtn').onclick = () => {
+                reportScreen.style.display = 'none';
+                startButton.style.display = 'inline-block';
+            };
+        }, 100);
+    }
+     );
 
     startButton.addEventListener('click', () => {
         // Spawn coffee cups for this round
         spawnCoffeeCups();
+        spawnRandomShelves(); // Spawn random shelves each round
         if (gitGraphResults.length === maxGames) return; // Don't start if series complete
         // --- FULL GAME RESET ---
         chaseSuccessCount = 0;
         gameStarted = true;
         startScreen.style.display = 'none';
         gameOverScreen.style.display = 'none';
+        scoreboard.style.display = 'block'; // Show scoreboard only during game
         score = 0;
         deletionsScore = 0;
         gitAdditions.textContent = 0;
@@ -1716,14 +1771,69 @@ if (t > 0) {
             // Show the start screen and hide the game over screen, reset game state
             startScreen.style.display = 'flex';
             gameOverScreen.style.display = 'none';
+            scoreboard.style.display = 'none'; // Hide scoreboard on start screen
             updateGitGraphGrid();
             // Stop the game loop if running
             gameLoopRunning = false;
             // Optionally reset cat position and other variables if needed
         });
 
-    // On load, always update grid
+    tutorialButton.addEventListener('click', () => {
+        tutorialScreen.style.display = 'flex';
+        reportScreen.style.display = 'block';
+        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups || press -> <- to move left and right and ^ to jump, Spam any letter key when infront of the computer to code!</span>`;
+        reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
+        // Reset button
+        setTimeout(() => {
+            document.getElementById('resetSeriesBtn').onclick = () => {
+                gitGraphResults = [];
+                updateGitGraphGrid();
+                reportScreen.style.display = 'none';
+                startButton.style.display = 'inline-block';
+            };
+        }, 100);
+        setTimeout(() => {
+            document.getElementById('closeBtn').onclick = () => {
+                reportScreen.style.display = 'none';
+                startButton.style.display = 'inline-block';
+            };
+        }, 100);
+    }
+     );
+
+    function showReport() {
+        // Hide start button, show report
+        startButton.style.display = 'none';
+        reportScreen.style.display = 'block';
+        scoreboard.style.display = 'none'; // Hide scoreboard on report screen
+        // Calculate total additions
+        let total = gitGraphResults.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);
+        let rank = getRank(total);
+        let rankColor = {
+            'kode kitten': '#888',
+            'junior dev': '#1e90ff',
+            'script kitty': '#f7c325',
+            'senior dev': '#a259e6',
+            'grey cat hacker': '#2ea043',
+            'master black cat hacker': '#000'
+        }[rank] || '#fff';
+        let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
+        let details = gitGraphResults.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');
+        reportScreen.innerHTML = `<h2>7 Games Complete!</h2><div style='margin:12px 0 18px 0;'>Total Additions: <span style='color:#2ea043; font-size:1.3em;'>${total}</span></div>${details}<div style='margin:18px 0 8px 0;'>Rank:</div>${rankText}<div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Play Again</button></div>`;
+        // Reset button
+        setTimeout(() => {
+            document.getElementById('resetSeriesBtn').onclick = () => {
+                gitGraphResults = [];
+                updateGitGraphGrid();
+                reportScreen.style.display = 'none';
+                startButton.style.display = 'inline-block';
+            };
+        }, 100);
+    }
+
+    // On load, always update grid and hide scoreboard
     updateGitGraphGrid();
+    scoreboard.style.display = 'none';
     // Stop any game loop on page load
     gameLoopRunning = false;
 </script>
