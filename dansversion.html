@@ -2,7 +2,7 @@
     // --- Timer Mechanic ---
     let round = 1;
     let timerInterval = null;
-    let baseTime = 100; // 5 minutes in seconds
+    let baseTime = 120; // 5 minutes in seconds
     let timeDecrease = 20; // seconds decrease per round
     let currentTime = baseTime;
 
@@ -69,7 +69,7 @@
         const numCups = 1 + Math.floor(Math.random() * 3); // 1-3 cups
         let spots = [];
         // Only shelf spots (no desk spots)
-        shelves.forEach(shelf => {
+        [...shelves, ...randomShelves].forEach(shelf => {
             spots.push({
                 x: shelf.x + 20 + Math.random() * (shelf.width - 40),
                 y: shelf.y - 18 + Math.random() * 4
@@ -117,12 +117,12 @@
     let gitGraphResults = [];
     const maxGames = 7;
     function getRank(total) {
-        if (total >= 7000) return 'master black cat hacker';
-        if (total >= 5000) return 'grey cat hacker';
-        if (total >= 3500) return 'senior dev';
-        if (total >= 2000) return 'script kitty';
-        if (total >= 1000) return 'junior dev';
-        return 'kode kitten';
+        if (total >= 7000) return 'Master B|ckc4t_h@cker';
+        if (total >= 5000) return 'Grey Cat Hacker';
+        if (total >= 3500) return 'Pythonista';
+        if (total >= 2000) return 'Script kitty';
+        if (total >= 1000) return 'Copy-pasta cat';
+        return 'Hello World!';
     }
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -140,7 +140,7 @@
     let scrubStainX = null;
     let scrubStainY = null;
     let stealthTimer = 0;
-    let nextStealthEvent = Date.now() + 15000 + Math.random() * 15000;
+    let nextStealthEvent = Date.now() + 3000 + Math.random() * 5000 //
     let doorOpenProgress = 0; // 0=closed, 1=open
     let footprintsProgress = 0; // 0=start, 1=at desk
     let handsProgress = 0; // 0=hidden, 1=fully shown
@@ -310,7 +310,7 @@
             { x: 25, y: 315, width: 65, height: 20, color: 'transparent' },
             { x: 200, y: 400, width: 100, height: 20, color: '#4b371C' },
             { x: 325, y: 290, width: 150, height: 20, color: '#4b371C' },
-            { x: 680, y: 380, width: 150, height: 20, color: '#4b371C' },
+            { x: 670, y: 380, width: 150, height: 20, color: '#4b371C' },
         ];
 
         function generateCodeParticle(score) {
@@ -465,7 +465,7 @@
                     scrubStainActive = false;
                     scrubFootstepsProgress = 0;
                     stealthState = 'idle';
-                    nextStealthEvent = Date.now() + 15000 + Math.random() * 15000;
+                    nextStealthEvent = Date.now() + 3000 + Math.random() * 4000;
                 }
                 // Do NOT return here; allow rest of update to run so game continues
             }
@@ -584,7 +584,7 @@
                     if (doorCloseProgress >= 1) {
                         doorCloseProgress = 1;
                         stealthState = 'idle';
-                        nextStealthEvent = Date.now() + 15000 + Math.random() * 15000;
+                        nextStealthEvent = Date.now() + 4000 + Math.random() * 3000;
                     }
                 }
             }
@@ -1514,14 +1514,14 @@ if (t > 0) {
                 });
                 // Start meow count if not started
                 if (!meowTarget) {
-                    meowTarget = 3 + Math.floor(Math.random() * 10); // 3-12
+                    meowTarget = 3 + Math.floor(Math.random() * 4); // 3-7
                     meowCount = 0;
                 }
                 meowCount++;
                 // If reached target, trigger hands chase
                 if (meowCount >= meowTarget) {
 
-                    ;
+
                     nextStealthEvent = Date.now()
                 }
             }
@@ -1721,8 +1721,8 @@ if (t > 0) {
 
     startButton.addEventListener('click', () => {
         // Spawn coffee cups for this round
-        spawnCoffeeCups();
         spawnRandomShelves(); // Spawn random shelves each round
+        spawnCoffeeCups();
         if (gitGraphResults.length === maxGames) return; // Don't start if series complete
         // --- FULL GAME RESET ---
         chaseSuccessCount = 0;
@@ -1738,7 +1738,7 @@ if (t > 0) {
         codeParticles = [];
         stealthState = 'idle';
         stealthTimer = 0;
-        nextStealthEvent = Date.now() + 15000 + Math.random() * 15000;
+        nextStealthEvent = Date.now() + 3000 + Math.random() * 5000;
         doorOpenProgress = 0;
         footprintsProgress = 0;
         handsProgress = 0;
