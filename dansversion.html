@@ -859,6 +859,8 @@
             ctx.fillStyle = windowGrad;
             ctx.fillRect(windowX, windowY, 140, 80);
 
+
+
             // --- Clouds ---
             if (!draw.clouds) {
                 draw.clouds = [];
@@ -885,6 +887,7 @@
                         c.speed = 0.15 + Math.random()*0.12;
                     }
                 }
+
                 // Draw cloud (simple ellipses)
                 ctx.save();
                 ctx.globalAlpha = 0.7;
@@ -1358,6 +1361,7 @@ if (t > 0) {
                 ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
+                ctx.restore(); // Restore main cat transform after back view
             } else {
                 // --- SIDEWAYS VIEW ---
                 // Body (sideways oval)
