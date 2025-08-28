@@ -775,6 +775,20 @@
     }
 
     function draw() {
+            // Reset any unbalanced context states for MacOS Strict stack management
+            let resetCount = 0;
+            while (resetCount < 100) { // Safety limit
+                try {
+                    ctx.restore();
+                    resetCount++;
+                } catch (e) { // reset until stack is empty and throws stack underflow or empty the save stack by 100 per frame
+                    break;
+                }
+            }
+
+            // Start with a fresh state
+            ctx.save();
+
             // --- BACKGROUND LAYERS ---
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             // Draw wall (upper background)
@@ -810,7 +824,7 @@
             ctx.globalAlpha = 0.85;
             ctx.fillStyle = '#4b371c';
             ctx.beginPath();
-            //ctx.ellipse(canvas.width / 2, desk.y + 8, canvas.width * 0.48 * 0.98, 13, 0, 0, Math.PI * 2);
+            //ctx.ellipse(canvas.width / 2, desk.y + 8, canvas.width * 0.48 * 0.98, 13, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
 
@@ -858,8 +872,6 @@
             windowGrad.addColorStop(1, '#fff');
             ctx.fillStyle = windowGrad;
             ctx.fillRect(windowX, windowY, 140, 80);
-
-
 
             // --- Clouds ---
             if (!draw.clouds) {
