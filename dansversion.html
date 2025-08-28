@@ -775,13 +775,13 @@
     }
 
     function draw() {
-            // Reset any unbalanced context states
+            // Reset any unbalanced context states for MacOS Strict stack management
             let resetCount = 0;
             while (resetCount < 100) { // Safety limit
                 try {
                     ctx.restore();
                     resetCount++;
-                } catch (e) {
+                } catch (e) { // reset until stack is empty and throws stack underflow or empty the save stack by 100 per frame
                     break;
                 }
             }
