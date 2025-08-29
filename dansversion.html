@@ -896,7 +896,7 @@
                         c.x = windowX-40;
                         c.y = windowY + 10 + Math.random()*50;
                         c.size = 18 + Math.random()*12;
-                        c.speed = 0.15 + Math.random()*0.12;
+                        c.speed = 0.15 + Math.random() * 0.12;
                     }
                 }
 
@@ -1327,20 +1327,42 @@ if (t > 0) {
                     ctx.save();
                     // Brim
                     ctx.beginPath();
-                    ctx.ellipse(0, -15, 12, 4, 0, 0, Math.PI * 2);
+                    ctx.ellipse(0, -15, 14, 5, 0, 0, Math.PI * 2);
                     ctx.fillStyle = '#111';
                     ctx.globalAlpha = 0.95;
                     ctx.fill();
-                    // Crown
+
+                    // Crown - more fedora-like with tapered shape and pinch
                     ctx.beginPath();
-                    ctx.rect(-7, -25, 14, 10);
+                    // Left side of crown
+                    ctx.moveTo(-7, -15);
+                    ctx.lineTo(-6, -25);
+                    // Top with pinch/dent
+                    ctx.lineTo(-2, -27);
+                    ctx.lineTo(0, -26);
+                    ctx.lineTo(2, -27);
+                    // Right side
+                    ctx.lineTo(6, -25);
+                    ctx.lineTo(7, -15);
+                    ctx.closePath();
                     ctx.fillStyle = '#111';
                     ctx.fill();
+
                     // Hat band
                     ctx.beginPath();
                     ctx.rect(-7, -21, 14, 3);
                     ctx.fillStyle = '#444';
                     ctx.fill();
+
+                    // Hat band decoration (small accent)
+                    ctx.beginPath();
+                    ctx.moveTo(5, -19.5);
+                    ctx.lineTo(7, -19.5);
+                    ctx.lineTo(6, -21);
+                    ctx.closePath();
+                    ctx.fillStyle = '#777';
+                    ctx.fill();
+
                     ctx.restore();
                 }
                 // Tail (back, up)
@@ -1385,33 +1407,7 @@ if (t > 0) {
                 ctx.beginPath();
                 ctx.ellipse(16, -2, 7, 8, Math.PI / 16, 0, Math.PI * 2);
                 ctx.fill();
-                // --- Fedora (sideways hat, match back view style, lowered to cover ears) ---
-                if (catWearsFedora) {
-                    ctx.save();
-                    // Flip hat for left/right facing
-                    let hatOffsetX = cat.lastFacing === 1 ? 16 : 16;
-                    let hatOffsetY = -4; // Lowered from -10 to -4 to cover ears
-                    ctx.translate(hatOffsetX, hatOffsetY);
-                    ctx.scale(cat.lastFacing, 1);
-                    // Brim (sideways, match back view)
-                    ctx.beginPath();
-                    ctx.ellipse(0, -7, 12, 4, Math.PI / 16, 0, Math.PI * 2);
-                    ctx.fillStyle = '#111';
-                    ctx.globalAlpha = 0.95;
-                    ctx.fill();
-                    // Crown (sideways, rectangle like back view)
-                    ctx.beginPath();
-                    ctx.rect(-7, -17, 14, 10);
-                    ctx.fillStyle = '#111';
-                    ctx.globalAlpha = 1.0;
-                    ctx.fill();
-                    // Hat band (sideways, thin rectangle)
-                    ctx.beginPath();
-                    ctx.rect(-7, -13, 14, 3);
-                    ctx.fillStyle = '#444';
-                    ctx.fill();
-                    ctx.restore();
-                }
+
                 // Ears (sideways, lowered to sit on head)
                 ctx.beginPath();
                 ctx.moveTo(21, -4);
@@ -1423,6 +1419,55 @@ if (t > 0) {
                 ctx.strokeStyle = '#222';
                 ctx.lineWidth = 3;
                 ctx.stroke();
+
+                // --- Fedora (sideways hat, match back view style, lowered to cover ears) ---
+                if (catWearsFedora) {
+                    ctx.save();
+                    // Flip hat for left/right facing
+                    let hatOffsetX = cat.lastFacing === 1 ? 16 : 16;
+                    let hatOffsetY = -4; // Lowered from -10 to -4 to cover ears
+                    ctx.translate(hatOffsetX, hatOffsetY);
+                    ctx.scale(cat.lastFacing, 1);
+
+                    // Brim (sideways, match back view)
+                    ctx.beginPath();
+                    ctx.ellipse(0, -7, 14, 5, Math.PI / 16, 0, Math.PI * 2);
+                    ctx.fillStyle = '#111';
+                    ctx.globalAlpha = 0.95;
+                    ctx.fill();
+
+                    // Crown - more fedora-like with tapered shape and pinch
+                    ctx.beginPath();
+                    // Create crown with pinch (from side view)
+                    ctx.moveTo(-7, -9);      // Bottom left
+                    ctx.lineTo(-6, -17);     // Top left, tapered in
+                    ctx.lineTo(-2, -19);     // First pinch point
+                    ctx.lineTo(0, -18);      // Center dip
+                    ctx.lineTo(2, -19);      // Second pinch point
+                    ctx.lineTo(6, -17);      // Top right, tapered in
+                    ctx.lineTo(7, -9);       // Bottom right
+                    ctx.closePath();
+                    ctx.fillStyle = '#111';
+                    ctx.fill();
+
+                    // Hat band (sideways, thin rectangle)
+                    ctx.beginPath();
+                    ctx.rect(-7, -13, 14, 3);
+                    ctx.fillStyle = '#444';
+                    ctx.fill();
+
+                    // Hat band decoration (small accent)
+                    ctx.beginPath();
+                    ctx.moveTo(5, -11.5);
+                    ctx.lineTo(7, -11.5);
+                    ctx.lineTo(6, -13);
+                    ctx.closePath();
+                    ctx.fillStyle = '#777';
+                    ctx.fill();
+
+                    ctx.restore();
+                }
+
                 // Eye (single, side profile)
                 ctx.beginPath();
                 ctx.ellipse(19, -4, 1.5, 2, 0, 0, Math.PI * 2);
