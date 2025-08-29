@@ -804,6 +804,8 @@
 
             // Draw floorboard (horizontal plank)
             ctx.save();
+            ctx.shadowColor = '#222a'; // dark shadow color
+            ctx.shadowBlur = 20;       // blur radius for soft shadow
             ctx.fillStyle = '#6b4a2b';
             ctx.fillRect(0, floorboardY - 8, canvas.width, 16);
             ctx.restore();
@@ -1024,7 +1026,7 @@ if (t > 0) {
     ctx.fillStyle = '#5a3c1a';
     ctx.fillRect(0, -doorH/2, doorW, doorH);
     ctx.strokeStyle = '#3a220a';
-    ctx.lineWidth = 5 / faceScaleX; // keep stroke visually consistent
+    ctx.lineWidth = 5 ;
     ctx.strokeRect(0, -doorH/2, doorW, doorH);
     // knob drawn in face local coords; adjust for scale
     const knobLocalX = doorW - 8;
@@ -1069,21 +1071,21 @@ if (t > 0) {
 
     ctx.restore();
 
-    // light beam: compute world coords of door tip
-    const worldAngle = angle; // rotation applied about hinge
-    const tipWorldX = hingeX + Math.cos(worldAngle) * doorW * (1);
-    const tipWorldY = hingeY + Math.sin(worldAngle) * doorW * (1);
+<!--    // light beam: compute world coords of door tip-->
+<!--    const worldAngle = angle; // rotation applied about hinge-->
+<!--    const tipWorldX = hingeX + Math.cos(worldAngle) * doorW * (1);-->
+<!--    const tipWorldY = hingeY + Math.sin(worldAngle) * doorW * (1);-->
 
     ctx.save();
     ctx.globalAlpha = 0.5 * eased;
-    const grad = ctx.createLinearGradient(tipWorldX, tipWorldY, tipWorldX + 200, tipWorldY + 80);
-    grad.addColorStop(0, 'rgba(255,255,180,0.7)');
-    grad.addColorStop(1, 'rgba(255,255,180,0)');
-    ctx.fillStyle = grad;
+<!--    //const grad = ctx.createLinearGradient(tipWorldX, tipWorldY, tipWorldX + 200, tipWorldY + 80);-->
+<!--    grad.addColorStop(0, 'rgba(255,255,180,0.7)');-->
+<!--    grad.addColorStop(1, 'rgba(255,255,180,0)');-->
+<!--    ctx.fillStyle = grad;-->
     ctx.beginPath();
     ctx.moveTo(hingeX, hingeY);
-    ctx.lineTo(tipWorldX + 200, tipWorldY - 30);
-    ctx.lineTo(tipWorldX + 200, tipWorldY + 150);
+<!--    ctx.lineTo(tipWorldX + 200, tipWorldY - 30);-->
+<!--    ctx.lineTo(tipWorldX + 200, tipWorldY + 150);-->
     ctx.closePath();
     ctx.fill();
     ctx.restore();
