@@ -3,13 +3,13 @@
   <input type="checkbox" id="fedoraCheckbox" style="margin-right: 10px;" checked>
   <label for="fedoraCheckbox" style="color: white; font-family: sans-serif;">Cat wears Fedora</label>
 </div>
-<button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><p><button id="tutorialButton" style="margin:0 auto 0 auto;display:block">How 2 Play</button></p><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gameOverScreen" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gameOverMessage" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="restartButton" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Restart</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas><script>
+<button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><p><button id="tutorialButton" style="margin:0 auto 0 auto;display:block">How 2 Play</button></p><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gameOverScreen" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gameOverMessage" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="restartButton" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Next Day</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas><script>
     let catWearsFedora = true;
     // --- Timer Mechanic ---
     let round = 1;
     let timerInterval = null;
-    let baseTime = 120; // 5 minutes in seconds
-    let timeDecrease = 20; // seconds decrease per round
+    let baseTime = 100 + Math.random() * 20; // random between 90 and 120 seconds
+    baseTime = Math.floor(baseTime); // round down to whole seconds if needed
     let currentTime = baseTime;
 
     function formatTime(secs) {
@@ -23,7 +23,7 @@
     }
 
     function showTimer(show) {
-        document.getElementById('timer').style.display = show ? 'block' : 'none';
+        //document.getElementById('timer').style.display = show ? 'block' : 'none';
     }
 
     function endRound() {
@@ -61,7 +61,6 @@
 
     function nextRound() {
         round++;
-        currentTime = Math.max(20, baseTime - (round - 1) * timeDecrease);
         startTimer();
     }
 
@@ -336,7 +335,7 @@
             const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
 
             codeParticles.push({
-                x: monitor.x - 100, // spawn to the left of the monitor
+                x: monitor.x - 300, // spawn to the left of the monitor
                 y: monitor.y + monitor.height / 2, // vertically centered on monitor
                 text: snippet.text,
                 consoleColor: snippet.consoleColor,
@@ -804,6 +803,8 @@
 
             // Draw floorboard (horizontal plank)
             ctx.save();
+            ctx.shadowColor = '#222a'; // dark shadow color
+            ctx.shadowBlur = 20;       // blur radius for soft shadow
             ctx.fillStyle = '#6b4a2b';
             ctx.fillRect(0, floorboardY - 8, canvas.width, 16);
             ctx.restore();
@@ -896,7 +897,7 @@
                         c.x = windowX-40;
                         c.y = windowY + 10 + Math.random()*50;
                         c.size = 18 + Math.random()*12;
-                        c.speed = 0.15 + Math.random()*0.12;
+                        c.speed = 0.15 + Math.random() * 0.12;
                     }
                 }
 
@@ -1024,7 +1025,7 @@ if (t > 0) {
     ctx.fillStyle = '#5a3c1a';
     ctx.fillRect(0, -doorH/2, doorW, doorH);
     ctx.strokeStyle = '#3a220a';
-    ctx.lineWidth = 5 / faceScaleX; // keep stroke visually consistent
+    ctx.lineWidth = 5 ;
     ctx.strokeRect(0, -doorH/2, doorW, doorH);
     // knob drawn in face local coords; adjust for scale
     const knobLocalX = doorW - 8;
@@ -1069,21 +1070,21 @@ if (t > 0) {
 
     ctx.restore();
 
-    // light beam: compute world coords of door tip
-    const worldAngle = angle; // rotation applied about hinge
-    const tipWorldX = hingeX + Math.cos(worldAngle) * doorW * (1);
-    const tipWorldY = hingeY + Math.sin(worldAngle) * doorW * (1);
+<!--    // light beam: compute world coords of door tip-->
+<!--    const worldAngle = angle; // rotation applied about hinge-->
+<!--    const tipWorldX = hingeX + Math.cos(worldAngle) * doorW * (1);-->
+<!--    const tipWorldY = hingeY + Math.sin(worldAngle) * doorW * (1);-->
 
     ctx.save();
     ctx.globalAlpha = 0.5 * eased;
-    const grad = ctx.createLinearGradient(tipWorldX, tipWorldY, tipWorldX + 200, tipWorldY + 80);
-    grad.addColorStop(0, 'rgba(255,255,180,0.7)');
-    grad.addColorStop(1, 'rgba(255,255,180,0)');
-    ctx.fillStyle = grad;
+<!--    //const grad = ctx.createLinearGradient(tipWorldX, tipWorldY, tipWorldX + 200, tipWorldY + 80);-->
+<!--    grad.addColorStop(0, 'rgba(255,255,180,0.7)');-->
+<!--    grad.addColorStop(1, 'rgba(255,255,180,0)');-->
+<!--    ctx.fillStyle = grad;-->
     ctx.beginPath();
     ctx.moveTo(hingeX, hingeY);
-    ctx.lineTo(tipWorldX + 200, tipWorldY - 30);
-    ctx.lineTo(tipWorldX + 200, tipWorldY + 150);
+<!--    ctx.lineTo(tipWorldX + 200, tipWorldY - 30);-->
+<!--    ctx.lineTo(tipWorldX + 200, tipWorldY + 150);-->
     ctx.closePath();
     ctx.fill();
     ctx.restore();
@@ -1327,20 +1328,42 @@ if (t > 0) {
                     ctx.save();
                     // Brim
                     ctx.beginPath();
-                    ctx.ellipse(0, -15, 12, 4, 0, 0, Math.PI * 2);
+                    ctx.ellipse(0, -15, 14, 5, 0, 0, Math.PI * 2);
                     ctx.fillStyle = '#111';
                     ctx.globalAlpha = 0.95;
                     ctx.fill();
-                    // Crown
+
+                    // Crown - more fedora-like with tapered shape and pinch
                     ctx.beginPath();
-                    ctx.rect(-7, -25, 14, 10);
+                    // Left side of crown
+                    ctx.moveTo(-7, -15);
+                    ctx.lineTo(-6, -25);
+                    // Top with pinch/dent
+                    ctx.lineTo(-2, -27);
+                    ctx.lineTo(0, -26);
+                    ctx.lineTo(2, -27);
+                    // Right side
+                    ctx.lineTo(6, -25);
+                    ctx.lineTo(7, -15);
+                    ctx.closePath();
                     ctx.fillStyle = '#111';
                     ctx.fill();
+
                     // Hat band
                     ctx.beginPath();
                     ctx.rect(-7, -21, 14, 3);
                     ctx.fillStyle = '#444';
                     ctx.fill();
+
+                    // Hat band decoration (small accent)
+                    ctx.beginPath();
+                    ctx.moveTo(5, -19.5);
+                    ctx.lineTo(7, -19.5);
+                    ctx.lineTo(6, -21);
+                    ctx.closePath();
+                    ctx.fillStyle = '#777';
+                    ctx.fill();
+
                     ctx.restore();
                 }
                 // Tail (back, up)
@@ -1385,33 +1408,7 @@ if (t > 0) {
                 ctx.beginPath();
                 ctx.ellipse(16, -2, 7, 8, Math.PI / 16, 0, Math.PI * 2);
                 ctx.fill();
-                // --- Fedora (sideways hat, match back view style, lowered to cover ears) ---
-                if (catWearsFedora) {
-                    ctx.save();
-                    // Flip hat for left/right facing
-                    let hatOffsetX = cat.lastFacing === 1 ? 16 : 16;
-                    let hatOffsetY = -4; // Lowered from -10 to -4 to cover ears
-                    ctx.translate(hatOffsetX, hatOffsetY);
-                    ctx.scale(cat.lastFacing, 1);
-                    // Brim (sideways, match back view)
-                    ctx.beginPath();
-                    ctx.ellipse(0, -7, 12, 4, Math.PI / 16, 0, Math.PI * 2);
-                    ctx.fillStyle = '#111';
-                    ctx.globalAlpha = 0.95;
-                    ctx.fill();
-                    // Crown (sideways, rectangle like back view)
-                    ctx.beginPath();
-                    ctx.rect(-7, -17, 14, 10);
-                    ctx.fillStyle = '#111';
-                    ctx.globalAlpha = 1.0;
-                    ctx.fill();
-                    // Hat band (sideways, thin rectangle)
-                    ctx.beginPath();
-                    ctx.rect(-7, -13, 14, 3);
-                    ctx.fillStyle = '#444';
-                    ctx.fill();
-                    ctx.restore();
-                }
+
                 // Ears (sideways, lowered to sit on head)
                 ctx.beginPath();
                 ctx.moveTo(21, -4);
@@ -1423,6 +1420,55 @@ if (t > 0) {
                 ctx.strokeStyle = '#222';
                 ctx.lineWidth = 3;
                 ctx.stroke();
+
+                // --- Fedora (sideways hat, match back view style, lowered to cover ears) ---
+                if (catWearsFedora) {
+                    ctx.save();
+                    // Flip hat for left/right facing
+                    let hatOffsetX = cat.lastFacing === 1 ? 16 : 16;
+                    let hatOffsetY = -4; // Lowered from -10 to -4 to cover ears
+                    ctx.translate(hatOffsetX, hatOffsetY);
+                    ctx.scale(cat.lastFacing, 1);
+
+                    // Brim (sideways, match back view)
+                    ctx.beginPath();
+                    ctx.ellipse(0, -7, 14, 5, Math.PI / 16, 0, Math.PI * 2);
+                    ctx.fillStyle = '#111';
+                    ctx.globalAlpha = 0.95;
+                    ctx.fill();
+
+                    // Crown - more fedora-like with tapered shape and pinch
+                    ctx.beginPath();
+                    // Create crown with pinch (from side view)
+                    ctx.moveTo(-7, -9);      // Bottom left
+                    ctx.lineTo(-6, -17);     // Top left, tapered in
+                    ctx.lineTo(-2, -19);     // First pinch point
+                    ctx.lineTo(0, -18);      // Center dip
+                    ctx.lineTo(2, -19);      // Second pinch point
+                    ctx.lineTo(6, -17);      // Top right, tapered in
+                    ctx.lineTo(7, -9);       // Bottom right
+                    ctx.closePath();
+                    ctx.fillStyle = '#111';
+                    ctx.fill();
+
+                    // Hat band (sideways, thin rectangle)
+                    ctx.beginPath();
+                    ctx.rect(-7, -13, 14, 3);
+                    ctx.fillStyle = '#444';
+                    ctx.fill();
+
+                    // Hat band decoration (small accent)
+                    ctx.beginPath();
+                    ctx.moveTo(5, -11.5);
+                    ctx.lineTo(7, -11.5);
+                    ctx.lineTo(6, -13);
+                    ctx.closePath();
+                    ctx.fillStyle = '#777';
+                    ctx.fill();
+
+                    ctx.restore();
+                }
+
                 // Eye (single, side profile)
                 ctx.beginPath();
                 ctx.ellipse(19, -4, 1.5, 2, 0, 0, Math.PI * 2);
@@ -1506,12 +1552,7 @@ if (t > 0) {
             });
         }
 
-        let keys = {};
-        let scoredKeys = {};
-        let lastKeyPressTime = 1;
-        let comboMultiplier = 1;
-        const comboThreshold = 400; // ms
-        const comboMax = 7;
+
 
         // For tip-tapping animation, track if user is typing
         let tipTapping = false;
@@ -1533,25 +1574,13 @@ if (t > 0) {
             }
             if (codeMode && e.key.match(/^[a-z]$/)) {
                 generateCodeParticle();
-                animateScore(1);
-                tipTapping = true;
-                clearTimeout(tipTapTimeout);
-                tipTapTimeout = setTimeout(() => { tipTapping = false; }, 120);
-            }
-            // --- Meow feature: space bar during hands at monitor ---
-            if (
-                stealthState === 'hands' &&
-                handsProgress === 1 &&
-                e.code === 'Space'
-            ) {
-                // Create a floating 'meow' particle from the cat
+                if (stealthState == 'handsChase'){
+                animateScore(10);
+                // Create a floating 10X score particle from the cat on chase trigger
                 codeParticles.push({
                     x: cat.x + cat.width / 2,
                     y: cat.y,
-                    text: 'meow',
-                    consoleColor: 'green',
-                    logColor: 'orange',
-                    meowColor: 'lightblue',
+                    text: '10x',
                     size: 22,
                     speedX: (Math.random() - 0.5) * 1.2,
                     speedY: -2.5 - Math.random() * 1.5,
@@ -1560,14 +1589,42 @@ if (t > 0) {
                     alpha: 1,
                     isMeow: true
                 });
+                } else {
+                animateScore(1);
+                }
+                tipTapping = true;
+                clearTimeout(tipTapTimeout);
+                tipTapTimeout = setTimeout(() => { tipTapping = false; }, 120);
+            }
+
+            // --- Meow feature: space bar during hands at monitor ---
+            if (
+                stealthState === 'hands' &&
+                handsProgress === 1 &&
+                e.code === 'Space'
+            ) {
+
                 // Start meow count if not started
                 if (!meowTarget) {
-                    meowTarget = 2 + Math.floor(Math.random() * 6); // 2-7
+                    meowTarget = 1;    //+ Math.floor(Math.random() * 6); // 1-5
                     meowCount = 0;
                 }
                 meowCount++;
                 // If reached target, trigger hands chase
                 if (meowCount >= meowTarget) {
+                     // Create a floating 'meow' particle from the cat on chase trigger
+                codeParticles.push({
+                    x: cat.x + cat.width / 2,
+                    y: cat.y,
+                    text: 'Aw lawd he commin!',
+                    size: 22,
+                    speedX: (Math.random() - 0.5) * 1.2,
+                    speedY: -2.5 - Math.random() * 1.5,
+                    targetX: cat.x + cat.width / 2 + (Math.random() - 0.5) * 40,
+                    targetY: cat.y - 60 - Math.random() * 30,
+                    alpha: 1,
+                    isMeow: true
+                });
                     stealthState = 'handsChase';
                     handsChaseActive = false; // will init in update()
                 }
@@ -1580,9 +1637,6 @@ if (t > 0) {
                     x: cat.x + cat.width / 2,
                     y: cat.y,
                     text: 'meow',
-                    consoleColor: 'white',
-                    logColor: 'white',
-                    meowColor: 'lightblue',
                     size: 22,
                     speedX: (Math.random() - 0.5) * 1.2,
                     speedY: -2.5 - Math.random() * 1.5,
@@ -1750,53 +1804,36 @@ if (t > 0) {
         function gameLoop() {
             if (!gameLoopRunning) return;
             // --- Multi-key scoring logic with combo ---
-    if (codeMode) {
-        const now = Date.now();
-        Object.keys(keys).forEach(key => {
-            if (keys[key] && key.match(/^[a-z]$/) && !scoredKeys[key]) {
-                // Combo logic
-                if (now - lastKeyPressTime < comboThreshold) {
-                    comboMultiplier = Math.min(comboMultiplier + 1, comboMax);
-                } else {
-                    comboMultiplier = 1;
-                }
-                lastKeyPressTime = now;
-                generateCodeParticle();
-                animateScore(comboMultiplier);
-                scoredKeys[key] = true;
-                tipTapping = true;
-                clearTimeout(tipTapTimeout);
-                tipTapTimeout = setTimeout(() => { tipTapping = false; }, 120);
-            }
-        });
-    }
+
+
+
             update();
             draw();
             requestAnimationFrame(gameLoop);
         }
 
-    tutorialButton.addEventListener('click', () => {
-        tutorialScreen.style.display = 'flex';
-        reportScreen.style.display = 'block';
-        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups || press -> <- to move left and right and ^ to jump, Spam any letter key when infront of the computer to code!</span>`;
-        reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
-        // Reset button
-        setTimeout(() => {
-            document.getElementById('resetSeriesBtn').onclick = () => {
-                gitGraphResults = [];
-                updateGitGraphGrid();
-                reportScreen.style.display = 'none';
-                startButton.style.display = 'inline-block';
-            };
-        }, 100);
-        setTimeout(() => {
-            document.getElementById('closeBtn').onclick = () => {
-                reportScreen.style.display = 'none';
-                startButton.style.display = 'inline-block';
-            };
-        }, 100);
-    }
-     );
+<!--    tutorialButton.addEventListener('click', () => {-->
+<!--        tutorialScreen.style.display = 'flex';-->
+<!--        reportScreen.style.display = 'block';-->
+<!--        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups || press -> <- to move left and right and ^ to jump || Spam any letter key when in front of the computer to code!</span>`;-->
+<!--        reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;-->
+<!--        // Reset button-->
+<!--        setTimeout(() => {-->
+<!--            document.getElementById('resetSeriesBtn').onclick = () => {-->
+<!--                gitGraphResults = [];-->
+<!--                updateGitGraphGrid();-->
+<!--                reportScreen.style.display = 'none';-->
+<!--                startButton.style.display = 'inline-block';-->
+<!--            };-->
+<!--        }, 100);-->
+<!--        setTimeout(() => {-->
+<!--            document.getElementById('closeBtn').onclick = () => {-->
+<!--                reportScreen.style.display = 'none';-->
+<!--                startButton.style.display = 'inline-block';-->
+<!--            };-->
+<!--        }, 100);-->
+<!--    }-->
+<!--     );-->
 
     startButton.addEventListener('click', () => {
         // Spawn coffee cups for this round
@@ -1834,6 +1871,7 @@ if (t > 0) {
         codeMode = false;
         // Clear keys
         keys = {};
+        //comboPoints = 0;
         // --- Reset and start timer for the round ---
         round = 1;
         currentTime = baseTime;
@@ -1864,7 +1902,7 @@ if (t > 0) {
     tutorialButton.addEventListener('click', () => {
         tutorialScreen.style.display = 'flex';
         reportScreen.style.display = 'block';
-        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups || press -> <- to move left and right and ^ to jump, Spam any letter key when infront of the computer to code!</span>`;
+        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups <p> press -> <- to move left and right and ^ to jump </p> Spam any letter key when infront of the computer to code! ||</span>`;
         reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
         // Reset button
         setTimeout(() => {
