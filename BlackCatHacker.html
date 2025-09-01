@@ -186,10 +186,10 @@
     function getRank(total) {
         if (total >= 7000) return 'Master B|ckc4t_h@cker';
         if (total >= 5000) return 'Grey Cat Hacker';
-        if (total >= 3500) return 'Pythonista';
+        if (total >= 3500) return 'Pawtonista';
         if (total >= 2000) return 'Script kitty';
         if (total >= 1000) return 'Copy-pasta cat';
-        return 'Hello World!';
+        return 'Dumber than my cat Emmie';
     }
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -459,6 +459,7 @@ function playGameOverProgression() {
     let additionsHistory = [];
 
     function animateDeletionsScore(points) {
+
         let startScore = deletionsScore;
         let endScore = deletionsScore + points;
         const animationDuration = 20;
@@ -753,6 +754,9 @@ function playGameOverProgression() {
                         if (lastHandsSecond !== handsSeconds) {
                             lastHandsSecond = handsSeconds;
                             animateDeletionsScore(5);
+                            playSoundEffect({ type: 'alert', pitch: 220 + Math.random() * 100, duration: 0.12, volume: 0.15 });
+
+
                         }
                         // --- GAME OVER if cat is in front of monitor when hands are there ---
                         if (isCatNearMonitor()) {
@@ -1872,8 +1876,9 @@ if (t > 0) {
             playSoundEffect({
             type: 'score',
             pitch: codeParticleChords[codeParticleChordIndex],
-            duration: .52,
-            volume: 0.05,
+            duration: 1.2,
+            volume: 0.00,
+
                         });
              codeParticleChordIndex = (codeParticleChordIndex + 1) % codeParticleChords.length;
 
@@ -1935,18 +1940,21 @@ if (t > 0) {
             let total = gitGraphResults.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);
             let rank = getRank(total);
             const fedoraOption = document.getElementById('fedoraOption');
-            if (rank === 'Hello World!') {
+            if (rank === 'Master B|ackc4t_h@cker' || rank === 'Grey Cat Hacker') {
                 fedoraOption.style.display = 'flex';
             } else {
                 fedoraOption.style.display = 'none';
             }
+
+
+
             let rankColor = {
-                'kode kitten': '#888',
-                'junior dev': '#1e90ff',
-                'script kitty': '#f7c325',
-                'senior dev': '#a259e6',
-                'grey cat hacker': '#2ea043',
-                'master black cat hacker': '#000'
+                'Dumber than my cat Emmie': '#888',
+                'Copy-pawsta Cat': '#1e90ff',
+                'Script Kitty': '#f7c325',
+                'Pawthonista': '#a259e6',
+                'Grey Cat Hacker': '#2ea043',
+                'Master B|ackc4t_h@cker': '#000'
             }[rank] || '#fff';
             let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
             let details = gitGraphResults.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');
