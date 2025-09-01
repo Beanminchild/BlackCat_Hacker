@@ -1,17 +1,11 @@
 <!DOCTYPE html><html><head><title>Black Cat Hacker</title><style>body{margin:0;overflow:hidden;background-color:#222}canvas{background-color:#728C69;display:block;margin:0 auto;position:relative;z-index:1}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10}#startButton,#tutorialButton{padding:20px 40px;font-size:24px;background-color:#555;color:white;border:none;cursor:pointer}#scoreboard{position:absolute;top:20px;right:20px;font-size:24px;color:white;z-index:20}#gitScoreBar{z-index:21;position:relative;}#gitAdditions,#gitDeletions,#gitCube{z-index:22;position:relative;}</style></head><body><div id="timer" style="display:none;position:absolute;top:10px;left:10px;font-size:2em;color:#fff;background:rgba(0,0,0,0.7);padding:8px 18px;border-radius:8px;z-index:1000">05:00</div><div id="workday-message" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.85);padding:20px 40px;border-radius:12px;z-index:2000">work day over</div><div id="startScreen" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"><div id="tutorialScreen" style="display:none;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index=10"></div><h1 style="color:white;font-family:sans-serif;font-size:3em;margin-bottom:24px">B|ackC4t_H@cker</h1><div id="gitGraphGrid" style="display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(2,32px);gap:12px;margin-bottom:24px;justify-content:center;align-items:center;width:max-content;margin-left:auto;margin-right:auto"><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:4;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:2"></canvas></div>
-<div id="fedoraOption" style="margin-bottom: 20px; display: none; align-items: center;">
-  <input type="checkbox" id="fedoraCheckbox" style="margin-right: 10px;">
-  <label for="fedoraCheckbox" style="color: white; font-family: sans-serif;">Script wears Fedora</label>
-</div>
-<button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><p><button id="tutorialButton" style="margin:0 auto 0 auto;display:block">How 2 Play</button></p><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gameOverScreen" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gameOverMessage" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="restartButton" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Next Day</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas><script>
+    <div id="fedoraOption" style="margin-bottom: 20px; display: none; align-items: center;"><input type="checkbox" id="fedoraCheckbox" style="margin-right: 10px;"><label for="fedoraCheckbox" style="color: white; font-family: sans-serif;">Script wears Fedora</label></div><button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><p><button id="tutorialButton" style="margin:0 auto 0 auto;display:block">How 2 Play</button></p><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gameOverScreen" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gameOverMessage" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="restartButton" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Next Day</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas><script>
     let catWearsFedora = false;
-    // --- Timer Mechanic ---
     let round = 1;
     let timerInterval = null;
     let baseTime = 100 + Math.random() * 20; // random between 90 and 120 seconds
     baseTime = Math.floor(baseTime); // round down to whole seconds if needed
     let currentTime = baseTime;
-
     function formatTime(secs) {
         const m = Math.floor(secs / 60).toString().padStart(2, '0');
         const s = (secs % 60).toString().padStart(2, '0');
@@ -29,24 +23,21 @@
     function endRound() {
         clearInterval(timerInterval);
         showTimer(false);
-        // Show game over screen with 'work day over' as the main message
         gameStarted = false;
         gameOverScreen.style.display = 'flex';
         gameOverScreen.setAttribute('data-reason', 'timeout');
         document.getElementById('gameOverMessage').textContent = 'work day over';
+         document.getElementById('restartButton').innerHTML = 'Next Day';
         finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${deletionsScore} deletions</span>`;
         drawGitGraph();
-        // --- Store result and update grid ---
         if (gitGraphResults.length < maxGames) {
             gitGraphResults.push({ score, deletions: deletionsScore });
         }
         updateGitGraphGrid();
-        // --- If 7 games played, show report ---
         if (gitGraphResults.length === maxGames) {
             setTimeout(showReport, 1200); // Give a moment to the last game over
         }
     }
-
     function startTimer() {
         showTimer(true);
         updateTimerDisplay();
@@ -131,7 +122,6 @@
     }
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-
     canvas.width = 800;
     canvas.height = 600;
 
@@ -173,14 +163,137 @@
     const gitGraphGrid = document.getElementById('gitGraphGrid');
     const reportScreen = document.getElementById('reportScreen');
     const scoreboard = document.getElementById('scoreboard');
-        // --- Draw the grid of 7 gitgraph squares on the home screen ---
+
+
+
+    // Sound API for harmonized, customizable effects
+    const aMajorScale = [440, 494, 554, 587, 659, 740, 831, 880]; // A major scale frequencies
+    let audioCtx = null;
+
+    function playSoundEffect({
+        type = 'default',      // 'meow', 'score', 'scrub', etc.
+        pitch = 440,           // base frequency
+        duration = 0.18,       // seconds
+        volume = 0.18,         // gain
+        scale = aMajorScale,   // harmonized scale
+        randomize = true       // add randomness
+    } = {}) {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Pick a harmonized note near the requested pitch
+        let freq = pitch;
+        if (scale && scale.length) {
+            // Find closest scale note
+            freq = scale.reduce((prev, curr) => Math.abs(curr - pitch) < Math.abs(prev - pitch) ? curr : prev);
+            // Randomize within scale
+            if (randomize) {
+                freq = scale[Math.floor(Math.random() * scale.length)];
+            }
+        }
+
+        // Optionally randomize duration and volume
+        if (randomize) {
+            duration += (Math.random() - 0.5) * 0.05;
+            volume += (Math.random() - 0.5) * 0.04;
+        }
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        // Choose waveform based on type
+        osc.type = (type === 'meow') ? 'triangle' :
+           (type === 'scrub') ? 'square' :
+           (type === 'alert') ? 'sawtooth' :
+           'sine';
+        osc.frequency.value = freq;
+        gain.gain.value = Math.max(0.01, volume);
+
+        osc.connect(gain).connect(audioCtx.destination);
+
+        // Envelope for smoother sound
+        gain.gain.setValueAtTime(gain.gain.value, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + duration);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+
+        osc.onended = () => osc.disconnect();
+    }
+
+
+function playGameOverProgression() {
+    const notes = [
+        { pitch: 349.23, duration: 0.38 }, // F (E string, fret 1)
+        { pitch: 392.00, duration: 0.38 }, // G (E string, fret 3)
+        { pitch: 415.30, duration: 0.38 }, // G# (E string, fret 4)
+        { pitch: 392.00, duration: 0.38 }, // G (E string, fret 3)
+        { pitch: 349.23, duration: 0.38 }, // F (E string, fret 1)
+        // Longer pause before last two notes
+        { pitch: 311.13, duration: 0.48, delay: 0.7 }, // D# (B string, fret 4)
+        { pitch: 293.66, duration: 0.48, delay: 0.5 }   // D (B string, fret 3)
+    ];
+
+    let time = 0;
+    notes.forEach(note => {
+        time += (note.delay || 0) + note.duration + 0.12; // 0.12s gap for more melody
+        setTimeout(() => {
+            playSoundEffect({
+                type: 'meow', // triangle waveform for softer sound
+                pitch: note.pitch,
+                duration: note.duration,
+                volume: 0.19,
+                randomize: false,
+                scale: null
+            });
+        }, time * 1000);
+    });
+}
+
+
+
+    function playBootupSound() {
+
+     // play macos bootup sound
+                playSoundEffect({
+                    type: 'meow',
+                    pitch: 174.61,      // F3, deep tone
+                    duration: 1.2,    // longer, sustained
+                    volume: 0.22,
+                    randomize: false,
+                    scale: null
+                });
+                 playSoundEffect({
+                    type: 'meow',
+                    pitch: 220,      // A3 deep tone
+                    duration: 1.2,    // longer, sustained
+                    volume: 0.22,
+                    randomize: false,
+                    scale: null
+                });
+                 playSoundEffect({
+                    type: 'meow',
+                    pitch: 261.63,      // c4, deep tone
+                    duration: 1.2,    // longer, sustained
+                    volume: 0.22,
+                    randomize: false,
+                    scale: null
+                });
+}
+    // Usage examples:
+
+
+
+
+<!--    playSoundEffect({ type: 'meow', pitch: 466, duration: 0.15 }); // Harmonized meow-->
+<!--    playSoundEffect({ type: 'score', pitch: 659, duration: 0.12 }); // Harmonized score blip-->
+<!--    playSoundEffect({ type: 'scrub', pitch: 554, duration: 0.2 }); // Harmonized scrub sound-->
+
         function updateGitGraphGrid() {
             const squares = gitGraphGrid.querySelectorAll('.gitGraphSquare');
             for (let i = 0; i < squares.length; i++) {
                 const ctx = squares[i].getContext('2d');
                 ctx.clearRect(0, 0, 32, 32);
                 if (gitGraphResults[i]) {
-                    // Color by (additions - deletions) for that game
                     const net = Math.max(0, gitGraphResults[i].score - gitGraphResults[i].deletions);
                     const maxScore = 1000;
                     const percent = Math.min(net / maxScore, 1);
@@ -207,7 +320,7 @@
                     ctx.lineWidth = 2;
                     ctx.strokeRect(1, 1, 30, 30);
                 } else {
-                    // Blank
+
                     ctx.fillStyle = '#181818';
                     ctx.fillRect(0, 0, 32, 32);
                     ctx.strokeStyle = '#222';
@@ -235,7 +348,7 @@
 
         // Door position and size (moved to global scope for scrubStain)
         const doorX = 30;
-        const doorY = 330;
+        const doorY = 333;
         const doorW = 60;
         const doorH = 140;
 
@@ -265,7 +378,6 @@
     const gitDeletions = document.getElementById('gitDeletions');
     const gitCube = document.getElementById('gitCube');
     const gameOverScreen = document.getElementById('gameOverScreen');
-    //const tutorialScreen = document.getElementById('reportScreen');
     const finalScores = document.getElementById('finalScores');
     const gitGraph = document.getElementById('gitGraph');
     const restartButton = document.getElementById('restartButton');
@@ -329,14 +441,16 @@
                 { text: "error ('no more catnip')", consoleColor: 'white', logColor: 'red', meowColor: 'white' },
                 { text: "function headscratch() { return ' purr ' }", consoleColor: 'white', logColor: 'lime', meowColor: 'white' },
                 { text: "cat.hunt('laser pointer')", consoleColor: 'white', logColor: 'pink', meowColor: 'white' },
-                {text: "while bowlEmpty(true) { meow() }", consoleColor: 'white', logColor: 'lightgreen', meowColor: 'red' }
+                {text: "while bowlEmpty(true) { meow() }", consoleColor: 'white', logColor: 'lightgreen', meowColor: 'red' },
+                 { text: "if (Noctis.doesAnything()) {Ignis(newRecipeh); }", consoleColor: 'white', logColor: 'gold', meowColor: 'white' },
+                 { text: "for (let thoseWhoComeAfter) { inspire(Gustave); }", consoleColor: 'white', logColor: 'teal', meowColor: 'white' }
             ];
 
             const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
 
             codeParticles.push({
-                x: monitor.x - 300, // spawn to the left of the monitor
-                y: monitor.y + monitor.height / 2, // vertically centered on monitor
+                x: monitor.x - 500,
+                y: monitor.y + monitor.height / 2,
                 text: snippet.text,
                 consoleColor: snippet.consoleColor,
                 logColor: snippet.logColor,
@@ -441,11 +555,6 @@
                     if ((cup.y > canvas.height - 10) && !scrubStainActive) {
                         triggerScrubStain(cup.x + 10, cup.y + 10);
                     }
-                    // Fade out if off screen
-                    if (cup.x < -40 || cup.x > canvas.width + 40 || cup.y > canvas.height + 40) {
-                        cup.alpha -= 0.04;
-                        if (cup.alpha <= 0) coffeeCups.splice(i, 1);
-                    }
                 }
             });
             // Remove cups that landed
@@ -544,7 +653,7 @@
                     doorOpenProgress = 0;
                     footprintsProgress = 0;
                     handsProgress = 0;
-                    //handsHoldTimer = 0;
+
                     footstepsBackProgress = 0;
                     doorCloseProgress = 0;
                 }
@@ -949,7 +1058,7 @@
 
             // Draw window (centered, more transparent so sun is visible) with shadow
             ctx.save();
-            ctx.shadowColor = '#2226'; // less intense shadow
+            ctx.shadowColor = '#2226';
             ctx.shadowBlur = 8;
             ctx.shadowOffsetX = 0;
             ctx.shadowOffsetY = 4;
@@ -1069,7 +1178,6 @@ if (t > 0) {
         // bottom outer
         ctx.lineTo(doorW, doorH/2);
         ctx.closePath();
-        // darker color for edge
         ctx.fillStyle = '#452a12';
         ctx.fill();
         ctx.strokeStyle = '#2c1907';
@@ -1078,22 +1186,10 @@ if (t > 0) {
     }
 
     ctx.restore();
-
-<!--    // light beam: compute world coords of door tip-->
-<!--    const worldAngle = angle; // rotation applied about hinge-->
-<!--    const tipWorldX = hingeX + Math.cos(worldAngle) * doorW * (1);-->
-<!--    const tipWorldY = hingeY + Math.sin(worldAngle) * doorW * (1);-->
-
     ctx.save();
     ctx.globalAlpha = 0.5 * eased;
-<!--    //const grad = ctx.createLinearGradient(tipWorldX, tipWorldY, tipWorldX + 200, tipWorldY + 80);-->
-<!--    grad.addColorStop(0, 'rgba(255,255,180,0.7)');-->
-<!--    grad.addColorStop(1, 'rgba(255,255,180,0)');-->
-<!--    ctx.fillStyle = grad;-->
     ctx.beginPath();
     ctx.moveTo(hingeX, hingeY);
-<!--    ctx.lineTo(tipWorldX + 200, tipWorldY - 30);-->
-<!--    ctx.lineTo(tipWorldX + 200, tipWorldY + 150);-->
     ctx.closePath();
     ctx.fill();
     ctx.restore();
@@ -1585,7 +1681,6 @@ if (t > 0) {
                 generateCodeParticle();
                 if (stealthState == 'handsChase'){
                 animateScore(10);
-                // Create a floating 10X score particle from the cat on chase trigger
                 codeParticles.push({
                     x: cat.x + cat.width / 2,
                     y: cat.y,
@@ -1605,31 +1700,23 @@ if (t > 0) {
                 clearTimeout(tipTapTimeout);
                 tipTapTimeout = setTimeout(() => { tipTapping = false; }, 120);
             }
-
-            // --- Meow feature: space bar during hands at monitor ---
             if (
                 stealthState === 'hands' &&
                 handsProgress === 1 &&
                 e.code === 'Space'
             ) {
-
-                // Start meow count if not started
                 if (!meowTarget) {
-                    meowTarget = 1 //+ Math.floor(Math.random() * 6); // 1-5
+                    meowTarget = 1;
                     meowCount = 0;
                 }
                 meowCount++;
-                // If reached target, trigger hands chase
                 if (meowCount >= meowTarget) {
-                     // Create a floating 'meow' particle from the cat on chase trigger
-
                     stealthState = 'handsChase';
-                    handsChaseActive = false; // will init in update()
-
-
-
-
+                    handsChaseActive = false;
                 }
+
+                playBootupSound();
+
 
                     codeParticles.push({
                     x: cat.x + cat.width / 2,
@@ -1645,6 +1732,17 @@ if (t > 0) {
                 });
             } else if (e.code === 'Space') {
 
+                 playSoundEffect({
+                    type: 'meow',
+                    pitch: bassMeowNotes[bassMeowIndex],
+                    duration: .18,
+                    volume: 0.18,
+                    randomize: false,
+                    scale: null
+
+                                });
+             bassMeowIndex = (bassMeowIndex + 1) % bassMeowNotes.length;
+
                  codeParticles.push({
                     x: cat.x + cat.width / 2,
                     y: cat.y,
@@ -1657,13 +1755,11 @@ if (t > 0) {
                     alpha: 1,
                     isMeow: true
                 });
-                // Start meow count if not started
                 if (!meowTarget) {
-                    meowTarget = 1 + Math.floor(Math.random() * 4); // 3-7
+                    meowTarget = 1 + Math.floor(Math.random() * 4);
                     meowCount = 0;
                 }
                 meowCount++;
-                // If reached target, trigger hands chase
                 if (meowCount >= meowTarget) {
 
 
@@ -1672,11 +1768,46 @@ if (t > 0) {
 
             }
         });
+     // Add at the top
+     const codeParticleChords = [392, 294, 220, 261.63]; // G, D, Am, C
+     let codeParticleChordIndex = 0;
+
+   const bassMeowNotes = [
+       98.00 * 2,    // E string, fret 3 (G)
+       196.00 * 2,   // D string, fret 5 (G)
+       110.00 * 2,   // A string, fret 0 (A)
+       196.00 * 2,   // D string, fret 5 (G)
+       123.47 * 2,   // A string, fret 2 (B)
+       196.00 * 2,   // D string, fret 5 (G)
+       130.81 * 2,   // A string, fret 3 (C)
+       196.00 * 2,   // D string, fret 5 (G)
+
+       146.83 * 2,   // D string, fret 0 (D)
+       196.00 * 2,    // G string, fret 0 (G)
+       164.81 * 2,   // D string, fret 2 (E)
+       196.00 * 2,     // G string, fret 0 (G)
+       184.99 * 2,   // D string, fret 4 (F#)
+       196.00 * 2,     // G string, fret 0 (G)
+       196.00 * 2,   // D string, fret 5 (G)
+       196.00 * 2,     // G string, fret 0 (G)
+
+   ];
+   let bassMeowIndex = 0;
+
 
         function animateScore(points) {
             let startScore = score;
             let endScore = score + points;
-            const animationDuration = .2;
+            playSoundEffect({
+            type: 'score',
+            pitch: codeParticleChords[codeParticleChordIndex],
+            duration: .52,
+            volume: 0.05,
+                        });
+             codeParticleChordIndex = (codeParticleChordIndex + 1) % codeParticleChords.length;
+
+
+            const animationDuration = 1.2;
             const startTime = performance.now();
 
             function updateScore(currentTime) {
@@ -1702,12 +1833,15 @@ if (t > 0) {
         }
 
         function endGame() {
+            playGameOverProgression()
             gameStarted = false;
             clearInterval(timerInterval);
             showTimer(false);
             gameOverScreen.style.display = 'flex';
             gameOverScreen.setAttribute('data-reason', 'petted');
-            document.getElementById('gameOverMessage').textContent = 'you were petted.';
+            document.getElementById('gameOverMessage').innerHTML =
+  "<span style='color:#f85149; font-family:Cinzel, serif; font-size:1.2em; letter-spacing:2px;'>You were petted.</span>";
+            document.getElementById('restartButton').innerHTML = 'We Continue';
             finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${deletionsScore} deletions</span>`;
             drawGitGraph();
             // --- Store result and update grid ---
@@ -1729,7 +1863,6 @@ if (t > 0) {
             // Calculate total additions
             let total = gitGraphResults.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);
             let rank = getRank(total);
-            // Show fedora option only for kode kitten
             const fedoraOption = document.getElementById('fedoraOption');
             if (rank === 'Hello World!') {
                 fedoraOption.style.display = 'flex';
@@ -1832,29 +1965,6 @@ if (t > 0) {
             requestAnimationFrame(gameLoop);
         }
 
-<!--    tutorialButton.addEventListener('click', () => {-->
-<!--        tutorialScreen.style.display = 'flex';-->
-<!--        reportScreen.style.display = 'block';-->
-<!--        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups || press -> <- to move left and right and ^ to jump || Spam any letter key when in front of the computer to code!</span>`;-->
-<!--        reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;-->
-<!--        // Reset button-->
-<!--        setTimeout(() => {-->
-<!--            document.getElementById('resetSeriesBtn').onclick = () => {-->
-<!--                gitGraphResults = [];-->
-<!--                updateGitGraphGrid();-->
-<!--                reportScreen.style.display = 'none';-->
-<!--                startButton.style.display = 'inline-block';-->
-<!--            };-->
-<!--        }, 100);-->
-<!--        setTimeout(() => {-->
-<!--            document.getElementById('closeBtn').onclick = () => {-->
-<!--                reportScreen.style.display = 'none';-->
-<!--                startButton.style.display = 'inline-block';-->
-<!--            };-->
-<!--        }, 100);-->
-<!--    }-->
-<!--     );-->
-
     startButton.addEventListener('click', () => {
         // Spawn coffee cups for this round
         spawnRandomShelves(); // Spawn random shelves each round
@@ -1902,6 +2012,7 @@ if (t > 0) {
         // --- Reset and start timer for the round ---
         round = 1;
         currentTime = baseTime;
+        playBootupSound();
         startTimer();
         // --- Start game loop only if not already running ---
         if (!gameLoopRunning) {
@@ -1931,7 +2042,7 @@ if (t > 0) {
         reportScreen.style.display = 'block';
         let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups <p> press -> <- to move left and right and ^ to jump </p> Spam any letter key when infront of the computer to code! ||</span>`;
         reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
-        // Reset button
+
         setTimeout(() => {
             document.getElementById('resetSeriesBtn').onclick = () => {
                 gitGraphResults = [];
@@ -1949,40 +2060,10 @@ if (t > 0) {
     }
      );
 
-<!--    function showReport() {-->
-<!--        // Hide start button, show report-->
-<!--        startButton.style.display = 'none';-->
-<!--        reportScreen.style.display = 'block';-->
-<!--        scoreboard.style.display = 'none'; // Hide scoreboard on report screen-->
-<!--        // Calculate total additions-->
-<!--        let total = gitGraphResults.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);-->
-<!--        let rank = getRank(total);-->
-<!--        let rankColor = {-->
-<!--            'kode kitten': '#888',-->
-<!--            'junior dev': '#1e90ff',-->
-<!--            'script kitty': '#f7c325',-->
-<!--            'senior dev': '#a259e6',-->
-<!--            'grey cat hacker': '#2ea043',-->
-<!--            'master black cat hacker': '#000'-->
-<!--        }[rank] || '#fff';-->
-<!--        let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;-->
-<!--        let details = gitGraphResults.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');-->
-<!--        reportScreen.innerHTML = `<h2>7 Games Complete!</h2><div style='margin:12px 0 18px 0;'>Total Additions: <span style='color:#2ea043; font-size:1.3em;'>${total}</span></div>${details}<div style='margin:18px 0 8px 0;'>Rank:</div>${rankText}<div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Play Again</button></div>`;-->
-<!--        // Reset button-->
-<!--        setTimeout(() => {-->
-<!--            document.getElementById('resetSeriesBtn').onclick = () => {-->
-<!--                gitGraphResults = [];-->
-<!--                updateGitGraphGrid();-->
-<!--                reportScreen.style.display = 'none';-->
-<!--                startButton.style.display = 'inline-block';-->
-<!--            };-->
-<!--        }, 100);-->
-<!--    }-->
 
-    // On load, always update grid and hide scoreboard
+
     updateGitGraphGrid();
     scoreboard.style.display = 'none';
-    // Stop any game loop on page load
     gameLoopRunning = false;
 </script>
 </body>
