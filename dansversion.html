@@ -1883,6 +1883,13 @@ if (t > 0) {
         doorCloseProgress = 0;
         lastStealthFrame = Date.now();
         lastHandsSecond = null;
+        // Reset scrub stain
+        scrubStainActive = false;
+        scrubStainTimer = 0;
+        scrubStainProgress = 0;
+        scrubStainAlpha = 0;
+        scrubStainX = null;
+        scrubStainY = null;
         // Reset cat position and state
         cat.x = 50;
         cat.y = 500;
