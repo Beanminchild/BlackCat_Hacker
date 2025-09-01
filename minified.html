@@ -1,10 +1,11 @@
-<!DOCTYPE html><html><head><title>Black Cat Hacker</title><style>body{margin:0;overflow:hidden;background-color:#222}canvas{background-color:#728C69;display:block;margin:0 auto;position:relative;z-index:1}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10}#startButton,#tutorialButton{padding:20px 40px;font-size:24px;background-color:#555;color:white;border:none;cursor:pointer}#scoreboard{position:absolute;top:20px;right:20px;font-size:24px;color:white;z-index:20}#gitScoreBar{z-index:21;position:relative;}#gitAdditions,#gitDeletions,#gitCube{z-index:22;position:relative;}</style></head><body><div id="timer" style="display:none;position:absolute;top:10px;left:10px;font-size:2em;color:#fff;background:rgba(0,0,0,0.7);padding:8px 18px;border-radius:8px;z-index:1000">05:00</div><div id="workday-message" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.85);padding:20px 40px;border-radius:12px;z-index:2000">work day over</div><div id="startScreen" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"><div id="tutorialScreen" style="display:none;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index=10"></div><h1 style="color:white;font-family:sans-serif;font-size:3em;margin-bottom:24px">B|ackC4t_H@cker</h1><div id="gitGraphGrid" style="display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(2,32px);gap:12px;margin-bottom:24px;justify-content:center;align-items:center;width:max-content;margin-left:auto;margin-right:auto"><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:4;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:2"></canvas></div><button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><p><button id="tutorialButton" style="margin:0 auto 0 auto;display:block">How 2 Play</button></p><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gameOverScreen" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gameOverMessage" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="restartButton" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Restart</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas><script>
+<!DOCTYPE html><html><head><title>Black Cat Hacker</title><style>body{margin:0;overflow:hidden;background-color:#222}canvas{background-color:#728C69;display:block;margin:0 auto;position:relative;z-index:1}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10}#startButton,#tutorialButton{padding:20px 40px;font-size:24px;background-color:#555;color:white;border:none;cursor:pointer}#scoreboard{position:absolute;top:20px;right:20px;font-size:24px;color:white;z-index:20}#gitScoreBar{z-index:21;position:relative;}#gitAdditions,#gitDeletions,#gitCube{z-index:22;position:relative;}</style></head><body><div id="timer" style="display:none;position:absolute;top:10px;left:10px;font-size:2em;color:#fff;background:rgba(0,0,0,0.7);padding:8px 18px;border-radius:8px;z-index:1000">05:00</div><div id="workday-message" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.85);padding:20px 40px;border-radius:12px;z-index:2000">work day over</div><div id="startScreen" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"><div id="tutorialScreen" style="display:none;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index=10"></div><h1 style="color:white;font-family:sans-serif;font-size:3em;margin-bottom:24px">B|ackC4t_H@cker</h1><div id="gitGraphGrid" style="display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(2,32px);gap:12px;margin-bottom:24px;justify-content:center;align-items:center;width:max-content;margin-left:auto;margin-right:auto"><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:4;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:2"></canvas></div>
+    <div id="fedoraOption" style="margin-bottom: 20px; display: none; align-items: center;"><input type="checkbox" id="fedoraCheckbox" style="margin-right: 10px;"><label for="fedoraCheckbox" style="color: white; font-family: sans-serif;">Script wears Fedora</label></div><button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><p><button id="tutorialButton" style="margin:0 auto 0 auto;display:block">How 2 Play</button></p><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gameOverScreen" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gameOverMessage" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="restartButton" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Next Day</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas><script>
+    let catWearsFedora = false;
     let round = 1;
     let timerInterval = null;
-    let baseTime = 120; // 5 minutes in seconds
-    let timeDecrease = 20; // seconds decrease per round
+    let baseTime = 100 + Math.random() * 20;
+    baseTime = Math.floor(baseTime);
     let currentTime = baseTime;
-
     function formatTime(secs) {
         const m = Math.floor(secs / 60).toString().padStart(2, '0');
         const s = (secs % 60).toString().padStart(2, '0');
@@ -15,9 +16,7 @@
         document.getElementById('timer').textContent = formatTime(currentTime);
     }
 
-    function showTimer(show) {
-        document.getElementById('timer').style.display = show ? 'block' : 'none';
-    }
+    function showTimer(show) {}
 
     function endRound() {
         clearInterval(timerInterval);
@@ -26,6 +25,7 @@
         gameOverScreen.style.display = 'flex';
         gameOverScreen.setAttribute('data-reason', 'timeout');
         document.getElementById('gameOverMessage').textContent = 'work day over';
+         document.getElementById('restartButton').innerHTML = 'Next Day';
         finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${deletionsScore} deletions</span>`;
         drawGitGraph();
         if (gitGraphResults.length < maxGames) {
@@ -36,7 +36,6 @@
             setTimeout(showReport, 1200);
         }
     }
-
     function startTimer() {
         showTimer(true);
         updateTimerDisplay();
@@ -51,7 +50,6 @@
 
     function nextRound() {
         round++;
-        currentTime = Math.max(20, baseTime - (round - 1) * timeDecrease);
         startTimer();
     }
 
@@ -59,14 +57,16 @@
     const coffeeEmoji = '\u{2615}';
     function spawnCoffeeCups() {
         coffeeCups = [];
-        const numCups = 1 + Math.floor(Math.random() * 3); // 1-3 cups
+        const numCups = 1 + Math.floor(Math.random() * 3);
         let spots = [];
+
         [...shelves, ...randomShelves].forEach(shelf => {
             spots.push({
                 x: shelf.x + 20 + Math.random() * (shelf.width - 40),
                 y: shelf.y - 18 + Math.random() * 4
             });
         });
+
         for (let i = 0; i < numCups && spots.length > 0; i++) {
             const idx = Math.floor(Math.random() * spots.length);
             const pos = spots.splice(idx, 1)[0];
@@ -81,25 +81,30 @@
         }
     }
     function isCatNearCup(cup) {
+
         const catCenterX = cat.x + cat.width / 2;
         const catCenterY = cat.y + cat.height / 2;
+
         const cupCenterX = cup.x + 10;
         const cupCenterY = cup.y + 10;
         return Math.abs(catCenterX - cupCenterX) < 32 && Math.abs(catCenterY - cupCenterY) < 32;
     }
     function pushCoffeeCup(cup) {
         if (cup.airborne) return;
+
         const catCenterX = cat.x + cat.width / 2;
         const cupCenterX = cup.x + 10;
         let dir = Math.sign(cupCenterX - catCenterX) || 1;
         cup.vx = dir * (2.5 + Math.random() * 1.5);
         cup.vy = -4.5 - Math.random() * 1.5;
         cup.airborne = true;
+
         if (stealthState === 'hands' && handsProgress === 1) {
             stealthState = 'handsChase';
             handsChaseActive = false;
         }
     }
+
     let gitGraphResults = [];
     const maxGames = 7;
     function getRank(total) {
@@ -112,10 +117,8 @@
     }
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-
     canvas.width = 800;
     canvas.height = 600;
-
     let stealthState = 'idle';
     let scrubStainTimer = 0;
     let scrubStainProgress = 0;
@@ -133,7 +136,6 @@
     let footstepsBackProgress = 0;
     let doorCloseProgress = 0;
     let lastStealthFrame = Date.now();
-
     let meowCount = 0;
     let meowTarget = 0;
     let chaseSuccessCount = 0;
@@ -142,8 +144,7 @@
     let handsChaseStart = 0;
     let handsChasePos = { x: 0, y: 0 };
     let handsChaseActive = false;
-    let handsChaseSpeed = 2.0; // px per frame
-
+    let handsChaseSpeed = 2.0;
     const startScreen = document.getElementById('startScreen');
     const startButton = document.getElementById('startButton');
     const tutorialButton = document.getElementById('tutorialButton');
@@ -151,6 +152,131 @@
     const gitGraphGrid = document.getElementById('gitGraphGrid');
     const reportScreen = document.getElementById('reportScreen');
     const scoreboard = document.getElementById('scoreboard');
+
+
+
+    // Sound API for harmonized, customizable effects
+    const aMajorScale = [440, 494, 554, 587, 659, 740, 831, 880]; // A major scale frequencies
+    let audioCtx = null;
+
+    function playSoundEffect({
+        type = 'default',      // 'meow', 'score', 'scrub', etc.
+        pitch = 440,           // base frequency
+        duration = 0.18,       // seconds
+        volume = 0.18,         // gain
+        scale = aMajorScale,   // harmonized scale
+        randomize = true       // add randomness
+    } = {}) {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Pick a harmonized note near the requested pitch
+        let freq = pitch;
+        if (scale && scale.length) {
+            // Find closest scale note
+            freq = scale.reduce((prev, curr) => Math.abs(curr - pitch) < Math.abs(prev - pitch) ? curr : prev);
+            // Randomize within scale
+            if (randomize) {
+                freq = scale[Math.floor(Math.random() * scale.length)];
+            }
+        }
+
+        // Optionally randomize duration and volume
+        if (randomize) {
+            duration += (Math.random() - 0.5) * 0.05;
+            volume += (Math.random() - 0.5) * 0.04;
+        }
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        // Choose waveform based on type
+        osc.type = (type === 'meow') ? 'triangle' :
+           (type === 'scrub') ? 'square' :
+           (type === 'alert') ? 'sawtooth' :
+           'sine';
+        osc.frequency.value = freq;
+        gain.gain.value = Math.max(0.01, volume);
+
+        osc.connect(gain).connect(audioCtx.destination);
+
+        // Envelope for smoother sound
+        gain.gain.setValueAtTime(gain.gain.value, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + duration);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+
+        osc.onended = () => osc.disconnect();
+    }
+
+
+function playGameOverProgression() {
+    const notes = [
+        { pitch: 349.23, duration: 0.38 }, // F (E string, fret 1)
+        { pitch: 392.00, duration: 0.38 }, // G (E string, fret 3)
+        { pitch: 415.30, duration: 0.38 }, // G# (E string, fret 4)
+        { pitch: 392.00, duration: 0.38 }, // G (E string, fret 3)
+        { pitch: 349.23, duration: 0.38 }, // F (E string, fret 1)
+        // Longer pause before last two notes
+        { pitch: 311.13, duration: 0.48, delay: 0.7 }, // D# (B string, fret 4)
+        { pitch: 293.66, duration: 0.48, delay: 0.5 }   // D (B string, fret 3)
+    ];
+
+    let time = 0;
+    notes.forEach(note => {
+        time += (note.delay || 0) + note.duration + 0.12; // 0.12s gap for more melody
+        setTimeout(() => {
+            playSoundEffect({
+                type: 'meow', // triangle waveform for softer sound
+                pitch: note.pitch,
+                duration: note.duration,
+                volume: 0.19,
+                randomize: false,
+                scale: null
+            });
+        }, time * 1000);
+    });
+}
+
+
+
+    function playBootupSound() {
+
+     // play macos bootup sound
+                playSoundEffect({
+                    type: 'meow',
+                    pitch: 174.61,      // F3, deep tone
+                    duration: 1.2,    // longer, sustained
+                    volume: 0.22,
+                    randomize: false,
+                    scale: null
+                });
+                 playSoundEffect({
+                    type: 'meow',
+                    pitch: 220,      // A3 deep tone
+                    duration: 1.2,    // longer, sustained
+                    volume: 0.22,
+                    randomize: false,
+                    scale: null
+                });
+                 playSoundEffect({
+                    type: 'meow',
+                    pitch: 261.63,      // c4, deep tone
+                    duration: 1.2,    // longer, sustained
+                    volume: 0.22,
+                    randomize: false,
+                    scale: null
+                });
+}
+    // Usage examples:
+
+
+
+
+<!--    playSoundEffect({ type: 'meow', pitch: 466, duration: 0.15 }); // Harmonized meow-->
+<!--    playSoundEffect({ type: 'score', pitch: 659, duration: 0.12 }); // Harmonized score blip-->
+<!--    playSoundEffect({ type: 'scrub', pitch: 554, duration: 0.2 }); // Harmonized scrub sound-->
+
         function updateGitGraphGrid() {
             const squares = gitGraphGrid.querySelectorAll('.gitGraphSquare');
             for (let i = 0; i < squares.length; i++) {
@@ -183,6 +309,7 @@
                     ctx.lineWidth = 2;
                     ctx.strokeRect(1, 1, 30, 30);
                 } else {
+
                     ctx.fillStyle = '#181818';
                     ctx.fillRect(0, 0, 32, 32);
                     ctx.strokeStyle = '#222';
@@ -206,23 +333,23 @@
             isJumping: false,
             color: 'black'
         };
-
-
         const doorX = 30;
-        const doorY = 330;
+        const doorY = 333;
         const doorW = 60;
         const doorH = 140;
+
 
         const deskWidth = 120;
         const deskHeight = 60;
         const desk = {
             x: canvas.width - deskWidth,
-            y: canvas.height - deskHeight - 20, // 20px above bottom
+            y: canvas.height - deskHeight - 20,
         };
 
+
         const monitor = {
-            x: 680, // rightmost shelf x
-            y: 300, // shelf y minus monitor height
+            x: 680,
+            y: 300,
             width: 100,
             height: 100,
             label: 'Monitor'
@@ -240,8 +367,10 @@
     const finalScores = document.getElementById('finalScores');
     const gitGraph = document.getElementById('gitGraph');
     const restartButton = document.getElementById('restartButton');
+
     let deletionsScore = 0;
     let lastHandsSecond = null;
+
     let additionsHistory = [];
 
     function animateDeletionsScore(points) {
@@ -275,7 +404,6 @@
             if (Math.abs(catCenterX - monitorCenterX) < 40 && Math.abs(catCenterY - monitorCenterY) < 40) return true;
 
         }
-
         shelves = [
             { x: 25, y: 315, width: 65, height: 20, color: 'transparent' },
             { x: 200, y: 400, width: 100, height: 20, color: '#4b371C' },
@@ -295,13 +423,15 @@
                 { text: "error ('no more catnip')", consoleColor: 'white', logColor: 'red', meowColor: 'white' },
                 { text: "function headscratch() { return ' purr ' }", consoleColor: 'white', logColor: 'lime', meowColor: 'white' },
                 { text: "cat.hunt('laser pointer')", consoleColor: 'white', logColor: 'pink', meowColor: 'white' },
-                {text: "while bowlEmpty(true) { meow() }", consoleColor: 'white', logColor: 'lightgreen', meowColor: 'red' }
+                {text: "while bowlEmpty(true) { meow() }", consoleColor: 'white', logColor: 'lightgreen', meowColor: 'red' },
+                 { text: "if (Noctis.doesAnything()) {Ignis(newRecipeh); }", consoleColor: 'white', logColor: 'gold', meowColor: 'white' },
+                 { text: "for (let thoseWhoComeAfter) { inspire(Gustave); }", consoleColor: 'white', logColor: 'teal', meowColor: 'white' }
             ];
 
             const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
 
             codeParticles.push({
-                x: monitor.x - 100,
+                x: monitor.x - 500,
                 y: monitor.y + monitor.height / 2,
                 text: snippet.text,
                 consoleColor: snippet.consoleColor,
@@ -349,14 +479,26 @@
     }
 
     function update() {
+
             let cupsToRemove = [];
             coffeeCups.forEach((cup, i) => {
                 if (cup.airborne) {
                     cup.x += cup.vx;
                     cup.y += cup.vy;
-                    cup.vy += 0.35; // gravity
+
+                    const cupWidth = 20;
+                    if (cup.x < 0) {
+                        cup.x = 0;
+                        cup.vx *= -1;
+                    } else if (cup.x > canvas.width - cupWidth) {
+                        cup.x = canvas.width - cupWidth;
+                        cup.vx *= -1;
+                    }
+                    cup.vy += 0.35;
+
                     if (cup.y + 20 > desk.y && cup.vy > 0) {
                         cup.y = desk.y - 20;
+
                         if (!scrubStainActive) {
                             triggerScrubStain(cup.x + 10, desk.y - 10);
                         }
@@ -365,7 +507,7 @@
                         if (Math.abs(cup.vy) < 1.2) {
                             cup.vy = 0;
                             cup.airborne = false;
-                            cupsToRemove.push(i); // Mark for removal
+                            cupsToRemove.push(i);
                         }
                     }
                     shelves.forEach(shelf => {
@@ -388,22 +530,22 @@
                     if ((cup.y > canvas.height - 10) && !scrubStainActive) {
                         triggerScrubStain(cup.x + 10, cup.y + 10);
                     }
-                    if (cup.x < -40 || cup.x > canvas.width + 40 || cup.y > canvas.height + 40) {
-                        cup.alpha -= 0.04;
-                        if (cup.alpha <= 0) coffeeCups.splice(i, 1);
-                    }
                 }
             });
+
             if (cupsToRemove.length > 0) {
                 cupsToRemove.sort((a, b) => b - a).forEach(idx => coffeeCups.splice(idx, 1));
             }
 
             if (!gameStarted) return;
 
+
             if (stealthState === 'scrubStain') {
                 scrubStainTimer++;
+
                 if (scrubStainTimer < 120) {
                     scrubStainProgress = scrubStainTimer / 120;
+
                     scrubStainAlpha = 1 - (scrubStainTimer / 120);
                 } else if (scrubStainTimer < 270)
                 {
@@ -412,24 +554,32 @@
                     scrubStainAlpha = 0;
                 } else if (scrubStainTimer < 330)
                 {
+
                     scrubStainAlpha = 0;
                 } else {
+
                     scrubStainActive = false;
                     scrubFootstepsProgress = 0;
                     stealthState = 'idle';
                     nextStealthEvent = Date.now() + 3000 + Math.random() * 4000;
                 }
+
             }
+
 
             const now = Date.now();
             if (stealthState === 'handsChase') {
+
                 if (!handsChaseActive) {
+
                     handsChaseActive = true;
                     handsChaseStart = now;
                     handsChaseTimer = 0;
+
                     handsChasePos.x = monitor.x + monitor.width / 2;
                     handsChasePos.y = monitor.y + monitor.height - 10;
                 }
+
                 const catCenterX = cat.x + cat.width / 2;
                 const catCenterY = cat.y + cat.height / 2;
                 const dx = catCenterX - handsChasePos.x;
@@ -439,6 +589,7 @@
                     handsChasePos.x += (dx / dist) * handsChaseSpeed;
                     handsChasePos.y += (dy / dist) * handsChaseSpeed;
                 }
+
                 if (
                     handsChasePos.x > cat.x - 18 &&
                     handsChasePos.x < cat.x + cat.width + 18 &&
@@ -448,17 +599,22 @@
                     endGame();
                     return;
                 }
+
                 handsChaseTimer = now - handsChaseStart;
                 if (handsChaseTimer > 7000) {
+
                     handsChaseActive = false;
                     chaseSuccessCount++;
                     meowCount = 0;
                     meowTarget = 0;
                     if (chaseSuccessCount >= chaseSuccessThreshold) {
+
                         endHandsMonitorAndTriggerWalkBack();
                         chaseSuccessCount = 0;
+
                         chaseSuccessThreshold = 1 + Math.floor(Math.random() * 3);
                     } else {
+
                         stealthState = 'hands';
                         handsProgress = 1;
                     }
@@ -471,6 +627,7 @@
                     doorOpenProgress = 0;
                     footprintsProgress = 0;
                     handsProgress = 0;
+
                     footstepsBackProgress = 0;
                     doorCloseProgress = 0;
                 }
@@ -493,24 +650,25 @@
                         handsProgress += 0.02;
                         if (handsProgress > 1) handsProgress = 1;
                     } else {
-                        handsHoldTimer += 16; // ~1 frame at 60fps
+                        handsHoldTimer += 16;
                         let handsSeconds = Math.floor(handsHoldTimer / 1000);
                         if (lastHandsSecond !== handsSeconds) {
                             lastHandsSecond = handsSeconds;
                             animateDeletionsScore(5);
                         }
+
                         if (isCatNearMonitor()) {
                             endGame();
                             return;
                         }
-                        if (handsHoldTimer >= 30000) { // 30 seconds in ms
+                        if (handsHoldTimer >= 30000) {
                             stealthState = 'footstepsBack';
                             footstepsBackProgress = 0;
                             lastHandsSecond = null;
                         }
                     }
                 } else if (stealthState === 'footstepsBack') {
-                    footstepsBackProgress += 0.012; // a bit faster than forward
+                    footstepsBackProgress += 0.012;
                     if (footstepsBackProgress >= 1) {
                         footstepsBackProgress = 1;
                         stealthState = 'doorClosing';
@@ -552,6 +710,7 @@
                 }
             });
 
+
             if (keys['ArrowLeft']) {
                 cat.x -= cat.speed;
             }
@@ -591,7 +750,6 @@
                     }
                 }
             });
-
             if (gameStarted && additionsHistory.length < 32) {
                 additionsHistory.push(score);
             }
@@ -616,6 +774,8 @@
             ctx.fillStyle = '#8d5c3c';
             ctx.fill();
             ctx.restore();
+
+
             if (scrubStainTimer < 120) {
                 let hand1X = stainX - 28;
                 let hand1Y = stainY - 32;
@@ -634,6 +794,7 @@
                 let footX = startX + (endX - startX) * t;
                 let footY = startY + (endY - startY) * t;
                 let steps = 8;
+
                 for (let i = 0; i < steps; i++) {
                     let stepT = i / (steps-1);
                     let sx = startX + (endX - startX) * stepT;
@@ -651,12 +812,13 @@
             }
         }
     }
-
     function drawGameHand(x, y, scale=1, alpha=1) {
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.translate(x, y);
         ctx.scale(scale, scale);
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = 'transparent';
         ctx.beginPath();
         ctx.ellipse(0, 0, 22, 16, Math.PI/10, 0, 2*Math.PI);
         ctx.fillStyle = '#f3e2c7';
@@ -675,37 +837,43 @@
     }
 
     function draw() {
+            let resetCount = 0;
+            while (resetCount < 100) {
+                try {
+                    ctx.restore();
+                    resetCount++;
+                } catch (e) {
+                    break;
+                }
+            }
+
+            ctx.save();
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#728C69';
             const wallBottomY = desk.y - 60;
             ctx.fillRect(0, 0, canvas.width, wallBottomY);
-
             const floorboardY = wallBottomY;
             ctx.fillStyle = '#bcae99';
             ctx.fillRect(0, floorboardY, canvas.width, canvas.height - floorboardY);
-
             ctx.save();
+            ctx.shadowColor = '#222a';
+            ctx.shadowBlur = 20;
             ctx.fillStyle = '#6b4a2b';
             ctx.fillRect(0, floorboardY - 8, canvas.width, 16);
             ctx.restore();
 
             updateGitCubeColor();
-
-
             if (scrubStainActive) {
                 drawScrubStain();
             }
-
             ctx.save();
             ctx.globalAlpha = 0.85;
             ctx.fillStyle = '#4b371c';
             ctx.beginPath();
             ctx.fill();
             ctx.restore();
-
             const windowX = canvas.width / 2 - 70;
             const windowY = 220;
-
             let windowSunProgress = 0;
             if (gameStarted && baseTime > 0) {
                 windowSunProgress = 1 - (currentTime / baseTime);
@@ -714,6 +882,7 @@
             } else {
                 windowSunProgress = 0;
             }
+
             function lerpColor(a, b, t) {
                 const ah = parseInt(a.replace('#',''),16), bh = parseInt(b.replace('#',''),16);
                 const ar = (ah>>16)&0xff, ag = (ah>>8)&0xff, ab = ah&0xff;
@@ -761,16 +930,16 @@
                         c.x = windowX-40;
                         c.y = windowY + 10 + Math.random()*50;
                         c.size = 18 + Math.random()*12;
-                        c.speed = 0.15 + Math.random()*0.12;
+                        c.speed = 0.15 + Math.random() * 0.12;
                     }
                 }
                 ctx.save();
                 ctx.globalAlpha = 0.7;
                 ctx.fillStyle = '#fff';
                 ctx.beginPath();
-                ctx.ellipse(c.x, c.y, c.size, c.size*0.6, 0, 0, 2*Math.PI);
-                ctx.ellipse(c.x+0.6*c.size, c.y+2, c.size*0.7, c.size*0.4, 0, 0, 2*Math.PI);
-                ctx.ellipse(c.x-0.7*c.size, c.y+3, c.size*0.5, c.size*0.3, 0, 0, 2*Math.PI);
+                ctx.ellipse(c.x, c.y, c.size, c.size*0.6, 0, 0, Math.PI*2);
+                ctx.ellipse(c.x+0.6*c.size, c.y+2, c.size*0.7, c.size*0.4, 0, 0, Math.PI*2);
+                ctx.ellipse(c.x-0.7*c.size, c.y+3, c.size*0.5, c.size*0.3, 0, 0, Math.PI*2);
                 ctx.fill();
                 ctx.restore();
             }
@@ -796,7 +965,6 @@
             ctx.shadowBlur = 24;
             ctx.fill();
             ctx.restore();
-
             ctx.save();
             ctx.shadowColor = '#2226';
             ctx.shadowBlur = 8;
@@ -820,7 +988,6 @@
             ctx.lineTo(windowX + 140, windowY + 40);
             ctx.stroke();
             ctx.restore();
-
             ctx.save();
             ctx.shadowColor = '#222a';
             ctx.shadowBlur = 18;
@@ -837,11 +1004,13 @@
             ) {
                 doorOpen = doorOpenProgress;
             } else if (stealthState === 'doorClosing' || (stealthState === 'scrubStain' && scrubStainTimer >= 270 && scrubStainTimer < 330)) {
+
                 let t = (stealthState === 'scrubStain') ? (scrubStainTimer-270)/60 : doorCloseProgress;
                 doorOpen = 1 - t;
             } else {
                 doorOpen = 0;
             }
+
 const doorW = 60, doorH = 135;
 const hingeLeft = true;
 const hingeX = hingeLeft ? doorX : doorX + doorW;
@@ -851,6 +1020,7 @@ const t = Math.max(0, Math.min(1, doorOpen));
 const eased = easeOutCubic(t);
 const maxAngle = Math.PI / 2 * 0.98;
 const angle = (hingeLeft ? -1 : 1) * maxAngle * eased;
+
 
 const thickness = 12;
 const depthScale = 0.6;
@@ -864,15 +1034,15 @@ if (t > 0) {
         ctx.restore();
 
     ctx.save();
-    ctx.translate(hingeX, hingeY);
 
+    ctx.translate(hingeX, hingeY);
     const faceScaleX = 1 - Math.abs(Math.sin(angle)) * depthScale;
     ctx.save();
     ctx.scale(faceScaleX, 1);
     ctx.fillStyle = '#5a3c1a';
     ctx.fillRect(0, -doorH/2, doorW, doorH);
     ctx.strokeStyle = '#3a220a';
-    ctx.lineWidth = 5 / faceScaleX;
+    ctx.lineWidth = 5 ;
     ctx.strokeRect(0, -doorH/2, doorW, doorH);
     const knobLocalX = doorW - 8;
     const knobLocalY = 0;
@@ -880,18 +1050,16 @@ if (t > 0) {
     ctx.arc(knobLocalX, knobLocalY, 6, 0, Math.PI * 2);
     ctx.fillStyle = '#eab676';
     ctx.fill();
-    ctx.restore(); // restore from scale
-
+    ctx.restore();
     const sign = hingeLeft ? 1 : -1;
     const absAng = Math.abs(angle);
     if (absAng > 0.01) {
-        const tipX = Math.cos(0) * doorW; // before rotation; we're in rotated coords
+
+        const tipX = Math.cos(0) * doorW;
         const tipTopY = -doorH/4;
         const tipBottomY = doorH/4;
-
         const edgeOffsetX = sign * thickness * Math.cos(absAng) ;
         const edgeOffsetY = thickness * Math.sin(absAng) * skew;
-
         ctx.beginPath();
         ctx.moveTo(doorW, -doorH/2);
         ctx.lineTo(doorW + edgeOffsetX, -doorH/2 + edgeOffsetY);
@@ -906,26 +1074,16 @@ if (t > 0) {
     }
 
     ctx.restore();
-
-    const worldAngle = angle; // rotation applied about hinge
-    const tipWorldX = hingeX + Math.cos(worldAngle) * doorW * (1);
-    const tipWorldY = hingeY + Math.sin(worldAngle) * doorW * (1);
-
     ctx.save();
     ctx.globalAlpha = 0.5 * eased;
-    const grad = ctx.createLinearGradient(tipWorldX, tipWorldY, tipWorldX + 200, tipWorldY + 80);
-    grad.addColorStop(0, 'rgba(255,255,180,0.7)');
-    grad.addColorStop(1, 'rgba(255,255,180,0)');
-    ctx.fillStyle = grad;
     ctx.beginPath();
     ctx.moveTo(hingeX, hingeY);
-    ctx.lineTo(tipWorldX + 200, tipWorldY - 30);
-    ctx.lineTo(tipWorldX + 200, tipWorldY + 150);
     ctx.closePath();
     ctx.fill();
     ctx.restore();
 
 } else {
+
   ctx.save();
   ctx.fillStyle = '#5a3c1a';
   ctx.fillRect(doorX, doorY, doorW, doorH);
@@ -944,13 +1102,13 @@ if (t > 0) {
             ctx.fillStyle = desk.color;
             ctx.fillRect(desk.x, desk.y, desk.width, desk.height);
             ctx.restore();
-
             drawScrubStain();
 
             shelves.forEach(shelf => {
                 ctx.fillStyle = shelf.color;
                 ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
             });
+
             randomShelves.forEach(shelf => {
                 ctx.fillStyle = shelf.color;
                 ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
@@ -971,7 +1129,6 @@ if (t > 0) {
                 ctx.stroke();
             }
             ctx.restore();
-
             coffeeCups.forEach(cup => {
                 ctx.save();
                 ctx.globalAlpha = cup.alpha;
@@ -981,7 +1138,6 @@ if (t > 0) {
                 ctx.fillText(coffeeEmoji, cup.x + 16, cup.y + 28);
                 ctx.restore();
             });
-
             const steps = 8;
             if (stealthState === 'footprints' || stealthState === 'hands') {
                 for (let i = 0; i < steps; i++) {
@@ -1008,6 +1164,7 @@ if (t > 0) {
                     ctx.save();
                     ctx.globalAlpha = 0.5 + 0.5 * t;
                     ctx.fillStyle = '#222';
+
                     ctx.shadowBlur = 0;
                     ctx.shadowColor = 'transparent';
                     ctx.beginPath();
@@ -1017,24 +1174,37 @@ if (t > 0) {
                 }
             }
 
+
+
+
+
             ctx.font = `${monitor.width}px serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
-            ctx.fillText('\u{1F5A5}', monitor.x + monitor.width / 2, monitor.y);
+            ctx.fillText('\u{1F4BB}', monitor.x + monitor.width/2, monitor.y);
+
 
             if (stealthState === 'handsChase' && handsChaseActive) {
+
                 ctx.save();
                 ctx.globalAlpha = 1;
+
+                ctx.shadowBlur = 0;
+                ctx.shadowColor = 'transparent';
+
                 const handY = handsChasePos.y;
+
                 ctx.fillStyle = '#eab676';
                 ctx.beginPath();
                 ctx.ellipse(handsChasePos.x - 25, handY, 18, 16, -0.2, 0, Math.PI*2);
                 ctx.fill();
+
                 for (let f=0; f<4; f++) {
                     ctx.beginPath();
                     ctx.ellipse(handsChasePos.x - 35 + f*6, handY+12, 4, 10, 0, 0, Math.PI*2);
                     ctx.fill();
                 }
+
                 ctx.beginPath();
                 ctx.ellipse(handsChasePos.x + 25, handY, 18, 16, 0.2, 0, Math.PI*2);
                 ctx.fill();
@@ -1058,22 +1228,31 @@ if (t > 0) {
                 ctx.restore();
 
             }
+
             if (stealthState === 'hands') {
+
                 const handY = monitor.y + monitor.height - 10 + 40 * (1 - handsProgress);
                 ctx.save();
                 ctx.globalAlpha = handsProgress;
+
+                ctx.shadowBlur = 0;
+                ctx.shadowColor = 'transparent';
                 ctx.fillStyle = '#eab676';
+
                 ctx.beginPath();
                 ctx.ellipse(monitor.x + 25, handY, 18, 16, -0.2, 0, Math.PI*2);
                 ctx.fill();
+
                 for (let f=0; f<4; f++) {
                     ctx.beginPath();
                     ctx.ellipse(monitor.x + 15 + f*6, handY+12, 4, 10, 0, 0, Math.PI*2);
                     ctx.fill();
                 }
+
                 ctx.beginPath();
                 ctx.ellipse(monitor.x + monitor.width - 25, handY, 18, 16, 0.2, 0, Math.PI*2);
                 ctx.fill();
+
                 for (let f=0; f<4; f++) {
                     ctx.beginPath();
                     ctx.ellipse(monitor.x + monitor.width - 35 + f*6, handY+12, 4, 10, 0, 0, Math.PI*2);
@@ -1082,8 +1261,10 @@ if (t > 0) {
                 ctx.restore();
             }
 
+
             ctx.save();
             ctx.translate(cat.x + cat.width / 2, cat.y + cat.height / 2);
+
             if (typeof cat.lastFacing === 'undefined') cat.lastFacing = 1;
             if (keys['ArrowLeft'] && !keys['ArrowRight']) cat.lastFacing = -1;
             else if (keys['ArrowRight'] && !keys['ArrowLeft']) cat.lastFacing = 1;
@@ -1095,14 +1276,18 @@ if (t > 0) {
                 walkCycle = Math.sin(Date.now() / 120) * 4;
             }
 
+
             if (codeMode) {
+
                 ctx.fillStyle = '#222';
                 ctx.beginPath();
                 ctx.ellipse(0, 8, 13, 11, 0, 0, Math.PI * 2);
                 ctx.fill();
+
                 ctx.beginPath();
                 ctx.arc(0, -6, 9, 0, Math.PI * 2);
                 ctx.fill();
+
                 ctx.beginPath();
                 ctx.moveTo(-6, -14);
                 ctx.lineTo(-3, -22);
@@ -1113,6 +1298,50 @@ if (t > 0) {
                 ctx.strokeStyle = '#222';
                 ctx.lineWidth = 3;
                 ctx.stroke();
+
+                if (catWearsFedora) {
+                    ctx.save();
+
+                    ctx.beginPath();
+                    ctx.ellipse(0, -15, 14, 5, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = '#111';
+                    ctx.globalAlpha = 0.95;
+                    ctx.fill();
+
+
+                    ctx.beginPath();
+
+                    ctx.moveTo(-7, -15);
+                    ctx.lineTo(-6, -25);
+
+                    ctx.lineTo(-2, -27);
+                    ctx.lineTo(0, -26);
+                    ctx.lineTo(2, -27);
+
+                    ctx.lineTo(6, -25);
+                    ctx.lineTo(7, -15);
+                    ctx.closePath();
+                    ctx.fillStyle = '#111';
+                    ctx.fill();
+
+
+                    ctx.beginPath();
+                    ctx.rect(-7, -21, 14, 3);
+                    ctx.fillStyle = '#444';
+                    ctx.fill();
+
+
+                    ctx.beginPath();
+                    ctx.moveTo(5, -19.5);
+                    ctx.lineTo(7, -19.5);
+                    ctx.lineTo(6, -21);
+                    ctx.closePath();
+                    ctx.fillStyle = '#777';
+                    ctx.fill();
+
+                    ctx.restore();
+                }
+
                 ctx.save();
                 ctx.beginPath();
                 ctx.moveTo(0, 18);
@@ -1121,8 +1350,10 @@ if (t > 0) {
                 ctx.lineWidth = 4;
                 ctx.stroke();
                 ctx.restore();
+
                 let tap = Math.abs(Math.sin(Date.now() / 80));
                 let tap2 = Math.abs(Math.sin(Date.now() / 80 + 1));
+
                 ctx.save();
                 ctx.translate(-6, 18 + tap * 3);
                 ctx.rotate(-0.2 + tap * 0.2);
@@ -1131,6 +1362,7 @@ if (t > 0) {
                 ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
+
                 ctx.save();
                 ctx.translate(6, 18 + tap2 * 3);
                 ctx.rotate(0.2 - tap2 * 0.2);
@@ -1138,6 +1370,7 @@ if (t > 0) {
                 ctx.beginPath();
                 ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
                 ctx.fill();
+                ctx.restore();
                 ctx.restore();
             } else {
                 ctx.fillStyle = '#222';
@@ -1157,6 +1390,50 @@ if (t > 0) {
                 ctx.strokeStyle = '#222';
                 ctx.lineWidth = 3;
                 ctx.stroke();
+                if (catWearsFedora) {
+                    ctx.save();
+
+                    let hatOffsetX = cat.lastFacing === 1 ? 16 : 16;
+                    let hatOffsetY = -4;
+                    ctx.translate(hatOffsetX, hatOffsetY);
+                    ctx.scale(cat.lastFacing, 1);
+
+
+                    ctx.beginPath();
+                    ctx.ellipse(0, -7, 14, 5, Math.PI / 16, 0, Math.PI * 2);
+                    ctx.fillStyle = '#111';
+                    ctx.globalAlpha = 0.95;
+                    ctx.fill();
+
+
+                    ctx.beginPath();
+
+                    ctx.moveTo(-7, -9);
+                    ctx.lineTo(-6, -17);
+                    ctx.lineTo(-2, -19);
+                    ctx.lineTo(0, -18);
+                    ctx.lineTo(2, -19);
+                    ctx.lineTo(6, -17);
+                    ctx.lineTo(7, -9);
+                    ctx.closePath();
+                    ctx.fillStyle = '#111';
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.rect(-7, -13, 14, 3);
+                    ctx.fillStyle = '#444';
+                    ctx.fill();
+
+                    ctx.beginPath();
+                    ctx.moveTo(5, -11.5);
+                    ctx.lineTo(7, -11.5);
+                    ctx.lineTo(6, -13);
+                    ctx.closePath();
+                    ctx.fillStyle = '#777';
+                    ctx.fill();
+
+                    ctx.restore();
+                }
                 ctx.beginPath();
                 ctx.ellipse(19, -4, 1.5, 2, 0, 0, Math.PI * 2);
                 ctx.fillStyle = 'white';
@@ -1165,10 +1442,12 @@ if (t > 0) {
                 ctx.ellipse(19, -4, 0.7, 1, 0, 0, Math.PI * 2);
                 ctx.fillStyle = 'black';
                 ctx.fill();
+
                 ctx.beginPath();
                 ctx.ellipse(23, -1, 0.7, 1, 0, 0, Math.PI * 2);
                 ctx.fillStyle = '#eab';
                 ctx.fill();
+
                 ctx.save();
                 ctx.beginPath();
                 ctx.moveTo(-10, 0);
@@ -1177,12 +1456,15 @@ if (t > 0) {
                 ctx.lineWidth = 4;
                 ctx.stroke();
                 ctx.restore();
+
                 ctx.strokeStyle = '#222';
                 ctx.lineWidth = 4;
+
                 ctx.beginPath();
                 ctx.moveTo(-2, 13);
                 ctx.lineTo(-2 + walkCycle, 22 - walkCycle);
                 ctx.stroke();
+
                 ctx.beginPath();
                 ctx.moveTo(8, 13);
                 ctx.lineTo(8 - walkCycle, 22 + walkCycle);
@@ -1191,8 +1473,6 @@ if (t > 0) {
             ctx.shadowBlur = 0;
             ctx.shadowOffsetY = 0;
             ctx.restore();
-
-
             codeParticles.forEach(particle => {
                 ctx.save();
                 ctx.shadowBlur = 0;
@@ -1214,11 +1494,12 @@ if (t > 0) {
                     const letterSpacing = particle.size
                     words.forEach(word => {
                         let color = 'white';
-                        if (word === 'console') color = particle.consoleColor;
+                        if (word === 'console') color = 'lightgreen';
                         else if (word === 'log') color = particle.logColor;
-                        else if (word === 'meow' || word === 'tuna' || word === 'yarn' || word === 'purr') color = particle.meowColor;
-                        else if (word === 'cat' || word === 'Food' || word === 'wakeUp' || word === 'debug' || word === 'error' || word === 'function' || word === 'return' || word === 'if' || word === 'let' || word === 'new') color = 'lightblue';
+                        else if (word === 'meow' || word === 'tuna' || word === 'yarn' || word === 'purr') color = 'magenta';
+                        else if (word === 'cat' || word === 'Food' || word === 'wakeUp' || word === 'debug' || word === 'function' || word === 'return' || word === 'if' || word === 'let' || word === 'new') color = 'lightblue';
                         else if (['Slep'].includes(word)) color = 'orange';
+                        else if (word === 'error') color = 'red';
                         ctx.fillStyle = color;
                         ctx.fillText(word, Math.round(particle.x + xOffset), particle.y);
                         let width = ctx.measureText(word).width;
@@ -1229,14 +1510,6 @@ if (t > 0) {
                 ctx.restore();
             });
         }
-
-        let keys = {};
-        let scoredKeys = {};
-        let lastKeyPressTime = 1;
-        let comboMultiplier = 1;
-        const comboThreshold = 400; // ms
-        const comboMax = 7;
-
         let tipTapping = false;
         let tipTapTimeout;
     document.addEventListener('keydown', (e) => {
@@ -1255,7 +1528,23 @@ if (t > 0) {
             }
             if (codeMode && e.key.match(/^[a-z]$/)) {
                 generateCodeParticle();
+                if (stealthState == 'handsChase'){
+                animateScore(10);
+                codeParticles.push({
+                    x: cat.x + cat.width / 2,
+                    y: cat.y,
+                    text: '10x',
+                    size: 22,
+                    speedX: (Math.random() - 0.5) * 1.2,
+                    speedY: -2.5 - Math.random() * 1.5,
+                    targetX: cat.x + cat.width / 2 + (Math.random() - 0.5) * 40,
+                    targetY: cat.y - 60 - Math.random() * 30,
+                    alpha: 1,
+                    isMeow: true
+                });
+                } else {
                 animateScore(1);
+                }
                 tipTapping = true;
                 clearTimeout(tipTapTimeout);
                 tipTapTimeout = setTimeout(() => { tipTapping = false; }, 120);
@@ -1265,42 +1554,48 @@ if (t > 0) {
                 handsProgress === 1 &&
                 e.code === 'Space'
             ) {
-                codeParticles.push({
-                    x: cat.x + cat.width / 2,
-                    y: cat.y,
-                    text: 'meow',
-                    consoleColor: 'white',
-                    logColor: 'white',
-                    meowColor: 'lightblue',
-                    size: 22,
-                    speedX: (Math.random() - 0.5) * 1.2,
-                    speedY: -2.5 - Math.random() * 1.5,
-                    targetX: cat.x + cat.width / 2 + (Math.random() - 0.5) * 40,
-                    targetY: cat.y - 60 - Math.random() * 30,
-                    alpha: 1,
-                    isMeow: true
-                });
                 if (!meowTarget) {
-                    meowTarget = 2 + Math.floor(Math.random() * 6);
+                    meowTarget = 1;
                     meowCount = 0;
                 }
                 meowCount++;
                 if (meowCount >= meowTarget) {
                     stealthState = 'handsChase';
-                    handsChaseActive = false; // will init in update()
+                    handsChaseActive = false;
                 }
-            } else if (
 
-                e.code === 'Space'
-            ) {
+                playBootupSound();
+
+
+                    codeParticles.push({
+                    x: cat.x + cat.width / 2,
+                    y: cat.y,
+                    text: 'Aw lawd he commin!',
+                    size: 22,
+                    speedX: (Math.random() - 0.5) * 1.2,
+                    speedY: -2.5 - Math.random() * 1.5,
+                    targetX: cat.x + cat.width / 2 + (Math.random() - 0.5) * 40,
+                    targetY: cat.y - 60 - Math.random() * 30,
+                    alpha: 1,
+                    isMeow: true
+                });
+            } else if (e.code === 'Space') {
+
+                 playSoundEffect({
+                    type: 'meow',
+                    pitch: bassMeowNotes[bassMeowIndex],
+                    duration: .18,
+                    volume: 0.18,
+                    randomize: false,
+                    scale: null
+
+                                });
+             bassMeowIndex = (bassMeowIndex + 1) % bassMeowNotes.length;
 
                  codeParticles.push({
                     x: cat.x + cat.width / 2,
                     y: cat.y,
                     text: 'meow',
-                    consoleColor: 'white',
-                    logColor: 'white',
-                    meowColor: 'lightblue',
                     size: 22,
                     speedX: (Math.random() - 0.5) * 1.2,
                     speedY: -2.5 - Math.random() * 1.5,
@@ -1310,7 +1605,7 @@ if (t > 0) {
                     isMeow: true
                 });
                 if (!meowTarget) {
-                    meowTarget = 3 + Math.floor(Math.random() * 4);
+                    meowTarget = 1 + Math.floor(Math.random() * 4);
                     meowCount = 0;
                 }
                 meowCount++;
@@ -1319,13 +1614,49 @@ if (t > 0) {
 
                     nextStealthEvent = Date.now()
                 }
+
             }
         });
+     // Add at the top
+     const codeParticleChords = [392, 294, 220, 261.63]; // G, D, Am, C
+     let codeParticleChordIndex = 0;
+
+   const bassMeowNotes = [
+       98.00 * 2,    // E string, fret 3 (G)
+       196.00 * 2,   // D string, fret 5 (G)
+       110.00 * 2,   // A string, fret 0 (A)
+       196.00 * 2,   // D string, fret 5 (G)
+       123.47 * 2,   // A string, fret 2 (B)
+       196.00 * 2,   // D string, fret 5 (G)
+       130.81 * 2,   // A string, fret 3 (C)
+       196.00 * 2,   // D string, fret 5 (G)
+
+       146.83 * 2,   // D string, fret 0 (D)
+       196.00 * 2,    // G string, fret 0 (G)
+       164.81 * 2,   // D string, fret 2 (E)
+       196.00 * 2,     // G string, fret 0 (G)
+       184.99 * 2,   // D string, fret 4 (F#)
+       196.00 * 2,     // G string, fret 0 (G)
+       196.00 * 2,   // D string, fret 5 (G)
+       196.00 * 2,     // G string, fret 0 (G)
+
+   ];
+   let bassMeowIndex = 0;
+
 
         function animateScore(points) {
             let startScore = score;
             let endScore = score + points;
-            const animationDuration = .2;
+            playSoundEffect({
+            type: 'score',
+            pitch: codeParticleChords[codeParticleChordIndex],
+            duration: .52,
+            volume: 0.05,
+                        });
+             codeParticleChordIndex = (codeParticleChordIndex + 1) % codeParticleChords.length;
+
+
+            const animationDuration = 1.2;
             const startTime = performance.now();
 
             function updateScore(currentTime) {
@@ -1350,12 +1681,15 @@ if (t > 0) {
         }
 
         function endGame() {
+            playGameOverProgression()
             gameStarted = false;
             clearInterval(timerInterval);
             showTimer(false);
             gameOverScreen.style.display = 'flex';
             gameOverScreen.setAttribute('data-reason', 'petted');
-            document.getElementById('gameOverMessage').textContent = 'you were petted.';
+            document.getElementById('gameOverMessage').innerHTML =
+  "<span style='color:#f85149; font-family:Cinzel, serif; font-size:1.2em; letter-spacing:2px;'>You were petted.</span>";
+            document.getElementById('restartButton').innerHTML = 'We Continue';
             finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${deletionsScore} deletions</span>`;
             drawGitGraph();
             if (gitGraphResults.length < maxGames) {
@@ -1363,16 +1697,22 @@ if (t > 0) {
             }
             updateGitGraphGrid();
             if (gitGraphResults.length === maxGames) {
-                setTimeout(showReport, 1200); // Give a moment for last game over
+                setTimeout(showReport, 1200);
             }
         }
 
         function showReport() {
             startButton.style.display = 'none';
             reportScreen.style.display = 'block';
-            scoreboard.style.display = 'none'; // Hide scoreboard on report screen
+            scoreboard.style.display = 'none';
             let total = gitGraphResults.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);
             let rank = getRank(total);
+            const fedoraOption = document.getElementById('fedoraOption');
+            if (rank === 'Hello World!') {
+                fedoraOption.style.display = 'flex';
+            } else {
+                fedoraOption.style.display = 'none';
+            }
             let rankColor = {
                 'kode kitten': '#888',
                 'junior dev': '#1e90ff',
@@ -1384,6 +1724,7 @@ if (t > 0) {
             let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
             let details = gitGraphResults.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');
             reportScreen.innerHTML = `<h2>7 Games Complete!</h2><div style='margin:12px 0 18px 0;'>Total Additions: <span style='color:#2ea043; font-size:1.3em;'>${total}</span></div>${details}<div style='margin:18px 0 8px 0;'>Rank:</div>${rankText}<div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Play Again</button></div>`;
+
             setTimeout(() => {
                 document.getElementById('resetSeriesBtn').onclick = () => {
                     gitGraphResults = [];
@@ -1451,65 +1792,23 @@ if (t > 0) {
         document.addEventListener('keyup', (e) => {
             keys[e.key] = false;
         });
-
         let gameLoopRunning = false;
         function gameLoop() {
             if (!gameLoopRunning) return;
-    if (codeMode) {
-        const now = Date.now();
-        Object.keys(keys).forEach(key => {
-            if (keys[key] && key.match(/^[a-z]$/) && !scoredKeys[key]) {
-                if (now - lastKeyPressTime < comboThreshold) {
-                    comboMultiplier = Math.min(comboMultiplier + 1, comboMax);
-                } else {
-                    comboMultiplier = 1;
-                }
-                lastKeyPressTime = now;
-                generateCodeParticle();
-                animateScore(comboMultiplier);
-                scoredKeys[key] = true;
-                tipTapping = true;
-                clearTimeout(tipTapTimeout);
-                tipTapTimeout = setTimeout(() => { tipTapping = false; }, 120);
-            }
-        });
-    }
             update();
             draw();
             requestAnimationFrame(gameLoop);
         }
 
-    tutorialButton.addEventListener('click', () => {
-        tutorialScreen.style.display = 'flex';
-        reportScreen.style.display = 'block';
-        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups || press -> <- to move left and right and ^ to jump, Spam any letter key when infront of the computer to code!</span>`;
-        reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
-        setTimeout(() => {
-            document.getElementById('resetSeriesBtn').onclick = () => {
-                gitGraphResults = [];
-                updateGitGraphGrid();
-                reportScreen.style.display = 'none';
-                startButton.style.display = 'inline-block';
-            };
-        }, 100);
-        setTimeout(() => {
-            document.getElementById('closeBtn').onclick = () => {
-                reportScreen.style.display = 'none';
-                startButton.style.display = 'inline-block';
-            };
-        }, 100);
-    }
-     );
-
     startButton.addEventListener('click', () => {
-        spawnRandomShelves(); // Spawn random shelves each round
+        spawnRandomShelves();
         spawnCoffeeCups();
-        if (gitGraphResults.length === maxGames) return; // Don't start if series complete
+        if (gitGraphResults.length === maxGames) return;
         chaseSuccessCount = 0;
         gameStarted = true;
         startScreen.style.display = 'none';
         gameOverScreen.style.display = 'none';
-        scoreboard.style.display = 'block'; // Show scoreboard only during game
+        scoreboard.style.display = 'block';
         score = 0;
         deletionsScore = 0;
         gitAdditions.textContent = 0;
@@ -1527,6 +1826,12 @@ if (t > 0) {
         doorCloseProgress = 0;
         lastStealthFrame = Date.now();
         lastHandsSecond = null;
+        scrubStainActive = false;
+        scrubStainTimer = 0;
+        scrubStainProgress = 0;
+        scrubStainAlpha = 0;
+        scrubStainX = null;
+        scrubStainY = null;
         cat.x = 50;
         cat.y = 500;
         cat.velocityY = 0;
@@ -1535,6 +1840,7 @@ if (t > 0) {
         keys = {};
         round = 1;
         currentTime = baseTime;
+        playBootupSound();
         startTimer();
         if (!gameLoopRunning) {
             gameLoopRunning = true;
@@ -1542,10 +1848,15 @@ if (t > 0) {
         }
     });
 
+    const fedoraCheckbox = document.getElementById('fedoraCheckbox');
+    fedoraCheckbox.addEventListener('change', (event) => {
+        catWearsFedora = event.target.checked;
+    });
+
         restartButton.addEventListener('click', () => {
             startScreen.style.display = 'flex';
             gameOverScreen.style.display = 'none';
-            scoreboard.style.display = 'none'; // Hide scoreboard on start screen
+            scoreboard.style.display = 'none';
             updateGitGraphGrid();
             gameLoopRunning = false;
         });
@@ -1553,8 +1864,9 @@ if (t > 0) {
     tutorialButton.addEventListener('click', () => {
         tutorialScreen.style.display = 'flex';
         reportScreen.style.display = 'block';
-        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups || press -> <- to move left and right and ^ to jump, Spam any letter key when infront of the computer to code!</span>`;
+        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups <p> press -> <- to move left and right and ^ to jump </p> Spam any letter key when infront of the computer to code! ||</span>`;
         reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
+
         setTimeout(() => {
             document.getElementById('resetSeriesBtn').onclick = () => {
                 gitGraphResults = [];
@@ -1572,32 +1884,7 @@ if (t > 0) {
     }
      );
 
-    function showReport() {
-        startButton.style.display = 'none';
-        reportScreen.style.display = 'block';
-        scoreboard.style.display = 'none'; // Hide scoreboard on report screen
-        let total = gitGraphResults.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);
-        let rank = getRank(total);
-        let rankColor = {
-            'kode kitten': '#888',
-            'junior dev': '#1e90ff',
-            'script kitty': '#f7c325',
-            'senior dev': '#a259e6',
-            'grey cat hacker': '#2ea043',
-            'master black cat hacker': '#000'
-        }[rank] || '#fff';
-        let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
-        let details = gitGraphResults.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');
-        reportScreen.innerHTML = `<h2>7 Games Complete!</h2><div style='margin:12px 0 18px 0;'>Total Additions: <span style='color:#2ea043; font-size:1.3em;'>${total}</span></div>${details}<div style='margin:18px 0 8px 0;'>Rank:</div>${rankText}<div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Play Again</button></div>`;
-        setTimeout(() => {
-            document.getElementById('resetSeriesBtn').onclick = () => {
-                gitGraphResults = [];
-                updateGitGraphGrid();
-                reportScreen.style.display = 'none';
-                startButton.style.display = 'inline-block';
-            };
-        }, 100);
-    }
+
 
     updateGitGraphGrid();
     scoreboard.style.display = 'none';
