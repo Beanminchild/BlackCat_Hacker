@@ -105,9 +105,10 @@
             gitGraphResults.push({ score, deletions: deletionsScore });
         }
         updateGitGraphGrid();
-        if (gitGraphResults.length === maxGames) {
-            setTimeout(showReport, 1200); // Give a moment to the last game over
-        }
+<!--        if (gitGraphResults.length === maxGames) {-->
+<!--            setTimeout(showReport, 1200); // Give a moment to the last game over-->
+<!--            playHighRankCelebration()-->
+<!--        }-->
     }
     function startTimer() {
         showTimer(true);
@@ -184,7 +185,7 @@
     let gitGraphResults = [];
     const maxGames = 7;
     function getRank(total) {
-        if (total >= 7000) return 'Master B|ckc4t_h@cker';
+        if (total >= 7000) return 'Master B|ackc4t_h@cker';
         if (total >= 5000) return 'Grey Cat Hacker';
         if (total >= 3500) return 'Pawtonista';
         if (total >= 2000) return 'Script kitty';
@@ -353,6 +354,35 @@ function playGameOverProgression() {
     // Usage examples:
 
 
+// High rank celebration sound based on your tab
+function playHighRankCelebration() {
+    // Frequencies for each string/fret (approximate, standard tuning)
+   const tabNotes = [
+        { pitch: 329.63 * Math.pow(2, 15 / 12), duration: 0.10 }, // high e, fret 15
+        { pitch: 329.63 * Math.pow(2, 14 / 12), duration: 0.10 }, // high e, fret 14
+        { pitch: 246.94 * Math.pow(2, 16 / 12), duration: 0.10 }, // B, fret 16
+        { pitch: 196.00 * Math.pow(2, 14 / 12), duration: 0.10 }, // G, fret 14
+        { pitch: 196.00 * Math.pow(2, 13 / 12), duration: 0.10 }, // G, fret 13
+        { pitch: 246.94 * Math.pow(2, 17 / 12), duration: 0.10 }, // B, fret 17
+        { pitch: 329.63 * Math.pow(2, 16 / 12), duration: 0.10 }, // high e, fret 16
+        { pitch: 329.63 * Math.pow(2, 20 / 12), duration: 0.10 }, // high e, fret 20
+    ];
+
+    let time = 0;
+    tabNotes.forEach(note => {
+        setTimeout(() => {
+            playSoundEffect({
+                type: 'score',
+                pitch: note.pitch,
+                duration: note.duration,
+                volume: 0.18,
+                scale: null,
+                randomize: false
+            });
+        }, time * 1000);
+        time += note.duration + 0.01; // 80ms gap between notes
+    });
+}
 
 
 <!--    playSoundEffect({ type: 'meow', pitch: 466, duration: 0.15 }); // Harmonized meow-->
@@ -441,10 +471,10 @@ function playGameOverProgression() {
         };
 
 
-        let gameStarted = false;
-        let codeMode = false;
-        let score = 0;
-        let codeParticles = [];
+    let gameStarted = false;
+    let codeMode = false;
+    let score = 0;
+    let codeParticles = [];
     const gitAdditions = document.getElementById('gitAdditions');
     const gitDeletions = document.getElementById('gitDeletions');
     const gitCube = document.getElementById('gitCube');
@@ -1231,34 +1261,34 @@ if (t > 0) {
 
     // draw visible edge (the door thickness) as a trapezoid
     // Edge direction depends on hinge side and sign of angle
-    const sign = hingeLeft ? 1 : -1;
-    const absAng = Math.abs(angle);
-    if (absAng > 0.01) {
-        // tip location at outer edge of face (in rotated space)
-        const tipX = Math.cos(0) * doorW; // before rotation; we're in rotated coords
-        const tipTopY = -doorH/4;
-        const tipBottomY = doorH/4;
+<!--    const sign = hingeLeft ? 1 : -1;-->
+<!--    const absAng = Math.abs(angle);-->
+<!--    if (absAng > 0.01) {-->
+<!--        // tip location at outer edge of face (in rotated space)-->
+<!--        const tipX = Math.cos(0) * doorW; // before rotation; we're in rotated coords-->
+<!--        const tipTopY = -doorH/4;-->
+<!--        const tipBottomY = doorH/4;-->
 
-        // compute offset for thickness using angle
-        const edgeOffsetX = sign * thickness * Math.cos(absAng) ;
-        const edgeOffsetY = thickness * Math.sin(absAng) * skew;
+<!--        // compute offset for thickness using angle-->
+<!--        const edgeOffsetX = sign * thickness * Math.cos(absAng) ;-->
+<!--        const edgeOffsetY = thickness * Math.sin(absAng) * skew;-->
 
-        ctx.beginPath();
-        // top outer corner
-        ctx.moveTo(doorW, -doorH/2);
-        // top outer + offset
-        ctx.lineTo(doorW + edgeOffsetX, -doorH/2 + edgeOffsetY);
-        // bottom outer + offset
-        ctx.lineTo(doorW + edgeOffsetX, doorH/2 + edgeOffsetY);
-        // bottom outer
-        ctx.lineTo(doorW, doorH/2);
-        ctx.closePath();
-        ctx.fillStyle = '#452a12';
-        ctx.fill();
-        ctx.strokeStyle = '#2c1907';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    }
+<!--        ctx.beginPath();-->
+<!--        // top outer corner-->
+<!--        ctx.moveTo(doorW, -doorH/2);-->
+<!--        // top outer + offset-->
+<!--        ctx.lineTo(doorW + edgeOffsetX, -doorH/2 + edgeOffsetY);-->
+<!--        // bottom outer + offset-->
+<!--        ctx.lineTo(doorW + edgeOffsetX, doorH/2 + edgeOffsetY);-->
+<!--        // bottom outer-->
+<!--        ctx.lineTo(doorW, doorH/2);-->
+<!--        ctx.closePath();-->
+<!--        ctx.fillStyle = '#452a12';-->
+<!--        ctx.fill();-->
+<!--        ctx.strokeStyle = '#2c1907';-->
+<!--        ctx.lineWidth = 2;-->
+<!--        ctx.stroke();-->
+<!--    }-->
 
     ctx.restore();
     ctx.save();
@@ -1769,7 +1799,7 @@ if (t > 0) {
                     isMeow: true
                 });
                 } else {
-                animateScore(1);
+                animateScore(10);
                 }
                 tipTapping = true;
                 clearTimeout(tipTapTimeout);
@@ -1791,6 +1821,7 @@ if (t > 0) {
                 }
 
                 playBootupSound();
+
 
 
                     codeParticles.push({
@@ -1927,7 +1958,8 @@ if (t > 0) {
             updateGitGraphGrid();
             // --- If 7 games played, show report ---
             if (gitGraphResults.length === maxGames) {
-                setTimeout(showReport, 1200); // Give a moment for last game over
+                setTimeout(showReport, 1500); // Give a moment for last game over
+
             }
         }
 
@@ -1942,6 +1974,7 @@ if (t > 0) {
             const fedoraOption = document.getElementById('fedoraOption');
             if (rank === 'Master B|ackc4t_h@cker' || rank === 'Grey Cat Hacker') {
                 fedoraOption.style.display = 'flex';
+
             } else {
                 fedoraOption.style.display = 'none';
             }
@@ -1952,7 +1985,7 @@ if (t > 0) {
                 'Script Kitty': '#f7c325',
                 'Pawthonista': '#a259e6',
                 'Grey Cat Hacker': '#2ea043',
-                'Master B|ackc4t_h@cker': '#000'
+                'Master B|ackc4t_h@cker': '#2ea043'
             }[rank] || '#fff';
             let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
             let details = gitGraphResults.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');
@@ -1964,6 +1997,12 @@ if (t > 0) {
                     updateGitGraphGrid();
                     reportScreen.style.display = 'none';
                     startButton.style.display = 'inline-block';
+                    if (rank === 'Master B|ackc4t_h@cker' || rank === 'Grey Cat Hacker') {
+                        //localStorage.setItem('catWearsFedora', 'true');
+                        playHighRankCelebration();
+
+                    }
+
                 };
             }, 100);
         }
