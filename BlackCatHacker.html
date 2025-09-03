@@ -519,7 +519,7 @@ function playHighRankCelebration() {
             const monitorCenterX = monitor.x + monitor.width / 2;
             const monitorCenterY = monitor.y + monitor.height/2
 
-            if (Math.abs(catCenterX - monitorCenterX) < 40 && Math.abs(catCenterY - monitorCenterY) < 40) return true;
+            if (Math.abs(catCenterX - monitorCenterX) < 40 && Math.abs(catCenterY - monitorCenterY) < 30) return true;
 
         }
 
@@ -540,7 +540,7 @@ function playHighRankCelebration() {
                 { text: "let catFood = new Food('tuna')", consoleColor: 'white', logColor: 'red', meowColor: 'white' },
                 { text: "cat.play('yarn')", consoleColor: 'white', logColor: 'purple', meowColor: 'white' },
                 { text: "debug('cat position : ' + cat.x + ', ' + cat.y)", consoleColor: 'white', logColor: 'cyan', meowColor: 'white' },
-                { text: "error ('no more catnip')", consoleColor: 'white', logColor: 'red', meowColor: 'white' },
+                { text: "error ('too many belly rubs)", consoleColor: 'white', logColor: 'red', meowColor: 'white' },
                 { text: "function headscratch() { return ' purr ' }", consoleColor: 'white', logColor: 'lime', meowColor: 'white' },
                 { text: "cat.hunt('laser pointer')", consoleColor: 'white', logColor: 'pink', meowColor: 'white' },
                 {text: "while bowlEmpty(true) { meow() }", consoleColor: 'white', logColor: 'lightgreen', meowColor: 'red' },
@@ -613,6 +613,7 @@ function playHighRankCelebration() {
                     // Bounce coffee cups off canvas edges
                     const cupWidth = 20;
                     if (cup.x < 0) {
+                        playSoundEffect({ type: 'scrub', pitch: 554, duration: 0.2 });
                         cup.x = 0;
                         cup.vx *= -1;
                     } else if (cup.x > canvas.width - cupWidth) {
@@ -624,6 +625,7 @@ function playHighRankCelebration() {
                     if (cup.y + 20 > desk.y && cup.vy > 0) {
                         cup.y = desk.y - 20;
                         // Trigger spill and scrubStain at cup location
+                        playSoundEffect({ type: 'scrub', pitch: 554, duration: 0.2 });
                         if (!scrubStainActive) {
                             triggerScrubStain(cup.x + 10, desk.y - 10);
                         }
@@ -635,7 +637,7 @@ function playHighRankCelebration() {
                             cupsToRemove.push(i); // Mark for removal
                         }
                     }
-                    // Shelf collision
+                  // Shelf collision
                     shelves.forEach(shelf => {
                         if (
                             cup.x + 20 > shelf.x &&
@@ -644,6 +646,7 @@ function playHighRankCelebration() {
                             cup.y < shelf.y + shelf.height &&
                             cup.vy > 0
                         ) {
+                            playSoundEffect({ type: 'scrub', pitch: 554, duration: 0.2 });
                             cup.y = shelf.y - 20;
                             cup.vy *= -0.35;
                             cup.vx *= 0.6;
@@ -653,10 +656,25 @@ function playHighRankCelebration() {
                             }
                         }
                     });
-                    // If cup falls off desk/screen, trigger scrubStain at last position
-                    if ((cup.y > canvas.height - 10) && !scrubStainActive) {
-                        triggerScrubStain(cup.x + 10, cup.y + 10);
-                    }
+                    // Shelf collision (random shelves)
+                    randomShelves.forEach(shelf => {
+                        if (
+                            cup.x + 20 > shelf.x &&
+                            cup.x < shelf.x + shelf.width &&
+                            cup.y + 20 > shelf.y &&
+                            cup.y < shelf.y + shelf.height &&
+                            cup.vy > 0
+                        ) {
+                            playSoundEffect({ type: 'scrub', pitch: 554, duration: 0.2 });
+                            cup.y = shelf.y - 20;
+                            cup.vy *= -0.35;
+                            cup.vx *= 0.6;
+                            if (Math.abs(cup.vy) < 1.2) {
+                                cup.vy = 0;
+                                cup.airborne = false;
+                            }
+                        }
+                    });
                 }
             });
             // Remove cups that landed
@@ -1372,6 +1390,7 @@ if (t > 0) {
             if (stealthState === 'footprints' || stealthState === 'hands') {
                 // Animate footprints from door toward desk
                 for (let i = 0; i < steps; i++) {
+
                     const t = i / (steps - 1);
                     if (t > footprintsProgress) break;
                     // Path from door to desk
@@ -1799,7 +1818,7 @@ if (t > 0) {
                     isMeow: true
                 });
                 } else {
-                animateScore(10);
+                animateScore(1);
                 }
                 tipTapping = true;
                 clearTimeout(tipTapTimeout);
@@ -1966,6 +1985,7 @@ if (t > 0) {
         function showReport() {
             // Hide start button, show report
             startButton.style.display = 'none';
+            tutorialButton.style.display = 'none';
             reportScreen.style.display = 'block';
             scoreboard.style.display = 'none'; // Hide scoreboard on report screen
             // Calculate total additions
@@ -1974,9 +1994,10 @@ if (t > 0) {
             const fedoraOption = document.getElementById('fedoraOption');
             if (rank === 'Master B|ackc4t_h@cker' || rank === 'Grey Cat Hacker') {
                 fedoraOption.style.display = 'flex';
+                catWearsFedora = true;
 
             } else {
-                fedoraOption.style.display = 'none';
+                //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
             }
 
             let rankColor = {
@@ -1997,6 +2018,7 @@ if (t > 0) {
                     updateGitGraphGrid();
                     reportScreen.style.display = 'none';
                     startButton.style.display = 'inline-block';
+                    tutorialButton.style.display = 'inline-block';
                     if (rank === 'Master B|ackc4t_h@cker' || rank === 'Grey Cat Hacker') {
                         //localStorage.setItem('catWearsFedora', 'true');
                         playHighRankCelebration();
@@ -2156,7 +2178,7 @@ if (t > 0) {
     tutorialButton.addEventListener('click', () => {
         tutorialScreen.style.display = 'flex';
         reportScreen.style.display = 'block';
-        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups <p> press -> <- to move left and right and ^ to jump </p> Spam any letter key when infront of the computer to code! ||</span>`;
+        let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups <p> press -> <- to move left and right and ^ to jump </p> Spam any letter key when infront of the computer to code! <p>Your goal is to help Script commit 1000 lines or more a day without being pet by your vibe coding owner!</p><p>Commit malicious code and help Script earn her master hacker fedora!</p></span>`;
         reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
 
         setTimeout(() => {
