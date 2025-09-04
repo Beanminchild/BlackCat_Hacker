@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><title>Black Cat Hacker</title><style>body{margin:0;overflow:hidden;background-color:#222}canvas{background-color:#728C69;display:block;margin:0 auto;position:relative;z-index:1}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10}#startButton,#tutorialButton{padding:20px 40px;font-size:24px;background-color:#555;color:white;border:none;cursor:pointer}#scoreboard{position:absolute;top:20px;right:20px;font-size:24px;color:white;z-index:20}#gitScoreBar{z-index:21;position:relative;}#gitAdditions,#gitDeletions,#gitCube{z-index:22;position:relative;}</style></head><body><div id="workday-message" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.85);padding:20px 40px;border-radius:12px;z-index:2000">work day over</div><div id="startScreen" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"><div id="tutorialScreen" style="display:none;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index=10"></div><h1 style="color:white;font-family:sans-serif;font-size:3em;margin-bottom:24px">B|ackC4t_H@cker</h1><div id="gitGraphGrid" style="display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(2,32px);gap:12px;margin-bottom:24px;justify-content:center;align-items:center;width:max-content;margin-left:auto;margin-right:auto"><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:4;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:2"></canvas></div><div id="fedoraOption" style="margin-bottom: 20px; display: none; align-items: center;"><input type="checkbox" id="fedoraCheckbox" style="margin-right: 10px;"><label for="fedoraCheckbox" style="color: white; font-family: sans-serif;">Script wears Fedora</label></div><button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><p><button id="tutorialButton" style="margin:0 auto 0 auto;display:block">How 2 Play</button></p><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gameOverScreen" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gameOverMessage" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="restartButton" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Next Day</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas></body></html>
+<!DOCTYPE html><html><head><title>Black Cat Hacker</title><style>body{margin:0;overflow:hidden;background-color:#222}canvas{background-color:#728C69;display:block;margin:0 auto;position:relative;z-index:1}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10}#startButton{padding:20px 40px;font-size:24px;background-color:#555;color:white;border:none;cursor:pointer}#scoreboard{position:absolute;top:20px;right:20px;font-size:24px;color:white;z-index:20}#gitScoreBar{z-index:21;position:relative;}#gitAdditions,#gitDeletions,#gitCube{z-index:22;position:relative;}</style></head><body><div id="workday-message" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.85);padding:20px 40px;border-radius:12px;z-index:2000">work day over</div><div id="startScreen" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"><h1 style="color:white;font-family:sans-serif;font-size:3em;margin-bottom:24px">B|ackC4t_H@cker</h1><div id="gitGraphGrid" style="display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(2,32px);gap:12px;margin-bottom:24px;justify-content:center;align-items:center;width:max-content;margin-left:auto;margin-right:auto"><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:4;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:2"></canvas></div><div id="fedoraOption" style="margin-bottom: 20px; display: none; align-items: center;"><input type="checkbox" id="fedoraCheckbox" style="margin-right: 10px;"><label for="fedoraCheckbox" style="color: white; font-family: sans-serif;">Script wears Fedora</label></div><button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gameOverScreen" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gameOverMessage" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="restartButton" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Next Day</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas></body></html>
 <Script>
     let catWearsFedora = false;
         let round = 1;
@@ -24,7 +24,7 @@
             if (gitGraphResults.length < maxGames) {
                 gitGraphResults.push({ score, deletions: deletionsScore });
             }
-            updateGitGraphGrid();
+            uGGG();
         }
         function startTimer() {
             timerInterval = setInterval(() => {
@@ -91,12 +91,12 @@
         let gitGraphResults = [];
         const maxGames = 7;
         function getRank(total) {
-            if (total >= 7000) return 'Master B|ackc4t_h@cker';
+            if (total >= 7000) return 'B|ackc4t_h@cker';
             if (total >= 5000) return 'Grey Cat Hacker';
             if (total >= 3500) return 'Pawtonista';
             if (total >= 2000) return 'Script kitty';
             if (total >= 1000) return 'Copy-pasta cat';
-            return 'Dumber than my cat Emmie';
+            return 'Emmie';
         }
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -116,7 +116,7 @@
         let footprintsProgress = 0;
         let handsProgress = 0;
         let handsHoldTimer = 0;
-        let footstepsBackProgress = 0;
+        let fSBP = 0;
         let doorCloseProgress = 0;
         let lastStealthFrame = Date.now();
         let meowCount = 0;
@@ -130,8 +130,6 @@
         let handsChaseSpeed = 2.0;
         const startScreen = document.getElementById('startScreen');
         const startButton = document.getElementById('startButton');
-        const tutorialButton = document.getElementById('tutorialButton');
-        const tutorialScreen = document.getElementById('reportScreen');
         const gitGraphGrid = document.getElementById('gitGraphGrid');
         const reportScreen = document.getElementById('reportScreen');
         const scoreboard = document.getElementById('scoreboard');
@@ -159,8 +157,6 @@
                     freq = scale[Math.floor(Math.random() * scale.length)];
                 }
             }
-
-
             if (randomize) {
                 duration += (Math.random() - 0.5) * 0.05;
                 volume += (Math.random() - 0.5) * 0.04;
@@ -189,8 +185,7 @@
             osc.onended = () => osc.disconnect();
         }
 
-
-    function playGameOverProgression() {
+    function playGOP() {
         const notes = [
             { pitch: 349.23, duration: 0.38 },
             { pitch: 392.00, duration: 0.38 },
@@ -216,7 +211,7 @@
             }, time * 1000);
         });
     }
-       function playBootupSound() {
+       function pBS() {
            [174.61, 220, 261.63].forEach(pitch => {
                playSoundEffect({
                    type: 'meow',
@@ -228,34 +223,7 @@
                });
            });
        }
-    function playMystery() {
-    const tabNotes = [
-        { pitch: 329.63 * Math.pow(2, 15 / 12), duration: 0.10 },
-        { pitch: 329.63 * Math.pow(2, 14 / 12), duration: 0.10 },
-        { pitch: 246.94 * Math.pow(2, 16 / 12), duration: 0.10 },
-        { pitch: 196.00 * Math.pow(2, 14 / 12), duration: 0.10 },
-        { pitch: 196.00 * Math.pow(2, 13 / 12), duration: 0.10 },
-        { pitch: 246.94 * Math.pow(2, 17 / 12), duration: 0.10 },
-        { pitch: 329.63 * Math.pow(2, 16 / 12), duration: 0.10 },
-        { pitch: 329.63 * Math.pow(2, 20 / 12), duration: 0.10 },
-    ];
-
-        let time = 0;
-        tabNotes.forEach(note => {
-            setTimeout(() => {
-                playSoundEffect({
-                    type: 'score',
-                    pitch: note.pitch,
-                    duration: note.duration,
-                    volume: 0.18,
-                    scale: null,
-                    randomize: false
-                });
-            }, time * 1000);
-            time += note.duration + 0.01;
-        });
-    }
-            function updateGitGraphGrid() {
+            function uGGG() {
                 const squares = gitGraphGrid.querySelectorAll('.gitGraphSquare');
                 for (let i = 0; i < squares.length; i++) {
                     const ctx = squares[i].getContext('2d');
@@ -342,7 +310,7 @@
         let deletionsScore = 0;
         let lastHandsSecond = null;
         let additionsHistory = [];
-        function animateDeletionsScore(points) {
+        function aD(points) {
             let startScore = deletionsScore;
             let endScore = deletionsScore + points;
             const animationDuration = 20;
@@ -373,7 +341,7 @@
             shelves=[{x:25,y:315,width:65,height:20,color:'transparent'},{x:200,y:400,width:100,height:20,color:'#4b371C'},{x:325,y:290,width:150,height:20,color:'#4b371C'},{x:670,y:380,width:150,height:20,color:'#4b371C'}];
             function generateCodeParticle(score) {
 
-                const codeSnippets=[{text:"console.log(meow')",consoleColor:'white',logColor:'green',meowColor:'lightblue'},{text:"cat.jump()",consoleColor:'white',logColor:'orange',meowColor:'white'},{text:"if ( cat.Slep) { slepMore() }",consoleColor:'white',logColor:'yellow',meowColor:'white'},{text:"error ('too many belly rubs)",consoleColor:'white',logColor:'red',meowColor:'white'},{text:"function headscratch() { return ' purr ' }",consoleColor:'white',logColor:'lime',meowColor:'white'},{text:"cat.hunt('laser pointer')",consoleColor:'white',logColor:'pink',meowColor:'white'},{text:"while bowlEmpty(true) { meow() }",consoleColor:'white',logColor:'lightgreen',meowColor:'red'}];
+                const codeSnippets=[{text:"console.log(meow')",consoleColor:'white',logColor:'green',meowColor:'lightblue'},{text:"cat.jump()",consoleColor:'white',logColor:'orange',meowColor:'white'},{text:"if ( cat.Slep) { slepMore() }",consoleColor:'white',logColor:'yellow',meowColor:'white'},{text:"error ('too many belly rubs)",consoleColor:'white',logColor:'red',meowColor:'white'},{text:"function headscratch() { return 'purr' }",consoleColor:'white',logColor:'lime',meowColor:'white'}];
 
                 const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
 
@@ -407,7 +375,7 @@
 
         function endHandsMonitorAndTriggerWalkBack() {
             stealthState = 'footstepsBack';
-            footstepsBackProgress = 0;
+            fSBP = 0;
             lastHandsSecond = null;
             handsHoldTimer = 0;
         }
@@ -550,7 +518,7 @@
                         footprintsProgress = 0;
                         handsProgress = 0;
 
-                        footstepsBackProgress = 0;
+                        fSBP = 0;
                         doorCloseProgress = 0;
                     }
                     if (stealthState === 'doorOpening') {
@@ -576,7 +544,7 @@
                             let handsSeconds = Math.floor(handsHoldTimer / 1000);
                             if (lastHandsSecond !== handsSeconds) {
                                 lastHandsSecond = handsSeconds;
-                                animateDeletionsScore(5);
+                                aD(5);
                                 playSoundEffect({ type: 'alert', pitch: 220 + Math.random() * 100, duration: 0.12, volume: 0.15 });
                             }
                             if (isCatNearMonitor()) {
@@ -585,14 +553,14 @@
                             }
                             if (handsHoldTimer >= 30000) {
                                 stealthState = 'footstepsBack';
-                                footstepsBackProgress = 0;
+                                fSBP = 0;
                                 lastHandsSecond = null;
                             }
                         }
                     } else if (stealthState === 'footstepsBack') {
-                        footstepsBackProgress += 0.012;
-                        if (footstepsBackProgress >= 1) {
-                            footstepsBackProgress = 1;
+                        fSBP += 0.012;
+                        if (fSBP >= 1) {
+                            fSBP = 1;
                             stealthState = 'doorClosing';
                             doorCloseProgress = 0;
                         }
@@ -674,58 +642,43 @@
                 }
             }
         function drawScrubStain() {
-            if (scrubStainActive && scrubStainX !== null && scrubStainY !== null) {
-                const stainX = scrubStainX;
-                const stainY = scrubStainY;
-                ctx.save();
-                ctx.globalAlpha = scrubStainAlpha;
-                ctx.shadowColor = 'transparent';
-                ctx.shadowBlur = 0;
-                ctx.beginPath();
-                ctx.arc(stainX, stainY, 38 + Math.sin(scrubStainTimer/6)*2, 0, 2 * Math.PI);
-                ctx.fillStyle = '#6b3e26';
-                ctx.fill();
-                ctx.globalAlpha = Math.min(1, scrubStainAlpha + 0.2);
-                ctx.beginPath();
-                ctx.arc(stainX+10, stainY-8, 12, 0, 2 * Math.PI);
-                ctx.arc(stainX-14, stainY+6, 8, 0, 2 * Math.PI);
-                ctx.fillStyle = '#8d5c3c';
-                ctx.fill();
-                ctx.restore();
+            if (!(scrubStainActive && scrubStainX !== null && scrubStainY !== null)) return;
+            const x = scrubStainX, y = scrubStainY;
+            ctx.save();
+            ctx.globalAlpha = scrubStainAlpha;
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.beginPath();
+            ctx.arc(x, y, 38 + Math.sin(scrubStainTimer / 6) * 2, 0, 2 * Math.PI);
+            ctx.fillStyle = '#6b3e26';
+            ctx.fill();
+            ctx.globalAlpha = Math.min(1, scrubStainAlpha + 0.2);
+            ctx.beginPath();
+            ctx.arc(x + 10, y - 8, 12, 0, 2 * Math.PI);
+            ctx.arc(x - 14, y + 6, 8, 0, 2 * Math.PI);
+            ctx.fillStyle = '#8d5c3c';
+            ctx.fill();
+            ctx.restore();
 
-                if (scrubStainTimer < 120) {
-                    let hand1X = stainX - 28;
-                    let hand1Y = stainY - 32;
-                    drawGameHand(hand1X, hand1Y, 1, 0.9);
-                    let angle = (scrubStainTimer/18) * 2 * Math.PI;
-                    let radius = 22;
-                    let hand2X = stainX + Math.cos(angle) * radius + 18;
-                    let hand2Y = stainY + Math.sin(angle) * radius - 18;
-                    drawGameHand(hand2X, hand2Y, 1, 1);
-                } else if (scrubStainTimer < 2440) {
-                    let t = scrubFootstepsProgress;
-                    let startX = stainX;
-                    let startY = stainY + 18;
-                    let endX = doorX + doorW/2;
-                    let endY = doorY + doorH - 18;
-                    let footX = startX + (endX - startX) * t;
-                    let footY = startY + (endY - startY) * t;
-                    let steps = 8;
-
-                    for (let i = 0; i < steps; i++) {
-                        let stepT = i / (steps-1);
-                        let sx = startX + (endX - startX) * stepT;
-                        let sy = startY + (endY - startY) * stepT;
-                        ctx.save();
-                        ctx.shadowColor = 'transparent';
-                        ctx.shadowBlur = 0;
-                        ctx.globalAlpha = Math.max(0, Math.min(1, (t-stepT)*2));
-                        ctx.beginPath();
-                        ctx.ellipse(sx, sy, 8, 4, (i%2===0?0:Math.PI/8), 0, 2*Math.PI);
-                        ctx.fillStyle = '#444';
-                        ctx.fill();
-                        ctx.restore();
-                    }
+            if (scrubStainTimer < 120) {
+                drawGameHand(x - 28, y - 32, 1, 0.9);
+                const angle = (scrubStainTimer / 18) * 2 * Math.PI, r = 22;
+                drawGameHand(x + Math.cos(angle) * r + 18, y + Math.sin(angle) * r - 18, 1, 1);
+            } else if (scrubStainTimer < 2440) {
+                const t = scrubFootstepsProgress, steps = 8;
+                const sx = x, sy = y + 18, ex = doorX + doorW / 2, ey = doorY + doorH - 18;
+                for (let i = 0; i < steps; i++) {
+                    const stepT = i / (steps - 1);
+                    const fx = sx + (ex - sx) * stepT, fy = sy + (ey - sy) * stepT;
+                    ctx.save();
+                    ctx.shadowColor = 'transparent';
+                    ctx.shadowBlur = 0;
+                    ctx.globalAlpha = Math.max(0, Math.min(1, (t - stepT) * 2));
+                    ctx.beginPath();
+                    ctx.ellipse(fx, fy, 8, 4, (i % 2 === 0 ? 0 : Math.PI / 8), 0, 2 * Math.PI);
+                    ctx.fillStyle = '#444';
+                    ctx.fill();
+                    ctx.restore();
                 }
             }
         }
@@ -1040,7 +993,7 @@
                         ctx.restore();
                     }
                 } else if (stealthState === 'footstepsBack') {
-                    const gone = Math.floor(steps * footstepsBackProgress + 0.001);
+                    const gone = Math.floor(steps * fSBP + 0.001);
                     for (let i = 0; i < steps - gone; i++) {
                         const t = i / (steps - 1);
                         const fx = doorX + 60 + (canvas.width - (doorX + 60)) * t;
@@ -1408,8 +1361,8 @@
                         handsChaseActive = false;
                     }
 
-                    playBootupSound();
-                    playMystery();
+                    pBS();
+
 
 
 
@@ -1463,62 +1416,37 @@
 
                 }
             });
-         const codeParticleChords = [392, 294, 220, 261.63];
-         let codeParticleChordIndex = 0;
+         const cPC = [392, 294, 220, 261.63];
+         let cPCI = 0;
 
-     const bassMeowNotes = [
-         196.00,
-         392.00,
-         220.00,
-         392.00,
-         246.94,
-         392.00,
-         261.62,
-         392.00,
-         293.66,
-         392.00,
-         329.62,
-         392.00,
-         369.98,
-         392.00,
-         392.00,
-         392.00
-     ];
+     const bassMeowNotes = [196.00,392.00,220.00,392.00,246.94,392.00,261.62,392.00,293.66,392.00,329.62,392.00,369.98,392.00,392.00,392.00];
        let bassMeowIndex = 0;
             function animateScore(points) {
-                let startScore = score;
-                let endScore = score + points;
+                const endScore = score + points;
                 playSoundEffect({
-                type: 'score',
-                pitch: codeParticleChords[codeParticleChordIndex],
-                duration: 1.2,
-                volume: 0.00,});
-                 codeParticleChordIndex = (codeParticleChordIndex + 1) % codeParticleChords.length;
-                const animationDuration = 1.2;
-                const startTime = performance.now();
-                function updateScore(currentTime) {
-                    const elapsedTime = currentTime - startTime;
-                    const progress = Math.min(elapsedTime / animationDuration, 1);
-                    const animatedScore = Math.floor(startScore + (endScore - startScore) * progress);
-                    gitAdditions.textContent = animatedScore;
-                    updateGitCubeColor(animatedScore);
-                    if (progress < 1) {
-                        requestAnimationFrame(updateScore);
-                    } else {
+                    type: 'score',
+                    pitch: cPC[cPCI],
+                    duration: 1.2,
+                    volume: 0
+                });
+                cPCI = (cPCI + 1) % cPC.length;
+                const startTime = performance.now(), duration = 1.2, startScore = score;
+                (function update(current) {
+                    const p = Math.min((current - startTime) / duration, 1);
+                    const val = Math.floor(startScore + (endScore - startScore) * p);
+                    gitAdditions.textContent = val;
+                    updateGitCubeColor(val);
+                    if (p < 1) requestAnimationFrame(update); else {
                         score = endScore;
                         gitAdditions.textContent = score;
                         updateGitCubeColor(score);
                     }
-                }
-
-                requestAnimationFrame(updateScore);
-                if (gameStarted && additionsHistory.length < 32) {
-                    additionsHistory.push(score + points);
-                }
+                })(startTime);
+                if (gameStarted && additionsHistory.length < 32) additionsHistory.push(endScore);
             }
 
             function endGame() {
-                playGameOverProgression()
+                playGOP()
                 gameStarted = false;
                 clearInterval(timerInterval);
                 gameOverScreen.style.display = 'flex';
@@ -1531,7 +1459,7 @@
                 if (gitGraphResults.length < maxGames) {
                     gitGraphResults.push({ score, deletions: deletionsScore });
                 }
-                updateGitGraphGrid();
+                uGGG();
                 if (gitGraphResults.length === maxGames) {
                     setTimeout(showReport, 1500);
 
@@ -1539,13 +1467,12 @@
             }
             function showReport() {
                 startButton.style.display = 'none';
-                tutorialButton.style.display = 'none';
                 reportScreen.style.display = 'block';
                 scoreboard.style.display = 'none';
                 let total = gitGraphResults.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);
                 let rank = getRank(total);
                 const fedoraOption = document.getElementById('fedoraOption');
-                if (rank === 'Master B|ackc4t_h@cker' || rank === 'Grey Cat Hacker') {
+                if (rank === 'B|ackc4t_h@cker' || rank === 'Grey Cat Hacker') {
                     fedoraOption.style.display = 'flex';
                     catWearsFedora = true;
                 }
@@ -1556,7 +1483,7 @@
                     'Script Kitty': '#f7c325',
                     'Pawthonista': '#a259e6',
                     'Grey Cat Hacker': '#2ea043',
-                    'Master B|ackc4t_h@cker': '#2ea043'
+                    'B|ackc4t_h@cker': '#2ea043'
                 }[rank] || '#fff';
                 let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
                 let details = gitGraphResults.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');
@@ -1564,14 +1491,9 @@
                 setTimeout(() => {
                     document.getElementById('resetSeriesBtn').onclick = () => {
                         gitGraphResults = [];
-                        updateGitGraphGrid();
+                        uGGG();
                         reportScreen.style.display = 'none';
                         startButton.style.display = 'inline-block';
-                        tutorialButton.style.display = 'inline-block';
-                        if (rank === 'Master B|ackc4t_h@cker' || rank === 'Grey Cat Hacker') {
-                            playMystery();
-                        }
-
                     };
                 }, 100);
             }
@@ -1664,7 +1586,7 @@
             footprintsProgress = 0;
             handsProgress = 0;
             handsHoldTimer = 0;
-            footstepsBackProgress = 0;
+            fSBP = 0;
             doorCloseProgress = 0;
             lastStealthFrame = Date.now();
             lastHandsSecond = null;
@@ -1682,7 +1604,7 @@
             keys = {};
             round = 1;
             currentTime = baseTime;
-            playBootupSound();
+            pBS();
             startTimer();
             if (!gameLoopRunning) {
                 gameLoopRunning = true;
@@ -1699,12 +1621,12 @@
                 startScreen.style.display = 'flex';
                 gameOverScreen.style.display = 'none';
                 scoreboard.style.display = 'none';
-                updateGitGraphGrid();
+                uGGG();
                 gameLoopRunning = false;
             });
 
 
-        updateGitGraphGrid();
+        uGGG();
         scoreboard.style.display = 'none';
         gameLoopRunning = false;
 </script>
