@@ -12,15 +12,8 @@
             return `${m}:${s}`;
         }
 
-        function updateTimerDisplay() {
-        }
-
-        function showTimer(show) {
-        }
-
         function endRound() {
             clearInterval(timerInterval);
-            showTimer(false);
             gameStarted = false;
             gameOverScreen.style.display = 'flex';
             gameOverScreen.setAttribute('data-reason', 'timeout');
@@ -34,11 +27,8 @@
             updateGitGraphGrid();
         }
         function startTimer() {
-            showTimer(true);
-            updateTimerDisplay();
             timerInterval = setInterval(() => {
                 currentTime--;
-                updateTimerDisplay();
                 if (currentTime <= 0) {
                     endRound();
                 }
@@ -226,44 +216,29 @@
             }, time * 1000);
         });
     }
-        function playBootupSound() {
-
-                    playSoundEffect({
-                        type: 'meow',
-                        pitch: 174.61,
-                        duration: 1.2,
-                        volume: 0.22,
-                        randomize: false,
-                        scale: null
-                    });
-                     playSoundEffect({
-                        type: 'meow',
-                        pitch: 220,
-                        duration: 1.2,
-                        volume: 0.22,
-                        randomize: false,
-                        scale: null
-                    });
-                     playSoundEffect({
-                        type: 'meow',
-                        pitch: 261.63,
-                        duration: 1.2,
-                        volume: 0.22,
-                        randomize: false,
-                        scale: null
-                    });
-    }
-    function playHighRankCelebration() {
-       const tabNotes = [
-            { pitch: 329.63 * Math.pow(2, 15 / 12), duration: 0.10 },
-            { pitch: 329.63 * Math.pow(2, 14 / 12), duration: 0.10 },
-            { pitch: 246.94 * Math.pow(2, 16 / 12), duration: 0.10 },
-            { pitch: 196.00 * Math.pow(2, 14 / 12), duration: 0.10 },
-            { pitch: 196.00 * Math.pow(2, 13 / 12), duration: 0.10 },
-            { pitch: 246.94 * Math.pow(2, 17 / 12), duration: 0.10 },
-            { pitch: 329.63 * Math.pow(2, 16 / 12), duration: 0.10 },
-            { pitch: 329.63 * Math.pow(2, 20 / 12), duration: 0.10 },
-        ];
+       function playBootupSound() {
+           [174.61, 220, 261.63].forEach(pitch => {
+               playSoundEffect({
+                   type: 'meow',
+                   pitch,
+                   duration: 1.2,
+                   volume: 0.22,
+                   randomize: false,
+                   scale: null
+               });
+           });
+       }
+    function playMystery() {
+    const tabNotes = [
+        { pitch: 329.63 * Math.pow(2, 15 / 12), duration: 0.10 },
+        { pitch: 329.63 * Math.pow(2, 14 / 12), duration: 0.10 },
+        { pitch: 246.94 * Math.pow(2, 16 / 12), duration: 0.10 },
+        { pitch: 196.00 * Math.pow(2, 14 / 12), duration: 0.10 },
+        { pitch: 196.00 * Math.pow(2, 13 / 12), duration: 0.10 },
+        { pitch: 246.94 * Math.pow(2, 17 / 12), duration: 0.10 },
+        { pitch: 329.63 * Math.pow(2, 16 / 12), duration: 0.10 },
+        { pitch: 329.63 * Math.pow(2, 20 / 12), duration: 0.10 },
+    ];
 
         let time = 0;
         tabNotes.forEach(note => {
@@ -395,29 +370,10 @@
                 const monitorCenterY = monitor.y + monitor.height/2
                 if (Math.abs(catCenterX - monitorCenterX) < 40 && Math.abs(catCenterY - monitorCenterY) < 30) return true;
             }
-            shelves = [
-                { x: 25, y: 315, width: 65, height: 20, color: 'transparent' },
-                { x: 200, y: 400, width: 100, height: 20, color: '#4b371C' },
-                { x: 325, y: 290, width: 150, height: 20, color: '#4b371C' },
-                { x: 670, y: 380, width: 150, height: 20, color: '#4b371C' },
-            ];
-
+            shelves=[{x:25,y:315,width:65,height:20,color:'transparent'},{x:200,y:400,width:100,height:20,color:'#4b371C'},{x:325,y:290,width:150,height:20,color:'#4b371C'},{x:670,y:380,width:150,height:20,color:'#4b371C'}];
             function generateCodeParticle(score) {
 
-                const codeSnippets = [
-                    { text: "console.log(meow')", consoleColor: 'white', logColor: 'green', meowColor: 'lightblue' },
-                    { text: "cat.jump()", consoleColor: 'white', logColor: 'orange', meowColor: 'white' },
-                    { text: "if ( cat.Slep) { slepMore() }", consoleColor: 'white', logColor: 'yellow', meowColor: 'white' },
-                    { text: "let catFood = new Food('tuna')", consoleColor: 'white', logColor: 'red', meowColor: 'white' },
-                    { text: "cat.play('yarn')", consoleColor: 'white', logColor: 'purple', meowColor: 'white' },
-                    { text: "debug('cat position : ' + cat.x + ', ' + cat.y)", consoleColor: 'white', logColor: 'cyan', meowColor: 'white' },
-                    { text: "error ('too many belly rubs)", consoleColor: 'white', logColor: 'red', meowColor: 'white' },
-                    { text: "function headscratch() { return ' purr ' }", consoleColor: 'white', logColor: 'lime', meowColor: 'white' },
-                    { text: "cat.hunt('laser pointer')", consoleColor: 'white', logColor: 'pink', meowColor: 'white' },
-                    {text: "while bowlEmpty(true) { meow() }", consoleColor: 'white', logColor: 'lightgreen', meowColor: 'red' },
-                     { text: "if (Noctis.doesAnything()) {Ignis(newRecipeh); }", consoleColor: 'white', logColor: 'gold', meowColor: 'white' },
-                     { text: "for (let thoseWhoComeAfter) { inspire(Gustave); }", consoleColor: 'white', logColor: 'teal', meowColor: 'white' }
-                ];
+                const codeSnippets=[{text:"console.log(meow')",consoleColor:'white',logColor:'green',meowColor:'lightblue'},{text:"cat.jump()",consoleColor:'white',logColor:'orange',meowColor:'white'},{text:"if ( cat.Slep) { slepMore() }",consoleColor:'white',logColor:'yellow',meowColor:'white'},{text:"error ('too many belly rubs)",consoleColor:'white',logColor:'red',meowColor:'white'},{text:"function headscratch() { return ' purr ' }",consoleColor:'white',logColor:'lime',meowColor:'white'},{text:"cat.hunt('laser pointer')",consoleColor:'white',logColor:'pink',meowColor:'white'},{text:"while bowlEmpty(true) { meow() }",consoleColor:'white',logColor:'lightgreen',meowColor:'red'}];
 
                 const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
 
@@ -1376,14 +1332,18 @@
                         const words = particle.text.match(/(\s+|[a-zA-Z_][a-zA-Z0-9_]*|\d+|[^\s\w])/g) || [];
                         let xOffset = 10;
                         const letterSpacing = particle.size
+                        const colorMap = {
+                            console: 'lightgreen',
+                            log: particle.logColor,
+                            meow: 'magenta', tuna: 'magenta', yarn: 'magenta', purr: 'magenta',
+                            cat: 'lightblue', Food: 'lightblue', wakeUp: 'lightblue', debug: 'lightblue',
+                            function: 'lightblue', return: 'lightblue', if: 'lightblue', let: 'lightblue', new: 'lightblue',
+                            Slep: 'orange',
+                            error: 'red'
+                        };
+
                         words.forEach(word => {
-                            let color = 'white';
-                            if (word === 'console') color = 'lightgreen';
-                            else if (word === 'log') color = particle.logColor;
-                            else if (word === 'meow' || word === 'tuna' || word === 'yarn' || word === 'purr') color = 'magenta';
-                            else if (word === 'cat' || word === 'Food' || word === 'wakeUp' || word === 'debug' || word === 'function' || word === 'return' || word === 'if' || word === 'let' || word === 'new') color = 'lightblue';
-                            else if (['Slep'].includes(word)) color = 'orange';
-                            else if (word === 'error') color = 'red';
+                            let color = colorMap[word] || 'white';
                             ctx.fillStyle = color;
                             ctx.fillText(word, Math.round(particle.x + xOffset), particle.y);
                             let width = ctx.measureText(word).width;
@@ -1449,6 +1409,7 @@
                     }
 
                     playBootupSound();
+                    playMystery();
 
 
 
@@ -1505,25 +1466,24 @@
          const codeParticleChords = [392, 294, 220, 261.63];
          let codeParticleChordIndex = 0;
 
-       const bassMeowNotes = [
-           98.00 * 2,
-           196.00 * 2,
-           110.00 * 2,
-           196.00 * 2,
-           123.47 * 2,
-           196.00 * 2,
-           130.81 * 2,
-           196.00 * 2,
-           146.83 * 2,
-           196.00 * 2,
-           164.81 * 2,
-           196.00 * 2,
-           184.99 * 2,
-           196.00 * 2,
-           196.00 * 2,
-           196.00 * 2,
-
-       ];
+     const bassMeowNotes = [
+         196.00,
+         392.00,
+         220.00,
+         392.00,
+         246.94,
+         392.00,
+         261.62,
+         392.00,
+         293.66,
+         392.00,
+         329.62,
+         392.00,
+         369.98,
+         392.00,
+         392.00,
+         392.00
+     ];
        let bassMeowIndex = 0;
             function animateScore(points) {
                 let startScore = score;
@@ -1561,7 +1521,6 @@
                 playGameOverProgression()
                 gameStarted = false;
                 clearInterval(timerInterval);
-                showTimer(false);
                 gameOverScreen.style.display = 'flex';
                 gameOverScreen.setAttribute('data-reason', 'petted');
                 document.getElementById('gameOverMessage').innerHTML =
@@ -1610,8 +1569,7 @@
                         startButton.style.display = 'inline-block';
                         tutorialButton.style.display = 'inline-block';
                         if (rank === 'Master B|ackc4t_h@cker' || rank === 'Grey Cat Hacker') {
-                            playHighRankCelebration();
-
+                            playMystery();
                         }
 
                     };
@@ -1745,28 +1703,6 @@
                 gameLoopRunning = false;
             });
 
-        tutorialButton.addEventListener('click', () => {
-            tutorialScreen.style.display = 'flex';
-            reportScreen.style.display = 'block';
-            let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups <p> press -> <- to move left and right and ^ to jump </p> Spam any letter key when infront of the computer to code!</span>`;
-            reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
-
-            setTimeout(() => {
-                document.getElementById('resetSeriesBtn').onclick = () => {
-                    gitGraphResults = [];
-                    updateGitGraphGrid();
-                    reportScreen.style.display = 'none';
-                    startButton.style.display = 'inline-block';
-                };
-            }, 100);
-            setTimeout(() => {
-                document.getElementById('closeBtn').onclick = () => {
-                    reportScreen.style.display = 'none';
-                    startButton.style.display = 'inline-block';
-                };
-            }, 100);
-        }
-         );
 
         updateGitGraphGrid();
         scoreboard.style.display = 'none';
