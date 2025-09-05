@@ -1,8 +1,8 @@
-<!DOCTYPE html><html><head><title>Black Cat Hacker</title><style>body{margin:0;overflow:hidden;background-color:#222}canvas{background-color:#728C69;display:block;margin:0 auto;position:relative;z-index:1}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10}#startButton{padding:20px 40px;font-size:24px;background-color:#555;color:white;border:none;cursor:pointer}#scoreboard{position:absolute;top:20px;right:20px;font-size:24px;color:white;z-index:20}#gitScoreBar{z-index:21;position:relative;}#gitAdditions,#gitDeletions,#gitCube{z-index:22;position:relative;}</style></head><body><div id="workday-message" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.85);padding:20px 40px;border-radius:12px;z-index:2000">work day over</div><div id="startScreen" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"><h1 style="color:white;font-family:sans-serif;font-size:3em;margin-bottom:24px">B|ackC4t_H@cker</h1><div id="gitGraphGrid" style="display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(2,32px);gap:12px;margin-bottom:24px;justify-content:center;align-items:center;width:max-content;margin-left:auto;margin-right:auto"><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:4;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:2"></canvas></div><div id="fedoraOption" style="margin-bottom: 20px; display: none; align-items: center;"><input type="checkbox" id="fedoraCheckbox" style="margin-right: 10px;"><label for="fedoraCheckbox" style="color: white; font-family: sans-serif;">Script wears Fedora</label></div><button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gOS" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gOM" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="rB" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Next Day</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas></body></html>
+<!DOCTYPE html><html><head><style>body{margin:0;overflow:hidden;background-color:#222}canvas{background-color:#728C69;display:block;margin:0 auto;position:relative;z-index:1}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10}#startButton{padding:20px 40px;font-size:24px;background-color:#555;color:white;border:none;cursor:pointer}#scoreboard{position:absolute;top:20px;right:20px;font-size:24px;color:white;z-index:20}#gitScoreBar{z-index:21;position:relative;}#gitAdditions,#gitDeletions,#gitCube{z-index:22;position:relative;}</style></head><body><div id="workday-message" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.85);padding:20px 40px;border-radius:12px;z-index:2000">work day over</div><div id="startScreen" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"><h1 style="color:white;font-family:sans-serif;font-size:3em;margin-bottom:24px">B|ackC4t_H@cker</h1><div id="gGG" style="display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(2,32px);gap:12px;margin-bottom:24px;justify-content:center;align-items:center;width:max-content;margin-left:auto;margin-right:auto"><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:4;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:2"></canvas></div><div id="fO" style="margin-bottom: 20px; display: none; align-items: center;"><input type="checkbox" id="fCh" style="margin-right: 10px;"><label for="fCh" style="color: white; font-family: sans-serif;">Script wears Fedora</label></div><button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gOS" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gOM" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="rB" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Next Day</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas></body></html>
 <Script>
-    let catWearsFedora = false;
+    let cWF = false;
         let round = 1;
-        let timerInterval = null;
+        let tiInt = null;
         let baseTime = 100 + Math.random() * 20;
         baseTime = Math.floor(baseTime);
         let currentTime = baseTime;
@@ -13,21 +13,21 @@
         }
 
         function endRound() {
-            clearInterval(timerInterval);
+            clearInterval(tiInt);
             gameStarted = false;
             gOS.style.display = 'flex';
             gOS.setAttribute('data-reason', 'timeout');
             document.getElementById('gOM').textContent = 'work day over';
              document.getElementById('rB').innerHTML = 'Next Day';
-            finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${deletionsScore} deletions</span>`;
+            finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${delS} deletions</span>`;
             drawGitGraph();
-            if (gGR.length < maxGames) {
-                gGR.push({ score, deletions: deletionsScore });
+            if (gGR.length < mG) {
+                gGR.push({ score, deletions: delS });
             }
             uGGG();
         }
         function startTimer() {
-            timerInterval = setInterval(() => {
+            tiInt = setInterval(() => {
                 currentTime--;
                 if (currentTime <= 0) {
                     endRound();
@@ -46,7 +46,7 @@
             const numCups = 1 + Math.floor(Math.random() * 3);
             let spots = [];
 
-            [...shelves, ...randomShelves].forEach(shelf => {
+            [...shelves, ...rSh].forEach(shelf => {
                 spots.push({
                     x: shelf.x + 20 + Math.random() * (shelf.width - 40),
                     y: shelf.y - 18 + Math.random() * 4
@@ -66,7 +66,7 @@
                 });
             }
         }
-        function isCatNearCup(cup) {
+        function iCNC(cup) {
 
             const catCenterX = cat.x + cat.width / 2;
             const catCenterY = cat.y + cat.height / 2;
@@ -83,13 +83,13 @@
             cup.vx = dir * (2.5 + Math.random() * 1.5);
             cup.vy = -4.5 - Math.random() * 1.5;
             cup.airborne = true;
-            if (sS === 'hands' && handsProgress === 1) {
+            if (sS === 'hands' && hP === 1) {
                 sS = 'handsChase';
                 hCA = false;
             }
         }
         let gGR = [];
-        const maxGames = 7;
+        const mG = 7;
         function getRank(total) {
             if (total >= 7000) return 'B|ackc4t_h@cker';
             if (total >= 5000) return 'Grey Cat Hacker';
@@ -114,7 +114,7 @@
         let nSE= Date.now() + 3000 + Math.random() * 5000
         let dOP = 0;
         let fPP = 0;
-        let handsProgress = 0;
+        let hP = 0;
         let handsHoldTimer = 0;
         let fSBP = 0;
         let dCP = 0;
@@ -125,16 +125,16 @@
         let cST = 1 + Math.floor(Math.random() * 3);
         let hCT = 0;
         let hCS = 0;
-        let handsChasePos = { x: 0, y: 0 };
+        let hCP = { x: 0, y: 0 };
         let hCA = false;
-        let handsChaseSpeed = 2.0;
+        let haCS = 2.0;
         const startScreen = document.getElementById('startScreen');
         const startButton = document.getElementById('startButton');
-        const gitGraphGrid = document.getElementById('gitGraphGrid');
+        const gGG = document.getElementById('gGG');
         const reportScreen = document.getElementById('reportScreen');
         const scoreboard = document.getElementById('scoreboard');
 
-        const aMajorScale = [440, 494, 554, 587, 659, 740, 831, 880];
+        const a = [440, 494, 554, 587, 659, 740, 831, 880];
         let audioCtx = null;
 
         function pSFX({
@@ -142,7 +142,7 @@
             pitch = 440,
             duration = 0.18,
             volume = 0.18,
-            scale = aMajorScale,
+            scale = a,
             randomize = true
         } = {}) {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -159,6 +159,34 @@
             osc.start(); osc.stop(audioCtx.currentTime + duration);
             osc.onended = () => osc.disconnect();
         }
+
+function pM() {
+   const t = [
+        { pitch: 329.63 * Math.pow(2, 15 / 12), duration: 0.10 },
+        { pitch: 329.63 * Math.pow(2, 14 / 12), duration: 0.10 },
+        { pitch: 246.94 * Math.pow(2, 16 / 12), duration: 0.10 },
+        { pitch: 196.00 * Math.pow(2, 14 / 12), duration: 0.10 },
+        { pitch: 196.00 * Math.pow(2, 13 / 12), duration: 0.10 },
+        { pitch: 246.94 * Math.pow(2, 17 / 12), duration: 0.10 },
+        { pitch: 329.63 * Math.pow(2, 16 / 12), duration: 0.10 },
+        { pitch: 329.63 * Math.pow(2, 20 / 12), duration: 0.10 },
+    ];
+
+    let ti = 0;
+    t.forEach(note => {
+        setTimeout(() => {
+            pSFX({
+                type: 'score',
+                pitch: note.pitch,
+                duration: note.duration,
+                volume: 0.18,
+                scale: null,
+                randomize: false
+            });
+        }, ti * 1000);
+        ti += note.duration + 0.01;
+    });
+}
 
     function playGOP() {
         const notes = [
@@ -199,7 +227,7 @@
            });
        }
             function uGGG() {
-                const squares = gitGraphGrid.querySelectorAll('.gitGraphSquare');
+                const squares = gGG.querySelectorAll('.gitGraphSquare');
                 for (let i = 0; i < squares.length; i++) {
                     const ctx = squares[i].getContext('2d');
                     ctx.clearRect(0, 0, 32, 32);
@@ -240,7 +268,7 @@
                 }
             }
             let shelves = [];
-            let randomShelves = [];
+            let rSh = [];
 
 
             const cat = {
@@ -282,31 +310,31 @@
         const finalScores = document.getElementById('finalScores');
         const gitGraph = document.getElementById('gitGraph');
         const rB = document.getElementById('rB');
-        let deletionsScore = 0;
+        let delS = 0;
         let lHS = null;
-        let additionsHistory = [];
+        let addH = [];
         function aD(points) {
-            let startScore = deletionsScore;
-            let endScore = deletionsScore + points;
-            const animationDuration = 20;
+            let startScore = delS;
+            let endScore = delS + points;
+            const aniD = 20;
             const startTime = performance.now();
             function updateScore(currentTime) {
                 const elapsedTime = currentTime - startTime;
-                const progress = Math.min(elapsedTime / animationDuration, 1);
-                const animatedScore = Math.floor(startScore + (endScore - startScore) * progress);
-                gitDeletions.textContent = animatedScore;
+                const progress = Math.min(elapsedTime / aniD, 1);
+                const aniS = Math.floor(startScore + (endScore - startScore) * progress);
+                gitDeletions.textContent = aniS;
                 if (progress < 1) {
-                    requestAnimationFrame(updateScore);
+                    reqF(updateScore);
                 } else {
-                    deletionsScore = endScore;
-                    gitDeletions.textContent = deletionsScore;
+                    delS = endScore;
+                    gitDeletions.textContent = delS;
                 }
             }
 
-            requestAnimationFrame(updateScore);
+            reqF(updateScore);
         }
 
-            function isCatNearMonitor() {
+            function iCNM() {
                 const catCenterX = cat.x + cat.width / 2;
                 const catCenterY = cat.y + cat.height / 2;
                 const monitorCenterX = monitor.x + monitor.width / 2;
@@ -316,7 +344,7 @@
             shelves=[{x:25,y:315,width:65,height:20,color:'transparent'},{x:200,y:400,width:100,height:20,color:'#4b371C'},{x:325,y:290,width:150,height:20,color:'#4b371C'},{x:670,y:380,width:150,height:20,color:'#4b371C'}];
             function generateCodeParticle(score) {
 
-                const codeSnippets=[{text:"console.log(meow')",consoleColor:'white',logColor:'green',meowColor:'lightblue'},{text:"if ( cat.Slep) { slepMore() }",consoleColor:'white',logColor:'yellow',meowColor:'white'},{text:"error ('too many belly rubs)",consoleColor:'white',logColor:'red',meowColor:'white'},{text:"function headscratch() { return 'purr' }",consoleColor:'white',logColor:'lime',meowColor:'white'}];
+                const codeSnippets=[{text:"console.log(meow')",consoleColor:'white',logColor:'green',meowColor:'lightblue'},{text:"if (cat.Slep) {slepMore()}",consoleColor:'white',logColor:'yellow',meowColor:'white'},{text:"error ('too many belly rubs)",consoleColor:'white',logColor:'red',meowColor:'white'},{text:"function headscratch() { return 'purr' }",consoleColor:'white',logColor:'lime',meowColor:'white'}];
 
                 const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
 
@@ -335,7 +363,7 @@
                     alpha: 1
                 });
             }
-        function triggerScrubStain(x, y) {
+        function tSS(x, y) {
             if (sS === 'hands' || sS === 'handsChase') {
                 hCA = false;
             }
@@ -349,25 +377,25 @@
         }
 
         function eHMTW() {
-            sS = 'footstepsBack';
+            sS = 'fSB';
             fSBP = 0;
             lHS = null;
             handsHoldTimer = 0;
         }
 
         function sRS() {
-            randomShelves = [];
+            rSh = [];
             const numShelves = Math.floor(Math.random() * 3);
             for (let i = 0; i < numShelves; i++) {
                 const x = 80 + Math.random() * 520;
                 const y = 180 + Math.random() * 30;
                 const width = 60 + Math.random() * 40;
                 const height = 20;
-                randomShelves.push({ x, y, width, height, color: '#7a5c3c' });
+                rSh.push({ x, y, width, height, color: '#7a5c3c' });
             }
         }
         function update() {
-                let cupsToRemove = [];
+                let cTR = [];
                 cC.forEach((cup, i) => {
                     if (cup.airborne) {
                         cup.x += cup.vx;
@@ -386,17 +414,17 @@
                             cup.y = desk.y - 20;
                             pSFX({ type: 'scrub', pitch: 554, duration: 0.2 });
                             if (!scrubStainActive) {
-                                triggerScrubStain(cup.x + 10, desk.y - 10);
+                                tSS(cup.x + 10, desk.y - 10);
                             }
                             cup.vy *= -0.35;
                             cup.vx *= 0.6;
                             if (Math.abs(cup.vy) < 1.2) {
                                 cup.vy = 0;
                                 cup.airborne = false;
-                                cupsToRemove.push(i);
+                                cTR.push(i);
                             }
                         }
-                        [shelves, randomShelves].flat().forEach(shelf => {
+                        [shelves, rSh].flat().forEach(shelf => {
                             if (
                                 cup.x + 20 > shelf.x &&
                                 cup.x < shelf.x + shelf.width &&
@@ -416,8 +444,8 @@
                         });
                     }
                 });
-                if (cupsToRemove.length > 0) {
-                    cupsToRemove.sort((a, b) => b - a).forEach(idx => cC.splice(idx, 1));
+                if (cTR.length > 0) {
+                    cTR.sort((a, b) => b - a).forEach(idx => cC.splice(idx, 1));
                 }
 
                 if (!gameStarted) return;
@@ -448,23 +476,23 @@
                         hCA = true;
                         hCS = now;
                         hCT = 0;
-                        handsChasePos.x = monitor.x + monitor.width / 2;
-                        handsChasePos.y = monitor.y + monitor.height - 10;
+                        hCP.x = monitor.x + monitor.width / 2;
+                        hCP.y = monitor.y + monitor.height - 10;
                     }
                     const catCenterX = cat.x + cat.width / 2;
                     const catCenterY = cat.y + cat.height / 2;
-                    const dx = catCenterX - handsChasePos.x;
-                    const dy = catCenterY - handsChasePos.y;
+                    const dx = catCenterX - hCP.x;
+                    const dy = catCenterY - hCP.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
                     if (dist > 1) {
-                        handsChasePos.x += (dx / dist) * handsChaseSpeed;
-                        handsChasePos.y += (dy / dist) * handsChaseSpeed;
+                        hCP.x += (dx / dist) * haCS;
+                        hCP.y += (dy / dist) * haCS;
                     }
                     if (
-                        handsChasePos.x > cat.x - 18 &&
-                        handsChasePos.x < cat.x + cat.width + 18 &&
-                        handsChasePos.y > cat.y - 16 &&
-                        handsChasePos.y < cat.y + cat.height + 16
+                        hCP.x > cat.x - 18 &&
+                        hCP.x < cat.x + cat.width + 18 &&
+                        hCP.y > cat.y - 16 &&
+                        hCP.y < cat.y + cat.height + 16
                     ) {
                         endGame();
                         return;
@@ -481,7 +509,7 @@
                             cST = 1 + Math.floor(Math.random() * 3);
                         } else {
                             sS = 'hands';
-                            handsProgress = 1;
+                            hP = 1;
                         }
                     }
                 } else {
@@ -491,7 +519,7 @@
                         sS = 'doorOpening';
                         dOP = 0;
                         fPP = 0;
-                        handsProgress = 0;
+                        hP = 0;
 
                         fSBP = 0;
                         dCP = 0;
@@ -511,9 +539,9 @@
                             lHS = null;
                         }
                     } else if (sS === 'hands') {
-                        if (handsProgress < 1) {
-                            handsProgress += 0.02;
-                            if (handsProgress > 1) handsProgress = 1;
+                        if (hP < 1) {
+                            hP += 0.02;
+                            if (hP > 1) hP = 1;
                         } else {
                             handsHoldTimer += 16;
                             let handsSeconds = Math.floor(handsHoldTimer / 1000);
@@ -522,17 +550,17 @@
                                 aD(5);
                                 pSFX({ type: 'alert', pitch: 220 + Math.random() * 100, duration: 0.12, volume: 0.15 });
                             }
-                            if (isCatNearMonitor()) {
+                            if (iCNM()) {
                                 endGame();
                                 return;
                             }
                             if (handsHoldTimer >= 30000) {
-                                sS = 'footstepsBack';
+                                sS = 'fSB';
                                 fSBP = 0;
                                 lHS = null;
                             }
                         }
-                    } else if (sS === 'footstepsBack') {
+                    } else if (sS === 'fSB') {
                         fSBP += 0.012;
                         if (fSBP >= 1) {
                             fSBP = 1;
@@ -548,7 +576,7 @@
                         }
                     }
                 }
-                if (isCatNearMonitor()) {
+                if (iCNM()) {
                     codeMode = true;
                 } else {
                     codeMode = false;
@@ -562,7 +590,7 @@
                     cat.isJumping = false;
                     onGround = true;
                 }
-                shelves.concat(randomShelves).forEach(shelf => {
+                shelves.concat(rSh).forEach(shelf => {
                     if (cat.x < shelf.x + shelf.width &&
                         cat.x + cat.width > shelf.x &&
                         cat.y + cat.height > shelf.y &&
@@ -586,34 +614,34 @@
                 if (cat.x + cat.width > canvas.width) {
                     cat.x = canvas.width - cat.width;
                 }
-                cP.forEach((particle, index) => {
-                    particle.x += particle.speedX;
-                    particle.y += particle.speedY;
-                    if (particle.isMeow) {
-                        const dx = (particle.targetX - particle.x) * 0.04;
-                        const dy = (particle.targetY - particle.y) * 0.04;
-                        particle.x += dx;
-                        particle.y += dy;
-                        particle.alpha -= 0.008;
-                        if (particle.alpha <= 0.01) {
+                cP.forEach((par, index) => {
+                    par.x += par.speedX;
+                    par.y += par.speedY;
+                    if (par.isMeow) {
+                        const dx = (par.targetX - par.x) * 0.04;
+                        const dy = (par.targetY - par.y) * 0.04;
+                        par.x += dx;
+                        par.y += dy;
+                        par.alpha -= 0.008;
+                        if (par.alpha <= 0.01) {
                             cP.splice(index, 1);
                         }
                     } else {
-                        const dx = particle.targetX - particle.x;
-                        const dy = particle.targetY - particle.y;
+                        const dx = par.targetX - par.x;
+                        const dy = par.targetY - par.y;
                         const distance = Math.sqrt(dx * dx + dy * dy);
                         if (distance < 10) {
                             cP.splice(index, 1);
 
                         }
-                        particle.alpha -= 0.01;
-                        if (particle.alpha <= 0) {
+                        par.alpha -= 0.01;
+                        if (par.alpha <= 0) {
                             cP.splice(index, 1);
                         }
                     }
                 });
-                if (gameStarted && additionsHistory.length < 32) {
-                    additionsHistory.push(score);
+                if (gameStarted && addH.length < 32) {
+                    addH.push(score);
                 }
             }
         function drawScrubStain() {
@@ -842,7 +870,7 @@
                     sS === 'footprints' ||
                     sS === 'hands' ||
                     sS === 'handsWait' ||
-                    sS === 'footstepsBack' ||
+                    sS === 'fSB' ||
                     (sS === 'scrubStain' && sST < 270)
                 ) {
                     doorOpen = dOP;
@@ -918,19 +946,19 @@
                     ctx.fillStyle = shelf.color;
                     ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
                 });
-                randomShelves.forEach(shelf => {
+                rSh.forEach(shelf => {
                     ctx.fillStyle = shelf.color;
                     ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
                 });
-                const rightShelf = shelves.reduce((a, b) => (a.x > b.x ? a : b));
+                const rS = shelves.reduce((a, b) => (a.x > b.x ? a : b));
                 const numLegs = 2;
-                const legSpacing = rightShelf.width / (numLegs + 1);
+                const legSpacing = rS.width / (numLegs + 1);
                 ctx.save();
                 ctx.strokeStyle = 'black';
                 ctx.lineWidth = 4;
                 for (let i = 1; i <= numLegs; i++) {
-                    const legX = rightShelf.x + i * legSpacing;
-                    const legYStart = rightShelf.y + rightShelf.height;
+                    const legX = rS.x + i * legSpacing;
+                    const legYStart = rS.y + rS.height;
                     const legYEnd = desk.y;
                     ctx.beginPath();
                     ctx.moveTo(legX, legYStart);
@@ -967,7 +995,7 @@
                         ctx.fill();
                         ctx.restore();
                     }
-                } else if (sS === 'footstepsBack') {
+                } else if (sS === 'fSB') {
                     const gone = Math.floor(steps * fSBP + 0.001);
                     for (let i = 0; i < steps - gone; i++) {
                         const t = i / (steps - 1);
@@ -994,22 +1022,22 @@
                     ctx.globalAlpha = 1;
                     ctx.shadowBlur = 0;
                     ctx.shadowColor = 'transparent';
-                    const handY = handsChasePos.y;
+                    const handY = hCP.y;
                     ctx.fillStyle = '#eab676';
                     ctx.beginPath();
-                    ctx.ellipse(handsChasePos.x - 25, handY, 18, 16, -0.2, 0, Math.PI*2);
+                    ctx.ellipse(hCP.x - 25, handY, 18, 16, -0.2, 0, Math.PI*2);
                     ctx.fill();
                     for (let f=0; f<4; f++) {
                         ctx.beginPath();
-                        ctx.ellipse(handsChasePos.x - 35 + f*6, handY+12, 4, 10, 0, 0, Math.PI*2);
+                        ctx.ellipse(hCP.x - 35 + f*6, handY+12, 4, 10, 0, 0, Math.PI*2);
                         ctx.fill();
                     }
                     ctx.beginPath();
-                    ctx.ellipse(handsChasePos.x + 25, handY, 18, 16, 0.2, 0, Math.PI*2);
+                    ctx.ellipse(hCP.x + 25, handY, 18, 16, 0.2, 0, Math.PI*2);
                     ctx.fill();
                     for (let f=0; f<4; f++) {
                         ctx.beginPath();
-                        ctx.ellipse(handsChasePos.x + 15 + f*6, handY+12, 4, 10, 0, 0, Math.PI*2);
+                        ctx.ellipse(hCP.x + 15 + f*6, handY+12, 4, 10, 0, 0, Math.PI*2);
                         ctx.fill();
                     }
                     ctx.restore();
@@ -1025,12 +1053,11 @@
                     ctx.strokeStyle = '#fff';
                     ctx.strokeRect(chaseBarX, chaseBarY, chaseBarW, chaseBarH);
                     ctx.restore();
-
                 }
                 if (sS === 'hands') {
-                    const handY = monitor.y + monitor.height - 10 + 40 * (1 - handsProgress);
+                    const handY = monitor.y + monitor.height - 10 + 40 * (1 - hP);
                     ctx.save();
-                    ctx.globalAlpha = handsProgress;
+                    ctx.globalAlpha = hP;
                     ctx.shadowBlur = 0;
                     ctx.shadowColor = 'transparent';
                     ctx.fillStyle = '#eab676';
@@ -1084,7 +1111,7 @@
                     ctx.strokeStyle = '#222';
                     ctx.lineWidth = 3;
                     ctx.stroke();
-                    if (catWearsFedora) {
+                    if (cWF) {
                         ctx.save();
                         ctx.beginPath();
                         ctx.ellipse(0, -15, 14, 5, 0, 0, Math.PI * 2);
@@ -1166,7 +1193,7 @@
                     ctx.lineWidth = 3;
                     ctx.stroke();
 
-                    if (catWearsFedora) {
+                    if (cWF) {
                         ctx.save();
                         let hatOffsetX = cat.lastFacing === 1 ? 16 : 16;
                         let hatOffsetY = -4;
@@ -1241,28 +1268,28 @@
                 ctx.shadowBlur = 0;
                 ctx.shadowOffsetY = 0;
                 ctx.restore();
-                cP.forEach(particle => {
+                cP.forEach(par => {
                     ctx.save();
                     ctx.shadowBlur = 0;
                     ctx.shadowColor = 'transparent';
-                    ctx.globalAlpha = particle.alpha;
-                    if (particle.isMeow) {
-                        ctx.font = `bold ${particle.size}px monospace`;
+                    ctx.globalAlpha = par.alpha;
+                    if (par.isMeow) {
+                        ctx.font = `bold ${par.size}px monospace`;
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'bottom';
                         ctx.strokeStyle = '#fff';
                         ctx.lineWidth = 1;
-                        ctx.strokeText(particle.text, particle.x, particle.y);
+                        ctx.strokeText(par.text, par.x, par.y);
                         ctx.fillStyle = '#4ec9f0';
-                        ctx.fillText(particle.text, particle.x, particle.y);
+                        ctx.fillText(par.text, par.x, par.y);
                     } else {
-                        ctx.font = `${particle.size}px monospace`;
-                        const words = particle.text.match(/(\s+|[a-zA-Z_][a-zA-Z0-9_]*|\d+|[^\s\w])/g) || [];
+                        ctx.font = `${par.size}px monospace`;
+                        const words = par.text.match(/(\s+|[a-zA-Z_][a-zA-Z0-9_]*|\d+|[^\s\w])/g) || [];
                         let xOffset = 10;
-                        const lS = particle.size
+                        const lS = par.size
                         const colorMap = {
                             console: 'lightgreen',
-                            log: particle.logColor,
+                            log: par.logColor,
                             meow: 'magenta', tuna: 'magenta', yarn: 'magenta', purr: 'magenta',
                             cat: 'lightblue', Food: 'lightblue', wakeUp: 'lightblue', debug: 'lightblue',
                             function: 'lightblue', return: 'lightblue', if: 'lightblue', let: 'lightblue', new: 'lightblue',
@@ -1273,7 +1300,7 @@
                         words.forEach(word => {
                             let color = colorMap[word] || 'white';
                             ctx.fillStyle = color;
-                            ctx.fillText(word, Math.round(particle.x + xOffset), particle.y);
+                            ctx.fillText(word, Math.round(par.x + xOffset), par.y);
                             let width = ctx.measureText(word).width;
                             xOffset += width + lS;
                         });
@@ -1287,7 +1314,7 @@
         document.addEventListener('keydown', (e) => {
                 if (e.code === 'Space') {
                     for (let cup of cC) {
-                        if (isCatNearCup(cup) && !cup.airborne) {
+                        if (iCNC(cup) && !cup.airborne) {
                             pCC(cup);
                             break;
                         }
@@ -1323,7 +1350,7 @@
                 }
                 if (
                     sS === 'hands' &&
-                    handsProgress === 1 &&
+                    hP === 1 &&
                     e.code === 'Space'
                 ) {
                     if (!meowTarget) {
@@ -1411,31 +1438,31 @@
                     const val = Math.floor(startScore + (endScore - startScore) * p);
                     gitAdditions.textContent = val;
                     uGCC(val);
-                    if (p < 1) requestAnimationFrame(update); else {
+                    if (p < 1) reqF(update); else {
                         score = endScore;
                         gitAdditions.textContent = score;
                         uGCC(score);
                     }
                 })(startTime);
-                if (gameStarted && additionsHistory.length < 32) additionsHistory.push(endScore);
+                if (gameStarted && addH.length < 32) addH.push(endScore);
             }
 
             function endGame() {
                 playGOP()
                 gameStarted = false;
-                clearInterval(timerInterval);
+                clearInterval(tiInt);
                 gOS.style.display = 'flex';
                 gOS.setAttribute('data-reason', 'petted');
                 document.getElementById('gOM').innerHTML =
       "<span style='color:#f85149; font-family:Cinzel, serif; font-size:1.2em; letter-spacing:2px;'>You were petted.</span>";
                 document.getElementById('rB').innerHTML = 'We Continue';
-                finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${deletionsScore} deletions</span>`;
+                finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${delS} deletions</span>`;
                 drawGitGraph();
-                if (gGR.length < maxGames) {
-                    gGR.push({ score, deletions: deletionsScore });
+                if (gGR.length < mG) {
+                    gGR.push({ score, deletions: delS });
                 }
                 uGGG();
-                if (gGR.length === maxGames) {
+                if (gGR.length === mG) {
                     setTimeout(showReport, 1500);
 
                 }
@@ -1446,10 +1473,11 @@
                 scoreboard.style.display = 'none';
                 let total = gGR.reduce((sum, g) => sum + Math.max(0, g.score - g.deletions), 0);
                 let rank = getRank(total);
-                const fedoraOption = document.getElementById('fedoraOption');
+                const fO = document.getElementById('fO');
                 if (rank === 'B|ackc4t_h@cker' || rank === 'Grey Cat Hacker') {
-                    fedoraOption.style.display = 'flex';
-                    catWearsFedora = true;
+                    fO.style.display = 'flex';
+                    cWF = true;
+                    setTimeout(pM, 5000);
                 }
 
                 let rankColor = {
@@ -1475,7 +1503,7 @@
             function drawGitGraph() {
                 const ctx = gitGraph.getContext('2d');
                 ctx.clearRect(0, 0, gitGraph.width, gitGraph.height);
-                const net = Math.max(0, score - deletionsScore);
+                const net = Math.max(0, score - delS);
                 const maxScore = 1000;
                 const percent = Math.min(net / maxScore, 1);
                 function lerp(a, b, t) { return a + (b - a) * t; }
@@ -1503,7 +1531,7 @@
             }
 
             function uGCC() {
-                const net = Math.max(0, score - deletionsScore);
+                const net = Math.max(0, score - delS);
                 const maxScore = 1000;
                 const percent = Math.min(net / maxScore, 1);
                 function lerp(a, b, t) { return a + (b - a) * t; }
@@ -1536,30 +1564,30 @@
 
                 update();
                 draw();
-                requestAnimationFrame(gameLoop);
+                reqF(gameLoop);
             }
 
         startButton.addEventListener('click', () => {
             sRS();
             sCC();
-            if (gGR.length === maxGames) return;
+            if (gGR.length === mG) return;
             cSC = 0;
             gameStarted = true;
             startScreen.style.display = 'none';
             gOS.style.display = 'none';
             scoreboard.style.display = 'block';
             score = 0;
-            deletionsScore = 0;
+            delS = 0;
             gitAdditions.textContent = 0;
             gitDeletions.textContent = 0;
-            additionsHistory = [];
+            addH = [];
             cP = [];
             sS = 'idle';
             stealthTimer = 0;
             nSE = Date.now() + 3000 + Math.random() * 5000;
             dOP = 0;
             fPP = 0;
-            handsProgress = 0;
+            hP = 0;
             handsHoldTimer = 0;
             fSBP = 0;
             dCP= 0;
@@ -1583,13 +1611,13 @@
             startTimer();
             if (!gameLoopRunning) {
                 gameLoopRunning = true;
-                requestAnimationFrame(gameLoop);
+                reqF(gameLoop);
             }
         });
 
-        const fedoraCheckbox = document.getElementById('fedoraCheckbox');
-        fedoraCheckbox.addEventListener('change', (event) => {
-            catWearsFedora = event.target.checked;
+        const fCh = document.getElementById('fCh');
+        fCh.addEventListener('change', (event) => {
+            cWF = event.target.checked;
         });
 
             rB.addEventListener('click', () => {
