@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><style>body{margin:0;overflow:hidden;background-color:#222}canvas{background-color:#728C69;display:block;margin:0 auto;position:relative;z-index:1}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10}#startButton{padding:20px 40px;font-size:24px;background-color:#555;color:white;border:none;cursor:pointer}#scoreboard{position:absolute;top:20px;right:20px;font-size:24px;color:white;z-index:20}#gitScoreBar{z-index:21;position:relative;}#gitAdditions,#gitDeletions,#gitCube{z-index:22;position:relative;}</style></head><body><div id="workday-message" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.85);padding:20px 40px;border-radius:12px;z-index:2000">work day over</div><div id="startScreen" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"><h1 style="color:white;font-family:sans-serif;font-size:3em;margin-bottom:24px">B|ackC4t_H@cker</h1><div id="gGG" style="display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(2,32px);gap:12px;margin-bottom:24px;justify-content:center;align-items:center;width:max-content;margin-left:auto;margin-right:auto"><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:4;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:2"></canvas></div><div id="fO" style="margin-bottom: 20px; display: none; align-items: center;"><input type="checkbox" id="fCh" style="margin-right: 10px;"><label for="fCh" style="color: white; font-family: sans-serif;">Script wears Fedora</label></div><button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gOS" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gOM" style="margin:0;font-size:2.5em"></h1><div id="finalScores" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="rB" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Next Day</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas></body></html>
+<!DOCTYPE html><html><head><style>body{margin:0;overflow:hidden;background-color:#222}canvas{background-color:#728C69;display:block;margin:0 auto;position:relative;z-index:1}#startScreen{position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:10}#startButton{padding:20px 40px;font-size:24px;background-color:#555;color:white;border:none;cursor:pointer}#scoreboard{position:absolute;top:20px;right:20px;font-size:24px;color:white;z-index:20}#gitScoreBar{z-index:21;position:relative;}#gitAdditions,#gitDeletions,#gitCube{z-index:22;position:relative;}</style></head><body><div id="workday-message" style="display:none;position:absolute;top:50px;left:50%;transform:translateX(-50%);font-size:2.5em;color:#fff;background:rgba(0,0,0,0.85);padding:20px 40px;border-radius:12px;z-index:2000">work day over</div><div id="startScreen" style="display:flex;flex-direction:column;justify-content:center;align-items:center;position:absolute;top:0;left:0;width:100%;height:100%;background-color:rgb(0,0,0);z-index:10"><h1 style="color:white;font-family:sans-serif;font-size:3em;margin-bottom:24px">B|ackC4t_H@cker</h1><div id="gGG" style="display:grid;grid-template-columns:repeat(4,32px);grid-template-rows:repeat(2,32px);gap:12px;margin-bottom:24px;justify-content:center;align-items:center;width:max-content;margin-left:auto;margin-right:auto"><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:4;grid-row:1"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:1;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:2;grid-row:2"></canvas><canvas class="gitGraphSquare" width="32" height="32" style="background:#181818;border-radius:6px;border:2px solid #222;box-shadow:0 2px 6px #0004;grid-column:3;grid-row:2"></canvas></div><div id="fO" style="margin-bottom: 20px; display: none; align-items: center;"><input type="checkbox" id="fCh" style="margin-right: 10px;"><label for="fCh" style="color: white; font-family: sans-serif;">Script wears Fedora</label></div><button id="startButton" style="margin:0 auto 0 auto;display:block">Start Game</button><div id="reportScreen" style="display:none;margin-top:24px;color:white;font-family:sans-serif;background:#222;border-radius:12px;padding:24px 32px;box-shadow:0 4px 32px #000a;text-align:center"></div></div><div id="gOS" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);z-index:100;color:white;justify-content:center;align-items:center;flex-direction:column;font-family:sans-serif"><div style="background:#222;padding:32px 48px;border-radius:16px;box-shadow:0 4px 32px #000a;display:flex;flex-direction:column;align-items:center;gap:24px"><h1 id="gOM" style="margin:0;font-size:2.5em"></h1><div id="finS" style="font-size:1.3em"></div><canvas id="gitGraph" width="24" height="24" style="margin-top:12px;border-radius:4px;background:#181818;border:2px solid #222;box-shadow:0 2px 6px #0004"></canvas><button id="rB" style="margin-top:18px;font-size:1.1em;padding:10px 32px;border-radius:8px;border:none;background:#2ea043;color:white;cursor:pointer">Next Day</button></div></div><div id="scoreboard"><div id="gitScoreBar" style="display:flex;align-items:center;gap:12px"><span style="background:#2ea043;color:white;border-radius:4px 0 0 4px;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center">+<span id="gitAdditions">0</span></span><span style="background:#f85149;color:white;border-radius:0 4px 4px 0;padding:4px 10px;font-family:monospace;font-size:20px;display:flex;align-items:center;opacity:0.9">-<span id="gitDeletions">0</span></span><span id="gitCube" style="width:24px;height:24px;margin-left:8px;border-radius:4px;background:#888;display:inline-block;border:2px solid #222;box-shadow:0 2px 6px #0004"></span></div></div><canvas id="gameCanvas"></canvas></body></html>
 <Script>
     let cWF = false;
         let round = 1;
@@ -19,8 +19,8 @@
             gOS.setAttribute('data-reason', 'timeout');
             document.getElementById('gOM').textContent = 'work day over';
              document.getElementById('rB').innerHTML = 'Next Day';
-            finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${delS} deletions</span>`;
-            drawGitGraph();
+            finS.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${delS} deletions</span>`;
+            drawGG();
             if (gGR.length < mG) {
                 gGR.push({ score, deletions: delS });
             }
@@ -307,7 +307,7 @@ function pM() {
         const gitDeletions = document.getElementById('gitDeletions');
         const gitCube = document.getElementById('gitCube');
         const gOS = document.getElementById('gOS');
-        const finalScores = document.getElementById('finalScores');
+        const finS = document.getElementById('finS');
         const gitGraph = document.getElementById('gitGraph');
         const rB = document.getElementById('rB');
         let delS = 0;
@@ -324,14 +324,14 @@ function pM() {
                 const aniS = Math.floor(startScore + (endScore - startScore) * progress);
                 gitDeletions.textContent = aniS;
                 if (progress < 1) {
-                    reqF(updateScore);
+                    requestAnimationFrame(updateScore);
                 } else {
                     delS = endScore;
                     gitDeletions.textContent = delS;
                 }
             }
 
-            reqF(updateScore);
+            requestAnimationFrame(updateScore);
         }
 
             function iCNM() {
@@ -344,9 +344,9 @@ function pM() {
             shelves=[{x:25,y:315,width:65,height:20,color:'transparent'},{x:200,y:400,width:100,height:20,color:'#4b371C'},{x:325,y:290,width:150,height:20,color:'#4b371C'},{x:670,y:380,width:150,height:20,color:'#4b371C'}];
             function generateCodeParticle(score) {
 
-                const codeSnippets=[{text:"console.log(meow')",consoleColor:'white',logColor:'green',meowColor:'lightblue'},{text:"if (cat.Slep) {slepMore()}",consoleColor:'white',logColor:'yellow',meowColor:'white'},{text:"error ('too many belly rubs)",consoleColor:'white',logColor:'red',meowColor:'white'},{text:"function headscratch() { return 'purr' }",consoleColor:'white',logColor:'lime',meowColor:'white'}];
+                const cSn=[{text:"console.log(meow')",consoleColor:'white',logColor:'green',meowColor:'lightblue'},{text:"if (cat.Slep) {slepMore()}",consoleColor:'white',logColor:'yellow',meowColor:'white'},{text:"error ('too many belly rubs)",consoleColor:'white',logColor:'red',meowColor:'white'},{text:"function headscratch() { return 'purr' }",consoleColor:'white',logColor:'lime',meowColor:'white'}];
 
-                const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                const snippet = cSn[Math.floor(Math.random() * cSn.length)];
 
                 cP.push({
                     x: monitor.x - 500,
@@ -1328,7 +1328,7 @@ function pM() {
                 if (codeMode && e.key.match(/^[a-z]$/)) {
                     generateCodeParticle();
                     if (sS == 'handsChase'){
-                    animateScore(10);
+                    aniS(10);
                     cP.push({
                         x: cat.x + cat.width / 2,
                         y: cat.y,
@@ -1342,7 +1342,7 @@ function pM() {
                         isMeow: true
                     });
                     } else {
-                    animateScore(1);
+                    aniS(1);
                     }
                     tipTapping = true;
                     clearTimeout(tipTapTimeout);
@@ -1423,7 +1423,7 @@ function pM() {
 
      const bMN = [196.00,392.00,220.00,392.00,246.94,392.00,261.62,392.00,293.66,392.00,329.62,392.00,369.98,392.00,392.00,392.00];
        let bMI = 0;
-            function animateScore(points) {
+            function aniS(points) {
                 const endScore = score + points;
                 pSFX({
                     type: 'score',
@@ -1438,7 +1438,7 @@ function pM() {
                     const val = Math.floor(startScore + (endScore - startScore) * p);
                     gitAdditions.textContent = val;
                     uGCC(val);
-                    if (p < 1) reqF(update); else {
+                    if (p < 1) requestAnimationFrame(update); else {
                         score = endScore;
                         gitAdditions.textContent = score;
                         uGCC(score);
@@ -1456,18 +1456,18 @@ function pM() {
                 document.getElementById('gOM').innerHTML =
       "<span style='color:#f85149; font-family:Cinzel, serif; font-size:1.2em; letter-spacing:2px;'>You were petted.</span>";
                 document.getElementById('rB').innerHTML = 'We Continue';
-                finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${delS} deletions</span>`;
-                drawGitGraph();
+                finS.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${delS} deletions</span>`;
+                drawGG();
                 if (gGR.length < mG) {
                     gGR.push({ score, deletions: delS });
                 }
                 uGGG();
                 if (gGR.length === mG) {
-                    setTimeout(showReport, 1500);
+                    setTimeout(shoR, 1500);
 
                 }
             }
-            function showReport() {
+            function shoR() {
                 startButton.style.display = 'none';
                 reportScreen.style.display = 'block';
                 scoreboard.style.display = 'none';
@@ -1488,9 +1488,9 @@ function pM() {
                     'Grey Cat Hacker': '#2ea043',
                     'B|ackc4t_h@cker': '#2ea043'
                 }[rank] || '#fff';
-                let rankText = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
+                let rankT = `<span style='font-size:2em; color:${rankColor}; font-weight:bold;'>${rank.replace(/\b\w/g, l => l.toUpperCase())}</span>`;
                 let details = gGR.map((g, i) => `<div style='font-size:1.1em; margin:4px 0;'>Game ${i+1}: <span style='color:#2ea043;'>+${g.score}</span> <span style='color:#f85149;'>-${g.deletions}</span> = <b>${Math.max(0, g.score-g.deletions)}</b></div>`).join('');
-                reportScreen.innerHTML = `<h2>7 Games Complete!</h2><div style='margin:12px 0 18px 0;'>Total Additions: <span style='color:#2ea043; font-size:1.3em;'>${total}</span></div>${details}<div style='margin:18px 0 8px 0;'>Rank:</div>${rankText}<div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Play Again</button></div>`;
+                reportScreen.innerHTML = `<h2>7 Games Complete!</h2><div style='margin:12px 0 18px 0;'>Total Additions: <span style='color:#2ea043; font-size:1.3em;'>${total}</span></div>${details}<div style='margin:18px 0 8px 0;'>Rank:</div>${rankT}<div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Play Again</button></div>`;
                 setTimeout(() => {
                     document.getElementById('resetSeriesBtn').onclick = () => {
                         gGR = [];
@@ -1500,7 +1500,7 @@ function pM() {
                     };
                 }, 100);
             }
-            function drawGitGraph() {
+            function drawGG() {
                 const ctx = gitGraph.getContext('2d');
                 ctx.clearRect(0, 0, gitGraph.width, gitGraph.height);
                 const net = Math.max(0, score - delS);
@@ -1564,7 +1564,7 @@ function pM() {
 
                 update();
                 draw();
-                reqF(gameLoop);
+                requestAnimationFrame(gameLoop);
             }
 
         startButton.addEventListener('click', () => {
@@ -1611,7 +1611,7 @@ function pM() {
             startTimer();
             if (!gameLoopRunning) {
                 gameLoopRunning = true;
-                reqF(gameLoop);
+                requestAnimationFrame(gameLoop);
             }
         });
 
