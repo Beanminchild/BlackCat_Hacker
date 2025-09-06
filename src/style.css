@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #222;
+}
+canvas {
+  background-color: #728c69;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+#startScreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+#startButton,
+#tutorialButton {
+  padding: 20px 40px;
+  font-size: 24px;
+  background-color: #555;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+#scoreboard {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  color: white;
+  z-index: 20;
+}
+#gitScoreBar {
+  z-index: 21;
+  position: relative;
+}
+#gitAdditions,
+#gitDeletions,
+#gitCube {
+  z-index: 22;
+  position: relative;
+}
