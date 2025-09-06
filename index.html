@@ -1,0 +1,339 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div
+      id="timer"
+      style="
+        display: none;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 2em;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 8px 18px;
+        border-radius: 8px;
+        z-index: 1000;
+      "
+    >
+      05:00
+    </div>
+    <div
+      id="workday-message"
+      style="
+        display: none;
+        position: absolute;
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2.5em;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.85);
+        padding: 20px 40px;
+        border-radius: 12px;
+        z-index: 2000;
+      "
+    >
+      work day over
+    </div>
+    <div
+      id="startScreen"
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(0, 0, 0);
+        z-index: 10;
+      "
+    >
+      <div
+        id="tutorialScreen"
+        style="
+          display: none;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgb(0, 0, 0);
+          z-index: 10;
+        "
+      ></div>
+      <h1
+        style="
+          color: white;
+          font-family: sans-serif;
+          font-size: 3em;
+          margin-bottom: 24px;
+        "
+      >
+        B|ackC4t_H@cker
+      </h1>
+      <div
+        id="gitGraphGrid"
+        style="
+          display: grid;
+          grid-template-columns: repeat(4, 32px);
+          grid-template-rows: repeat(2, 32px);
+          gap: 12px;
+          margin-bottom: 24px;
+          justify-content: center;
+          align-items: center;
+          width: max-content;
+          margin-left: auto;
+          margin-right: auto;
+        "
+      >
+        <canvas
+          class="gitGraphSquare"
+          width="32"
+          height="32"
+          style="
+            background: #181818;
+            border-radius: 6px;
+            border: 2px solid #222;
+            box-shadow: 0 2px 6px #0004;
+            grid-column: 1;
+            grid-row: 1;
+          "
+        ></canvas>
+        <canvas
+          class="gitGraphSquare"
+          width="32"
+          height="32"
+          style="
+            background: #181818;
+            border-radius: 6px;
+            border: 2px solid #222;
+            box-shadow: 0 2px 6px #0004;
+            grid-column: 2;
+            grid-row: 1;
+          "
+        ></canvas>
+        <canvas
+          class="gitGraphSquare"
+          width="32"
+          height="32"
+          style="
+            background: #181818;
+            border-radius: 6px;
+            border: 2px solid #222;
+            box-shadow: 0 2px 6px #0004;
+            grid-column: 3;
+            grid-row: 1;
+          "
+        ></canvas>
+        <canvas
+          class="gitGraphSquare"
+          width="32"
+          height="32"
+          style="
+            background: #181818;
+            border-radius: 6px;
+            border: 2px solid #222;
+            box-shadow: 0 2px 6px #0004;
+            grid-column: 4;
+            grid-row: 1;
+          "
+        ></canvas>
+        <canvas
+          class="gitGraphSquare"
+          width="32"
+          height="32"
+          style="
+            background: #181818;
+            border-radius: 6px;
+            border: 2px solid #222;
+            box-shadow: 0 2px 6px #0004;
+            grid-column: 1;
+            grid-row: 2;
+          "
+        ></canvas>
+        <canvas
+          class="gitGraphSquare"
+          width="32"
+          height="32"
+          style="
+            background: #181818;
+            border-radius: 6px;
+            border: 2px solid #222;
+            box-shadow: 0 2px 6px #0004;
+            grid-column: 2;
+            grid-row: 2;
+          "
+        ></canvas>
+        <canvas
+          class="gitGraphSquare"
+          width="32"
+          height="32"
+          style="
+            background: #181818;
+            border-radius: 6px;
+            border: 2px solid #222;
+            box-shadow: 0 2px 6px #0004;
+            grid-column: 3;
+            grid-row: 2;
+          "
+        ></canvas>
+      </div>
+      <div
+        id="fedoraOption"
+        style="margin-bottom: 20px; display: none; align-items: center"
+      >
+        <input
+          type="checkbox"
+          id="fedoraCheckbox"
+          style="margin-right: 10px"
+        /><label
+          for="fedoraCheckbox"
+          style="color: white; font-family: sans-serif"
+          >Script wears Fedora</label
+        >
+      </div>
+      <button id="startButton" style="margin: 0 auto 0 auto; display: block">
+        Start Game
+      </button>
+      <p>
+        <button
+          id="tutorialButton"
+          style="margin: 0 auto 0 auto; display: block"
+        >
+          How 2 Play
+        </button>
+      </p>
+      <div
+        id="reportScreen"
+        style="
+          display: none;
+          margin-top: 24px;
+          color: white;
+          font-family: sans-serif;
+          background: #222;
+          border-radius: 12px;
+          padding: 24px 32px;
+          box-shadow: 0 4px 32px #000a;
+          text-align: center;
+        "
+      ></div>
+    </div>
+    <div
+      id="gameOverScreen"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.92);
+        z-index: 100;
+        color: white;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-family: sans-serif;
+      "
+    >
+      <div
+        style="
+          background: #222;
+          padding: 32px 48px;
+          border-radius: 16px;
+          box-shadow: 0 4px 32px #000a;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 24px;
+        "
+      >
+        <h1 id="gameOverMessage" style="margin: 0; font-size: 2.5em"></h1>
+        <div id="finalScores" style="font-size: 1.3em"></div>
+        <canvas
+          id="gitGraph"
+          width="24"
+          height="24"
+          style="
+            margin-top: 12px;
+            border-radius: 4px;
+            background: #181818;
+            border: 2px solid #222;
+            box-shadow: 0 2px 6px #0004;
+          "
+        ></canvas>
+        <button
+          id="restartButton"
+          style="
+            margin-top: 18px;
+            font-size: 1.1em;
+            padding: 10px 32px;
+            border-radius: 8px;
+            border: none;
+            background: #2ea043;
+            color: white;
+            cursor: pointer;
+          "
+        >
+          Next Day
+        </button>
+      </div>
+    </div>
+    <div id="scoreboard">
+      <div
+        id="gitScoreBar"
+        style="display: flex; align-items: center; gap: 12px"
+      >
+        <span
+          style="
+            background: #2ea043;
+            color: white;
+            border-radius: 4px 0 0 4px;
+            padding: 4px 10px;
+            font-family: monospace;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+          "
+          >+<span id="gitAdditions">0</span></span
+        ><span
+          style="
+            background: #f85149;
+            color: white;
+            border-radius: 0 4px 4px 0;
+            padding: 4px 10px;
+            font-family: monospace;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            opacity: 0.9;
+          "
+          >-<span id="gitDeletions">0</span></span
+        ><span
+          id="gitCube"
+          style="
+            width: 24px;
+            height: 24px;
+            margin-left: 8px;
+            border-radius: 4px;
+            background: #888;
+            display: inline-block;
+            border: 2px solid #222;
+            box-shadow: 0 2px 6px #0004;
+          "
+        ></span>
+      </div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
