@@ -1,5 +1,7 @@
 <html>
   <head>
+    <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./src/style.css" />
   </head>
   <body>
@@ -334,6 +336,19 @@
       </div>
     </div>
     <canvas id="gameCanvas"></canvas>
+
+    <!-- Mobile Game Controls -->
+    <div id="mobileControls">
+      <div class="mobile-control-group left-controls">
+        <button id="leftBtn" class="mobile-btn">←</button>
+        <button id="rightBtn" class="mobile-btn">→</button>
+      </div>
+      <div class="mobile-control-group right-controls">
+        <button id="jumpBtn" class="mobile-btn">↑</button>
+        <button id="meowBtn" class="mobile-btn">M</button>
+        <button id="typeBtn" class="mobile-btn">T</button>
+      </div>
+    </div>
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>

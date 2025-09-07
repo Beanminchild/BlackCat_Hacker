@@ -5,6 +5,9 @@ let timerInterval = null;
 let baseTime = 100 + Math.random() * 20; // random between 90 and 120 seconds
 baseTime = Math.floor(baseTime); // round down to whole seconds if needed
 let currentTime = baseTime;
+
+
+
 function formatTime(secs) {
   const m = Math.floor(secs / 60)
     .toString()
@@ -61,7 +64,7 @@ function nextRound() {
 // Call startTimer() at the start of each round in your game logic.
 // --- Coffee Cup Mechanic ---
 let coffeeCups = [];
-const coffeeEmoji = "\u{2615}";
+const coffeeEmoji = "☕";
 function spawnCoffeeCups() {
   coffeeCups = [];
   const numCups = 1 + Math.floor(Math.random() * 3); // 1-3 cups
@@ -130,6 +133,10 @@ const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 600;
 
+
+
+
+
 // Stealth mechanic variables
 let stealthState = "idle"; // idle, doorOpening, footprints, hands, handsWait, footstepsBack, doorClosing, handsChase, scrubStain
 let scrubStainTimer = 0;
@@ -168,6 +175,7 @@ const tutorialScreen = document.getElementById("reportScreen");
 const gitGraphGrid = document.getElementById("gitGraphGrid");
 const reportScreen = document.getElementById("reportScreen");
 const scoreboard = document.getElementById("scoreboard");
+const mobileControls = document.getElementById('mobileControls');
 
 // Sound API for harmonized, customizable effects
 const aMajorScale = [440, 494, 554, 587, 659, 740, 831, 880]; // A major scale frequencies
@@ -1499,7 +1507,7 @@ function draw() {
   ctx.font = `${monitor.width}px serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
-  ctx.fillText("\u{1F4BB}", monitor.x + monitor.width / 2, monitor.y);
+  ctx.fillText('💻', monitor.x + monitor.width / 2, monitor.y);
 
   // --- HANDS CHASE DRAW ---
   if (stealthState === "handsChase" && handsChaseActive) {
@@ -2074,6 +2082,7 @@ function animateScore(points) {
 }
 
 function endGame() {
+
   playGameOverProgression();
   gameStarted = false;
   clearInterval(timerInterval);
@@ -2243,6 +2252,9 @@ function gameLoop() {
 }
 
 startButton.addEventListener("click", () => {
+
+  mobileControls.style.display = window.innerWidth <= 900 ? 'flex' : 'none';
+  document.getElementById("gameCanvas").style.display = 'block';
   // Spawn coffee cups for this round
   spawnRandomShelves(); // Spawn random shelves each round
   spawnCoffeeCups();
@@ -2252,7 +2264,7 @@ startButton.addEventListener("click", () => {
   gameStarted = true;
   startScreen.style.display = "none";
   gameOverScreen.style.display = "none";
-  scoreboard.style.display = "block"; // Show scoreboard only during game
+  scoreboard.style.display = "block";
   score = 0;
   deletionsScore = 0;
   gitAdditions.textContent = 0;
@@ -2298,25 +2310,21 @@ startButton.addEventListener("click", () => {
   }
 });
 
-const fedoraCheckbox = document.getElementById("fedoraCheckbox");
-fedoraCheckbox.addEventListener("change", (event) => {
-  catWearsFedora = event.target.checked;
-});
-
 restartButton.addEventListener("click", () => {
-  // Show the start screen and hide the game over screen, reset game state
   startScreen.style.display = "flex";
   gameOverScreen.style.display = "none";
-  scoreboard.style.display = "none"; // Hide scoreboard on start screen
+  scoreboard.style.display = "none";
+  document.getElementById("gameCanvas").style.display = 'none';
+  mobileControls.style.display = 'none';
   updateGitGraphGrid();
-  // Stop the game loop if running
   gameLoopRunning = false;
-  // Optionally reset cat position and other variables if needed
 });
 
 tutorialButton.addEventListener("click", () => {
   tutorialScreen.style.display = "flex";
   reportScreen.style.display = "block";
+  document.getElementById("gameCanvas").style.display = 'none';
+  mobileControls.style.display = 'none';
   let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups <p> press -> <- to move left and right and ^ to jump </p> Spam any letter key when infront of the computer to code! <p>Your goal is to help Script commit 1000 lines or more a day without being pet by your vibe coding owner!</p><p>Commit malicious code and help Script earn her master hacker fedora!</p></span>`;
   reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
 
@@ -2335,6 +2343,105 @@ tutorialButton.addEventListener("click", () => {
     };
   }, 100);
 });
+
+// Mobile controls setup
+const leftBtn = document.getElementById('leftBtn');
+const rightBtn = document.getElementById('rightBtn');
+const jumpBtn = document.getElementById('jumpBtn');
+const meowBtn = document.getElementById('meowBtn');
+const typeBtn = document.getElementById('typeBtn');
+
+function setupMobileControls() {
+  leftBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    keys['ArrowLeft'] = true;
+  });
+  leftBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    keys['ArrowLeft'] = false;
+  });
+  rightBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    keys['ArrowRight'] = true;
+  });
+  rightBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    keys['ArrowRight'] = false;
+  });
+  jumpBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (!cat.isJumping) {
+      cat.velocityY = -10;
+      cat.isJumping = true;
+    }
+  });
+  meowBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const event = new KeyboardEvent('keydown', { key: ' ', code: 'Space' });
+    document.dispatchEvent(event);
+  });
+  typeBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const event = new KeyboardEvent('keydown', { key: 'z', code: 'KeyZ' });
+
+    document.dispatchEvent(event);
+  });
+  let lastSwipeX = null;
+  let swipeAccum = 0;
+  const swipeThreshold = 30; // px per key press
+
+  function handleSwipe(e) {
+    const touch = e.touches[0];
+    if (lastSwipeX !== null) {
+      const dx = touch.clientX - lastSwipeX;
+      swipeAccum += Math.abs(dx);
+      while (swipeAccum >= swipeThreshold) {
+        const event = new KeyboardEvent('keydown', { key: 'e', code: 'KeyE' });
+        document.dispatchEvent(event);
+        swipeAccum -= swipeThreshold;
+      }
+    }
+    lastSwipeX = touch.clientX;
+  }
+
+  function resetSwipe() {
+    lastSwipeX = null;
+    swipeAccum = 0;
+  }
+
+  const swipeArea = document.getElementById('mobileControls');
+  swipeArea.addEventListener('touchstart', (e) => {
+    lastSwipeX = e.touches[0].clientX;
+    swipeAccum = 0;
+  });
+
+  const swipeArea2 = document.getElementById('gameCanvas');
+    swipeArea2.addEventListener('touchstart', (e) => {
+      lastSwipeX = e.touches[0].clientX;
+      swipeAccum = 0;
+    });
+
+  swipeArea.addEventListener('touchmove', handleSwipe);
+  swipeArea.addEventListener('touchend', resetSwipe);
+  swipeArea2.addEventListener('touchmove', handleSwipe);
+  swipeArea2.addEventListener('touchend', resetSwipe); // full screen? maybe feels better?
+
+  // Prevent default behavior for all mobile buttons
+  const allMobileButtons = document.querySelectorAll('.mobile-btn');
+  allMobileButtons.forEach(btn => {
+    btn.addEventListener('touchstart', e => e.preventDefault());
+    btn.addEventListener('touchmove', e => e.preventDefault());
+//    btn.addEventListener('touchend', e => e.preventDefault());
+  });
+}
+setupMobileControls();
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('gameCanvas').style.display = 'none';
+  document.getElementById('mobileControls').style.display = 'none';
+});
+
+
 
 updateGitGraphGrid();
 scoreboard.style.display = "none";
