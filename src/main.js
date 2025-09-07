@@ -1962,7 +1962,7 @@ document.addEventListener("keydown", (e) => {
         isMeow: true,
       });
     } else {
-      animateScore(1);
+      animateScore(1000);
     }
     tipTapping = true;
     clearTimeout(tipTapTimeout);
@@ -2131,7 +2131,7 @@ function showReport() {
   const fedoraOption = document.getElementById("fedoraOption");
   if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker") {
     fedoraOption.style.display = "flex";
-    catWearsFedora = true;
+    //catWearsFedora = true;
   } else if (rank === "Dumber than my cat Emmie") {
     document.getElementById("whiteScriptOption").style.display = "block";
     //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
@@ -2488,7 +2488,10 @@ tutorialButton.addEventListener("click", () => {
 window.addEventListener('DOMContentLoaded', updateTutorialButtonText);
 window.addEventListener('resize', updateTutorialButtonText);
 
-
+const fedoraCheckbox = document.getElementById('fedoraCheckbox');
+    fedoraCheckbox.addEventListener('change', (event) => {
+        catWearsFedora = event.target.checked;
+    });
 document.getElementById("whiteScriptCheckbox").addEventListener("change", function(e) {
   if (e.target.checked) {
     // Set script color to white to make Emmie
