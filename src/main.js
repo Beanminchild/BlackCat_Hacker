@@ -29,7 +29,7 @@ function showTimer(show) {
 
 function endRound() {
   clearInterval(timerInterval);
-  showTimer(false);
+  showTimer(false); 
   gameStarted = false;
   gameOverScreen.style.display = "flex";
   gameOverScreen.setAttribute("data-reason", "timeout");
@@ -948,7 +948,7 @@ function update() {
 }
 
 function drawScrubStain() {
-   tailWidth = 4; // reset tail width in case it was Emmie
+   //tailWidth = 4; // reset tail width in case it was Emmie
   // Draw coffee stain at the triggered location
   if (scrubStainActive && scrubStainX !== null && scrubStainY !== null) {
     const stainX = scrubStainX;
@@ -2498,6 +2498,8 @@ document.getElementById("whiteScriptCheckbox").addEventListener("change", functi
   } else {
     // Reset to default (black)
     cat.color = "#222";
+    tailColor = "#222"; // default tail color
+    tailWidth = 4; // reset tail widtth back to Script default
   }
 });
 
