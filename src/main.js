@@ -1,6 +1,8 @@
 let keys = {};
 let catWearsFedora = false;
 let whiteScriptOption = false;
+let tailColor = "#222"; // allow different tail colors for Emmie, Script tail by default
+let tailWidth = 4; // default tail width for script, enables fluffy  tail for Emmie
 let round = 1;
 let timerInterval = null;
 let baseTime = 100 + Math.random() * 20; // random between 90 and 120 seconds
@@ -730,10 +732,14 @@ function update() {
   if (stealthState === "handsChase") {
     // --- Hands chase the cat ---
     if (!handsChaseActive) {
-      // Initialize chase
+      // Initialize chasef
       handsChaseActive = true;
       handsChaseStart = now;
       handsChaseTimer = 0;
+      if (tailColor == "#8b6f2cff") {  // checking tail color is emmie (only cat with fluffy tail)// could i check the checkbox state instead? yes but too long. 
+        playHighRankCelebration(); // Use high-rank sound to celebreate Emmies unique Fluffy tail!
+        tailWidth = 14; // Emmie's fluffy tail
+      }
       // Start hands at monitor
       handsChasePos.x = monitor.x + monitor.width / 2;
       handsChasePos.y = monitor.y + monitor.height - 10;
@@ -763,6 +769,7 @@ function update() {
     if (handsChaseTimer > 7000) {
       // Hands return to monitor, but count as a successful avoidance
       handsChaseActive = false;
+      tailWidth = 4;  // reset tail width in case it was Emmie
       chaseSuccessCount++;
       meowCount = 0;
       meowTarget = 0;
@@ -836,12 +843,14 @@ function update() {
       }
     } else if (stealthState === "footstepsBack") {
       footstepsBackProgress += 0.012; // a bit faster than forward
+      tailWidth = 4; // reset tail width in case it was Emmie
       if (footstepsBackProgress >= 1) {
         footstepsBackProgress = 1;
         stealthState = "doorClosing";
         doorCloseProgress = 0;
       }
     } else if (stealthState === "doorClosing") {
+      tailWidth = 4; // reset tail width in case it was Emmie
       doorCloseProgress += 0.02;
       if (doorCloseProgress >= 1) {
         doorCloseProgress = 1;
@@ -939,6 +948,7 @@ function update() {
 }
 
 function drawScrubStain() {
+   tailWidth = 4; // reset tail width in case it was Emmie
   // Draw coffee stain at the triggered location
   if (scrubStainActive && scrubStainX !== null && scrubStainY !== null) {
     const stainX = scrubStainX;
@@ -1661,7 +1671,7 @@ function draw() {
     ctx.moveTo(6, -14);
     ctx.lineTo(3, -22);
     ctx.lineTo(0, -10);
-    ctx.strokeStyle = "#222";
+    ctx.strokeStyle = cat.color;
     ctx.lineWidth = 3;
     ctx.stroke();
     // Fedora (black hat)
@@ -1712,8 +1722,8 @@ function draw() {
     ctx.beginPath();
     ctx.moveTo(0, 18);
     ctx.bezierCurveTo(0, 32, 8, 38 + walkCycle, 0, 48 + walkCycle);
-    ctx.strokeStyle = cat.color;
-    ctx.lineWidth = 4;
+    ctx.strokeStyle = tailColor;
+    ctx.lineWidth = tailWidth;
     ctx.stroke();
     ctx.restore();
     // Paws (tip-tapping)
@@ -1813,7 +1823,7 @@ function draw() {
     // Eye (single, side profile)
     ctx.beginPath();
     ctx.ellipse(19, -4, 1.5, 2, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "yellow";
     ctx.fill();
     ctx.beginPath();
     ctx.ellipse(19, -4, 0.7, 1, 0, 0, Math.PI * 2);
@@ -1836,12 +1846,12 @@ function draw() {
       0,
       -32 - walkCycle
     );
-    ctx.strokeStyle = "#222";
-    ctx.lineWidth = 4;
+    ctx.strokeStyle = tailColor;
+    ctx.lineWidth = tailWidth;
     ctx.stroke();
     ctx.restore();
     // Legs (sideways, move when walking)
-    ctx.strokeStyle = "#222";
+    ctx.strokeStyle = cat.color;
     ctx.lineWidth = 4;
     // Back leg
     ctx.beginPath();
@@ -2481,8 +2491,10 @@ window.addEventListener('resize', updateTutorialButtonText);
 
 document.getElementById("whiteScriptCheckbox").addEventListener("change", function(e) {
   if (e.target.checked) {
-    // Set script color to white
-    cat.color = "white";
+    // Set script color to white to make Emmie
+    
+    cat.color = "#f7f4edff";
+    tailColor = "#8b6f2cff"; // emmies light brown tail
   } else {
     // Reset to default (black)
     cat.color = "#222";
