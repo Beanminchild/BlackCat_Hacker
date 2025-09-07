@@ -1,5 +1,6 @@
 let keys = {};
 let catWearsFedora = false;
+let whiteScriptOption = false;
 let round = 1;
 let timerInterval = null;
 let baseTime = 100 + Math.random() * 20; // random between 90 and 120 seconds
@@ -392,7 +393,7 @@ const cat = {
   speed: 5,
   velocityY: 0,
   isJumping: false,
-  color: "black",
+  color: "#222",
 };
 
 // Door position and size (moved to global scope for scrubStain)
@@ -1644,7 +1645,7 @@ function draw() {
   if (codeMode) {
     // --- BACK VIEW ---
     // Body (back, rounder)
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(0, 8, 13, 11, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -1711,7 +1712,7 @@ function draw() {
     ctx.beginPath();
     ctx.moveTo(0, 18);
     ctx.bezierCurveTo(0, 32, 8, 38 + walkCycle, 0, 48 + walkCycle);
-    ctx.strokeStyle = "#222";
+    ctx.strokeStyle = cat.color;
     ctx.lineWidth = 4;
     ctx.stroke();
     ctx.restore();
@@ -1722,7 +1723,7 @@ function draw() {
     ctx.save();
     ctx.translate(-6, 18 + tap * 3);
     ctx.rotate(-0.2 + tap * 0.2);
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -1731,7 +1732,7 @@ function draw() {
     ctx.save();
     ctx.translate(6, 18 + tap2 * 3);
     ctx.rotate(0.2 - tap2 * 0.2);
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -1740,7 +1741,7 @@ function draw() {
   } else {
     // --- SIDEWAYS VIEW ---
     // Body (sideways oval)
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(2, 6, 14, 7, Math.PI / 12, 0, Math.PI * 2);
     ctx.fill();
@@ -1757,7 +1758,7 @@ function draw() {
     ctx.moveTo(11, -4);
     ctx.lineTo(13, -12);
     ctx.lineTo(16, 2);
-    ctx.strokeStyle = "#222";
+    ctx.strokeStyle = cat.color;
     ctx.lineWidth = 3;
     ctx.stroke();
 
@@ -2121,8 +2122,12 @@ function showReport() {
   if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker") {
     fedoraOption.style.display = "flex";
     catWearsFedora = true;
-  } else {
+  } else if (rank === "Dumber than my cat Emmie") {
+    document.getElementById("whiteScriptOption").style.display = "block";
     //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
+  } else {
+  //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
+
   }
 
   let rankColor =
@@ -2130,7 +2135,7 @@ function showReport() {
       "Dumber than my cat Emmie": "#888",
       "Copy-pawsta Cat": "#1e90ff",
       "Script Kitty": "#f7c325",
-      Pawthonista: "#a259e6",
+      "Pawthonista": "#a259e6",
       "Grey Cat Hacker": "#2ea043",
       "Master B|ackc4t_h@cker": "#2ea043",
     }[rank] || "#fff";
@@ -2159,7 +2164,7 @@ function showReport() {
       reportScreen.style.display = "none";
       startButton.style.display = "inline-block";
       tutorialButton.style.display = "inline-block";
-      if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker") {
+      if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker"  || rank === "Dumber than my cat Emmie") {
         //localStorage.setItem('catWearsFedora', 'true');
         playHighRankCelebration();
       }
@@ -2326,7 +2331,7 @@ tutorialButton.addEventListener("click", () => {
   document.getElementById("gameCanvas").style.display = 'none';
   mobileControls.style.display = 'none';
   let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups <p> press -> <- to move left and right and ^ to jump </p> Spam any letter key when infront of the computer to code! <p>Your goal is to help Script commit 1000 lines or more a day without being pet by your vibe coding owner!</p><p>Commit malicious code and help Script earn her master hacker fedora!</p></span>`;
-  reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
+  reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Clear GitGraph</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
 
   setTimeout(() => {
     document.getElementById("resetSeriesBtn").onclick = () => {
@@ -2441,6 +2446,48 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('mobileControls').style.display = 'none';
 });
 
+// Place this in your main JS file
+function updateTutorialButtonText() {
+  const tutorialBtn = document.getElementById('tutorialButton');
+  if (window.innerWidth <= 900) {
+    tutorialBtn.textContent = 'Mobile Tutorial';
+  } else {
+    tutorialBtn.textContent = 'Tutorial';
+  }
+}
+function getTutorialText() {
+  if (window.innerWidth <= 900) {
+    return `<span style='font-size:1em; color:white; font-weight:bold;'>Mobile controls: Tap ↑ to jump, ← → to move, M to meow, T or Swipe anyhwere to code .<br>Help Script commit 1000+ lines a day!</span>`;
+  } else {
+    return `<span style='font-size:1em; color:white; font-weight:bold;'>Press SPACE to meow and push coffee cups.<br>Use arrow keys to move and jump.<br>Spam any letter key in front of the computer to code!<br>Your goal: Help Script commit 1000+ lines a day!</span>`;
+  }
+}
+
+tutorialButton.addEventListener("click", () => {
+  tutorialScreen.style.display = "flex";
+  reportScreen.style.display = "block";
+  document.getElementById("gameCanvas").style.display = 'none';
+  mobileControls.style.display = 'none';
+  let tutorialText = getTutorialText();
+  reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Clear GitGraph</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
+
+  // ...rest of your button setup code...
+});
+
+// Run on load and on resize
+window.addEventListener('DOMContentLoaded', updateTutorialButtonText);
+window.addEventListener('resize', updateTutorialButtonText);
+
+
+document.getElementById("whiteScriptCheckbox").addEventListener("change", function(e) {
+  if (e.target.checked) {
+    // Set script color to white
+    cat.color = "white";
+  } else {
+    // Reset to default (black)
+    cat.color = "#222";
+  }
+});
 
 
 updateGitGraphGrid();
