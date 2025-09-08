@@ -2456,6 +2456,30 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('mobileControls').style.display = 'none';
 });
 
+// function scaleCanvasForScreen() {
+//   const canvas = document.getElementById("gameCanvas");
+//   if (window.innerWidth > 1200) {
+//     // Desktop: scale up visually
+//     canvas.style.transform = "scale(1.5)";
+//     canvas.style.transformOrigin = "center top";
+//   } else {
+//     // Mobile: normal scale
+//     canvas.style.transform = "scale(1)";
+//     canvas.style.transformOrigin = "top left";
+//   }
+// }
+
+// // Run on load and resize
+// window.addEventListener('DOMContentLoaded', scaleCanvasForScreen);
+// window.addEventListener('resize', scaleCanvasForScreen);
+
+  // Optionally, update desk/monitor positions if needed
+
+
+// // Run on load and resize
+// window.addEventListener('DOMContentLoaded', scaleCanvasForScreen);
+// window.addEventListener('resize', scaleCanvasForScreen);
+
 // Place this in your main JS file
 function updateTutorialButtonText() {
   const tutorialBtn = document.getElementById('tutorialButton');
@@ -2487,6 +2511,7 @@ tutorialButton.addEventListener("click", () => {
 // Run on load and on resize
 window.addEventListener('DOMContentLoaded', updateTutorialButtonText);
 window.addEventListener('resize', updateTutorialButtonText);
+
 
 const fedoraCheckbox = document.getElementById('fedoraCheckbox');
     fedoraCheckbox.addEventListener('change', (event) => {
