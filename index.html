@@ -1,5 +1,7 @@
 <html>
   <head>
+    <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./src/style.css" />
   </head>
   <body>
@@ -201,6 +203,13 @@
           >Script wears Fedora</label
         >
       </div>
+        <!-- In your home screen HTML -->
+        <div id="whiteScriptOption" style="display:none; margin:12px 0;">
+          <label for = "whiteScriptCheckbox" style="color: white; font-family: sans-serif;">
+            <input type="checkbox" id="whiteScriptCheckbox">
+            Play as Emmie
+          </label>
+        </div>
       <button id="startButton" style="margin: 0 auto 0 auto; display: block">
         Start Game
       </button>
@@ -291,49 +300,106 @@
     <div id="scoreboard">
       <div
         id="gitScoreBar"
-        style="display: flex; align-items: center; gap: 12px"
+        style="display: flex; flex-direction: column; align-items: flex-start; gap: 0px;"
       >
-        <span
-          style="
-            background: #2ea043;
-            color: white;
-            border-radius: 4px 0 0 4px;
-            padding: 4px 10px;
-            font-family: monospace;
-            font-size: 20px;
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span
+            style="
+              background: #2ea043;
+              color: white;
+              border-radius: 4px 0 0 4px;
+              padding: 4px 10px;
+              font-family: monospace;
+              font-size: 20px;
+              display: flex;
+              align-items: center;
+              opacity: 0.75;
+            "
+            >+<span id="gitAdditions">0</span></span
+          >
+          <span
+            style="
+              background: #f85149;
+              color: white;
+              border-radius: 0 4px 4px 0;
+              padding: 4px 10px;
+              font-family: monospace;
+              font-size: 20px;
+              display: flex;
+              align-items: center;
+              opacity: 0.75;
+            "
+            >-<span id="gitDeletions">0</span></span
+          >
+          <span
+            id="gitCube"
+            style="
+              width: 24px;
+              height: 24px;
+              margin-left: 8px;
+              border-radius: 4px;
+              background: #888;
+              display: inline-block;
+              border: 2px solid #222;
+              box-shadow: 0 2px 6px #0004;
+            "
+          ></span>
+        </div>
+        <div id="sunglassesBox" style="
+            width: 98px;
+            height: 32px;
+            margin-top: 8px;
+            margin-left: 80px;
+            border-radius: 6px;
+            background: #222b;
             display: flex;
             align-items: center;
-          "
-          >+<span id="gitAdditions">0</span></span
-        ><span
-          style="
-            background: #f85149;
-            color: white;
-            border-radius: 0 4px 4px 0;
-            padding: 4px 10px;
-            font-family: monospace;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            opacity: 0.9;
-          "
-          >-<span id="gitDeletions">0</span></span
-        ><span
-          id="gitCube"
-          style="
-            width: 24px;
-            height: 24px;
-            margin-left: 8px;
-            border-radius: 4px;
-            background: #888;
-            display: inline-block;
-            border: 2px solid #222;
+            justify-content: center;
+            border: 2px solid #888;
+            font-size: 2em;
+            color: #fff;
             box-shadow: 0 2px 6px #0004;
-          "
-        ></span>
+            opacity: 0.85;
+            visibility: hidden;
+          "></div>
       </div>
     </div>
     <canvas id="gameCanvas"></canvas>
+
+    <!-- Mobile Game Controls -->
+    <div id="mobileControls">
+      <div class="mobile-control-group left-controls">
+        <button id="leftBtn" class="mobile-btn">←</button>
+        <button id="rightBtn" class="mobile-btn">→</button>
+      </div>
+      <div class="mobile-control-group right-controls">
+        <button id="jumpBtn" class="mobile-btn">↑</button>
+        <button id="meowBtn" class="mobile-btn">M</button>
+        <button id="typeBtn" class="mobile-btn">T</button>
+      </div>
+    </div>
+    <div
+      id="glasses-message"
+      style="
+        display: none;
+        position: absolute;
+        top: 120px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2em;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.85);
+        padding: 18px 36px;
+        border-radius: 12px;
+        z-index: 2100;
+        text-align: center;
+      "
+    >
+      <button id="close-glasses-message" style="position: absolute; top: 8px; right: 12px; font-size: 1.2em; background: none; border: none; color: #fff; cursor: pointer;">&times;</button>
+      <div>Legendary Item Unlocked: Cat Vision Goggles! 🕶️</div>
+      <div style="font-size: 1.1em; margin-top: 10px; color: #ffd700;">Now you can see hidden clues in the room.</div>
+        <div style="font-size: .5em; margin-top: 20px; color: #red">When in the light... look for the darkness.</div>
+    </div>
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>

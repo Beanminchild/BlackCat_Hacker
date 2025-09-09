@@ -1,10 +1,24 @@
 let keys = {};
 let catWearsFedora = false;
+let whiteScriptOption = false;
+let tailColor = "#222"; // allow different tail colors for Emmie, Script tail by default
+let tailWidth = 4; // default tail width for script, enables fluffy  tail for Emmie
 let round = 1;
 let timerInterval = null;
 let baseTime = 100 + Math.random() * 20; // random between 90 and 120 seconds
 baseTime = Math.floor(baseTime); // round down to whole seconds if needed
 let currentTime = baseTime;
+
+let inOtherRoom = false;
+let originalShelves = null;
+let originalMonitor = null;
+let originalRandomShelves = null;
+let originalCoffeeCups = null;
+
+let roomChangeCooldown = 0; // ms timestamp for door cooldown
+
+let glassesCollected = false;
+
 function formatTime(secs) {
   const m = Math.floor(secs / 60)
     .toString()
@@ -23,8 +37,15 @@ function showTimer(show) {
 
 function endRound() {
   clearInterval(timerInterval);
-  showTimer(false);
+  showTimer(false); 
   gameStarted = false;
+  // Reset cat to original room/position and room state
+  inOtherRoom = false;
+  shelves = JSON.parse(JSON.stringify(originalShelves));
+  randomShelves = JSON.parse(JSON.stringify(originalRandomShelves));
+  coffeeCups = JSON.parse(JSON.stringify(originalCoffeeCups));
+  Object.assign(monitor, originalMonitor);
+  placeCatUnderDoor(doorX, doorY, doorW, doorH);
   gameOverScreen.style.display = "flex";
   gameOverScreen.setAttribute("data-reason", "timeout");
   document.getElementById("gameOverMessage").textContent = "work day over";
@@ -53,6 +74,9 @@ function startTimer() {
 }
 
 function nextRound() {
+  // Reset cat to original room/position at the start of each round
+  cat.x = originalCatX;
+  cat.y = originalCatY;
   round++;
   startTimer();
 }
@@ -61,7 +85,7 @@ function nextRound() {
 // Call startTimer() at the start of each round in your game logic.
 // --- Coffee Cup Mechanic ---
 let coffeeCups = [];
-const coffeeEmoji = "\u{2615}";
+const coffeeEmoji = "☕";
 function spawnCoffeeCups() {
   coffeeCups = [];
   const numCups = 1 + Math.floor(Math.random() * 3); // 1-3 cups
@@ -130,6 +154,10 @@ const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 600;
 
+
+
+
+
 // Stealth mechanic variables
 let stealthState = "idle"; // idle, doorOpening, footprints, hands, handsWait, footstepsBack, doorClosing, handsChase, scrubStain
 let scrubStainTimer = 0;
@@ -168,6 +196,7 @@ const tutorialScreen = document.getElementById("reportScreen");
 const gitGraphGrid = document.getElementById("gitGraphGrid");
 const reportScreen = document.getElementById("reportScreen");
 const scoreboard = document.getElementById("scoreboard");
+const mobileControls = document.getElementById('mobileControls');
 
 // Sound API for harmonized, customizable effects
 const aMajorScale = [440, 494, 554, 587, 659, 740, 831, 880]; // A major scale frequencies
@@ -375,6 +404,20 @@ function updateGitGraphGrid() {
 
 let shelves = [];
 let randomShelves = [];
+// Add shelves for the second room
+let otherRoomShelves = [
+  { x: 60, y: 425, width: 120, height: 20, color: "#7a5c3c" },
+  { x: 30, y: 330, width: 20, height: 20, color: "#7a5c3c" },
+  { x: 30, y: 180, width: 10, height: 20, color: "#7a5c3c" },
+  { x: 150, y: 100, width: 10, height: 20, color: "#7a5c3c" },
+  { x: 150, y: 280, width: 20, height: 20, color: "#7a5c3c" },
+  { x: 375, y: 200, width: 100, height: 20, color: "#7a5c3c" },
+  { x: 500, y: 50, width: 140, height: 20, color: "#7a5c3c" },
+  { x: 703, y: 315, width: 65, height: 20, color: "transparent" },
+  { x: 780, y: 215, width: 65, height: 20, color: "#7a5c3c" },
+  { x: 680, y: 115, width: 65, height: 20, color: "#7a5c3c" },
+  { x: 903, y: 315, width: 65, height: 20, color: "transparent" }, // hide the legs
+];
 
 const cat = {
   x: 50,
@@ -384,8 +427,11 @@ const cat = {
   speed: 5,
   velocityY: 0,
   isJumping: false,
-  color: "black",
+  color: "#222",
 };
+// Store original cat position after creation
+let originalCatX = cat.x;
+let originalCatY = cat.y;
 
 // Door position and size (moved to global scope for scrubStain)
 const doorX = 30;
@@ -721,10 +767,14 @@ function update() {
   if (stealthState === "handsChase") {
     // --- Hands chase the cat ---
     if (!handsChaseActive) {
-      // Initialize chase
+      // Initialize chasef
       handsChaseActive = true;
       handsChaseStart = now;
       handsChaseTimer = 0;
+      if (tailColor == "#8b6f2cff") {  // checking tail color is emmie (only cat with fluffy tail)// could i check the checkbox state instead? yes but too long. 
+        playHighRankCelebration(); // Use high-rank sound to celebreate Emmies unique Fluffy tail!
+        tailWidth = 14; // Emmie's fluffy tail
+      }
       // Start hands at monitor
       handsChasePos.x = monitor.x + monitor.width / 2;
       handsChasePos.y = monitor.y + monitor.height - 10;
@@ -754,6 +804,7 @@ function update() {
     if (handsChaseTimer > 7000) {
       // Hands return to monitor, but count as a successful avoidance
       handsChaseActive = false;
+      tailWidth = 4;  // reset tail width in case it was Emmie
       chaseSuccessCount++;
       meowCount = 0;
       meowTarget = 0;
@@ -827,12 +878,14 @@ function update() {
       }
     } else if (stealthState === "footstepsBack") {
       footstepsBackProgress += 0.012; // a bit faster than forward
+      tailWidth = 4; // reset tail width in case it was Emmie
       if (footstepsBackProgress >= 1) {
         footstepsBackProgress = 1;
         stealthState = "doorClosing";
         doorCloseProgress = 0;
       }
     } else if (stealthState === "doorClosing") {
+      tailWidth = 4; // reset tail width in case it was Emmie
       doorCloseProgress += 0.02;
       if (doorCloseProgress >= 1) {
         doorCloseProgress = 1;
@@ -927,9 +980,91 @@ function update() {
   if (gameStarted && additionsHistory.length < 32) {
     additionsHistory.push(score);
   }
+
+  // Room switch mechanic with cooldown
+  if (isCatAtDoorBottom()) {
+    if (Date.now() > roomChangeCooldown) {
+      roomChangeCooldown = Date.now() + 1000; // 1 second cooldown
+      if (!inOtherRoom) {
+        // Enter other room: remove shelves and monitor
+        inOtherRoom = true;
+        if (!originalShelves) originalShelves = JSON.parse(JSON.stringify(shelves));
+        if (!originalMonitor) originalMonitor = Object.assign({}, monitor);
+        if (!originalRandomShelves) originalRandomShelves = JSON.parse(JSON.stringify(randomShelves));
+        if (!originalCoffeeCups) originalCoffeeCups = JSON.parse(JSON.stringify(coffeeCups));
+        shelves = JSON.parse(JSON.stringify(otherRoomShelves)); // Use second room shelves
+        randomShelves = [];
+        coffeeCups = [];
+        monitor.x = -9999; // Move monitor offscreen
+        monitor.y = -9999;
+        // Move door to opposite side
+        window.otherRoomDoorX = canvas.width - doorW - 30;
+        window.otherRoomDoorY = doorY;
+        // Move cat under new door
+        placeCatUnderDoor(window.otherRoomDoorX, window.otherRoomDoorY, doorW, doorH);
+      } else {
+        // Return to main room: restore shelves and monitor
+        inOtherRoom = false;
+        shelves = JSON.parse(JSON.stringify(originalShelves));
+        randomShelves = JSON.parse(JSON.stringify(originalRandomShelves));
+        coffeeCups = JSON.parse(JSON.stringify(originalCoffeeCups));
+        Object.assign(monitor, originalMonitor);
+        // Move door back to original position
+        window.otherRoomDoorX = doorX;
+        window.otherRoomDoorY = doorY;
+        // Move cat under original door
+        placeCatUnderDoor(doorX, doorY, doorW, doorH);
+      }
+    }
+  }
+
+  if (inOtherRoom && !glassesCollected) {
+    // Glasses emoji bounding box (centered on shelf)
+    const glassesCenterX = 500 + 140 / 2;
+    const glassesCenterY = 50 + 15;
+    const glassesSize = 32; // emoji font size
+    const glassesLeft = glassesCenterX - glassesSize / 2;
+    const glassesRight = glassesCenterX + glassesSize / 2;
+    const glassesTop = glassesCenterY - glassesSize / 2;
+    const glassesBottom = glassesCenterY + glassesSize / 2;
+    // Cat bounding box
+    const catLeft = cat.x;
+    const catRight = cat.x + cat.width;
+    const catTop = cat.y;
+    const catBottom = cat.y + cat.height;
+    // AABB collision
+    if (
+      catRight > glassesLeft &&
+      catLeft < glassesRight &&
+      catBottom > glassesTop &&
+      catTop < glassesBottom
+    ) {
+      glassesCollected = true;
+      document.getElementById("glasses-message").style.display = "block";
+      setTimeout(() => {
+        document.getElementById("glasses-message").style.display = "none";
+      }, 5500);
+      updateSunglassesBox();
+    }
+  }
+}
+
+function isCatAtDoorBottom() {
+  // Cat's bottom center
+  const catBottomX = cat.x + cat.width / 2;
+  const catBottomY = cat.y + cat.height;
+  // Door bottom area
+  let checkDoorX = inOtherRoom ? (window.otherRoomDoorX || canvas.width - doorW - 30) : doorX;
+  let checkDoorY = inOtherRoom ? (window.otherRoomDoorY || doorY) : doorY;
+  return (
+    catBottomX > checkDoorX &&
+    catBottomX < checkDoorX + doorW &&
+    Math.abs(catBottomY - (checkDoorY + doorH)) < 8
+  );
 }
 
 function drawScrubStain() {
+   //tailWidth = 4; // reset tail width in case it was Emmie
   // Draw coffee stain at the triggered location
   if (scrubStainActive && scrubStainX !== null && scrubStainY !== null) {
     const stainX = scrubStainX;
@@ -1056,14 +1191,14 @@ function draw() {
   // --- BACKGROUND LAYERS ---
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   // Draw wall (upper background)
-  ctx.fillStyle = "#728C69";
+  ctx.fillStyle = inOtherRoom ? "#ffe066" : "#728C69"; // yellow for other room
   // Lower the wall so it ends closer to the desk
   const wallBottomY = desk.y - 60; // was desk.y - 241, now much closer
   ctx.fillRect(0, 0, canvas.width, wallBottomY);
 
   // Draw floor area (lower background, below floorboard)
   const floorboardY = wallBottomY;
-  ctx.fillStyle = "#bcae99"; // lighter, warm floor color
+  ctx.fillStyle = inOtherRoom ? "#fff6c1" : "#bcae99"; // lighter yellow for other room
   ctx.fillRect(0, floorboardY, canvas.width, canvas.height - floorboardY);
 
   // Draw floorboard (horizontal plank)
@@ -1299,8 +1434,11 @@ function draw() {
   const doorW = 60,
     doorH = 135;
   const hingeLeft = true; // set false for right hinge
-  const hingeX = hingeLeft ? doorX : doorX + doorW;
-  const hingeY = doorY + doorH / 2;
+  // Use other room door position if inOtherRoom
+  let drawDoorX = inOtherRoom ? (window.otherRoomDoorX || canvas.width - doorW - 30) : doorX;
+  let drawDoorY = inOtherRoom ? (window.otherRoomDoorY || doorY) : doorY;
+  const hingeX = hingeLeft ? drawDoorX : drawDoorX + doorW;
+  const hingeY = drawDoorY + doorH / 2;
   function easeOutCubic(t) {
     return 1 - Math.pow(1 - t, 3);
   }
@@ -1319,7 +1457,7 @@ function draw() {
     ctx.save();
     ctx.fillStyle = "black";
     // Cover the entire door frame area
-    ctx.fillRect(doorX, doorY, doorW, doorH);
+    ctx.fillRect(drawDoorX, drawDoorY, doorW, doorH);
     ctx.restore();
 
     ctx.save();
@@ -1389,12 +1527,12 @@ function draw() {
     // closed door
     ctx.save();
     ctx.fillStyle = "#5a3c1a";
-    ctx.fillRect(doorX, doorY, doorW, doorH);
+    ctx.fillRect(drawDoorX, drawDoorY, doorW, doorH);
     ctx.strokeStyle = "#3a220a";
     ctx.lineWidth = 5;
-    ctx.strokeRect(doorX, doorY, doorW, doorH);
+    ctx.strokeRect(drawDoorX, drawDoorY, doorW, doorH);
     ctx.beginPath();
-    ctx.arc(doorX + doorW - 8, doorY + doorH / 2, 6, 0, Math.PI * 2);
+    ctx.arc(drawDoorX + doorW - 8, drawDoorY + doorH / 2, 6, 0, Math.PI * 2);
     ctx.fillStyle = "#eab676";
     ctx.fill();
     ctx.restore();
@@ -1417,6 +1555,15 @@ function draw() {
   shelves.forEach((shelf) => {
     ctx.fillStyle = shelf.color;
     ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
+    // Draw glasses emoji on the second room shelf at x: 680, y: 115
+    if (inOtherRoom && shelf.x === 500 && shelf.y === 50 && !glassesCollected) {
+      ctx.save();
+      ctx.font = "32px serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.fillText("🕶️", shelf.x + shelf.width / 2, shelf.y + shelf.height - 2);
+      ctx.restore();
+    }
   });
   // Draw random shelves
   randomShelves.forEach((shelf) => {
@@ -1424,7 +1571,7 @@ function draw() {
     ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
   });
   // Draw little black legs from the furthest right shelf to the desk
-  const rightShelf = shelves.reduce((a, b) => (a.x > b.x ? a : b));
+  const rightShelf = shelves.length > 0 ? shelves.reduce((a, b) => (a.x > b.x ? a : b)) : { x: 0, width: 0, y: 0, height: 0 };
   const numLegs = 2;
   const legSpacing = rightShelf.width / (numLegs + 1);
   ctx.save();
@@ -1496,10 +1643,12 @@ function draw() {
   }
 
   // Draw monitor as emoji
-  ctx.font = `${monitor.width}px serif`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "top";
-  ctx.fillText("\u{1F4BB}", monitor.x + monitor.width / 2, monitor.y);
+  if (monitor.x > 0 && monitor.y > 0) {
+    ctx.font = `${monitor.width}px serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText('💻', monitor.x + monitor.width / 2, monitor.y);
+  }
 
   // --- HANDS CHASE DRAW ---
   if (stealthState === "handsChase" && handsChaseActive) {
@@ -1636,7 +1785,7 @@ function draw() {
   if (codeMode) {
     // --- BACK VIEW ---
     // Body (back, rounder)
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(0, 8, 13, 11, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -1652,7 +1801,7 @@ function draw() {
     ctx.moveTo(6, -14);
     ctx.lineTo(3, -22);
     ctx.lineTo(0, -10);
-    ctx.strokeStyle = "#222";
+    ctx.strokeStyle = cat.color;
     ctx.lineWidth = 3;
     ctx.stroke();
     // Fedora (black hat)
@@ -1703,8 +1852,8 @@ function draw() {
     ctx.beginPath();
     ctx.moveTo(0, 18);
     ctx.bezierCurveTo(0, 32, 8, 38 + walkCycle, 0, 48 + walkCycle);
-    ctx.strokeStyle = "#222";
-    ctx.lineWidth = 4;
+    ctx.strokeStyle = tailColor;
+    ctx.lineWidth = tailWidth;
     ctx.stroke();
     ctx.restore();
     // Paws (tip-tapping)
@@ -1714,7 +1863,7 @@ function draw() {
     ctx.save();
     ctx.translate(-6, 18 + tap * 3);
     ctx.rotate(-0.2 + tap * 0.2);
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -1723,7 +1872,7 @@ function draw() {
     ctx.save();
     ctx.translate(6, 18 + tap2 * 3);
     ctx.rotate(0.2 - tap2 * 0.2);
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -1732,7 +1881,7 @@ function draw() {
   } else {
     // --- SIDEWAYS VIEW ---
     // Body (sideways oval)
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(2, 6, 14, 7, Math.PI / 12, 0, Math.PI * 2);
     ctx.fill();
@@ -1749,7 +1898,7 @@ function draw() {
     ctx.moveTo(11, -4);
     ctx.lineTo(13, -12);
     ctx.lineTo(16, 2);
-    ctx.strokeStyle = "#222";
+    ctx.strokeStyle = cat.color;
     ctx.lineWidth = 3;
     ctx.stroke();
 
@@ -1804,7 +1953,7 @@ function draw() {
     // Eye (single, side profile)
     ctx.beginPath();
     ctx.ellipse(19, -4, 1.5, 2, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "yellow";
     ctx.fill();
     ctx.beginPath();
     ctx.ellipse(19, -4, 0.7, 1, 0, 0, Math.PI * 2);
@@ -1827,12 +1976,12 @@ function draw() {
       0,
       -32 - walkCycle
     );
-    ctx.strokeStyle = "#222";
-    ctx.lineWidth = 4;
+    ctx.strokeStyle = tailColor;
+    ctx.lineWidth = tailWidth;
     ctx.stroke();
     ctx.restore();
     // Legs (sideways, move when walking)
-    ctx.strokeStyle = "#222";
+    ctx.strokeStyle = cat.color;
     ctx.lineWidth = 4;
     // Back leg
     ctx.beginPath();
@@ -1943,7 +2092,7 @@ document.addEventListener("keydown", (e) => {
         isMeow: true,
       });
     } else {
-      animateScore(1);
+      animateScore(1000);
     }
     tipTapping = true;
     clearTimeout(tipTapTimeout);
@@ -2074,6 +2223,7 @@ function animateScore(points) {
 }
 
 function endGame() {
+
   playGameOverProgression();
   gameStarted = false;
   clearInterval(timerInterval);
@@ -2111,9 +2261,15 @@ function showReport() {
   const fedoraOption = document.getElementById("fedoraOption");
   if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker") {
     fedoraOption.style.display = "flex";
-    catWearsFedora = true;
-  } else {
+    //catWearsFedora = true;
+  } else if (rank === "Dumber than my cat Emmie") {
+    document.getElementById("whiteScriptCheckbox").checked = false;
+    document.getElementById("whiteScriptOption").style.display = "block";
+
     //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
+  } else {
+  //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
+
   }
 
   let rankColor =
@@ -2121,7 +2277,7 @@ function showReport() {
       "Dumber than my cat Emmie": "#888",
       "Copy-pawsta Cat": "#1e90ff",
       "Script Kitty": "#f7c325",
-      Pawthonista: "#a259e6",
+      "Pawthonista": "#a259e6",
       "Grey Cat Hacker": "#2ea043",
       "Master B|ackc4t_h@cker": "#2ea043",
     }[rank] || "#fff";
@@ -2150,7 +2306,7 @@ function showReport() {
       reportScreen.style.display = "none";
       startButton.style.display = "inline-block";
       tutorialButton.style.display = "inline-block";
-      if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker") {
+      if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker"  || rank === "Dumber than my cat Emmie") {
         //localStorage.setItem('catWearsFedora', 'true');
         playHighRankCelebration();
       }
@@ -2243,6 +2399,9 @@ function gameLoop() {
 }
 
 startButton.addEventListener("click", () => {
+
+  mobileControls.style.display = window.innerWidth <= 900 ? 'flex' : 'none';
+  document.getElementById("gameCanvas").style.display = 'block';
   // Spawn coffee cups for this round
   spawnRandomShelves(); // Spawn random shelves each round
   spawnCoffeeCups();
@@ -2252,7 +2411,7 @@ startButton.addEventListener("click", () => {
   gameStarted = true;
   startScreen.style.display = "none";
   gameOverScreen.style.display = "none";
-  scoreboard.style.display = "block"; // Show scoreboard only during game
+  scoreboard.style.display = "block";
   score = 0;
   deletionsScore = 0;
   gitAdditions.textContent = 0;
@@ -2298,27 +2457,187 @@ startButton.addEventListener("click", () => {
   }
 });
 
-const fedoraCheckbox = document.getElementById("fedoraCheckbox");
-fedoraCheckbox.addEventListener("change", (event) => {
-  catWearsFedora = event.target.checked;
-});
-
 restartButton.addEventListener("click", () => {
-  // Show the start screen and hide the game over screen, reset game state
   startScreen.style.display = "flex";
   gameOverScreen.style.display = "none";
-  scoreboard.style.display = "none"; // Hide scoreboard on start screen
+  scoreboard.style.display = "none";
+  document.getElementById("gameCanvas").style.display = 'none';
+  mobileControls.style.display = 'none';
   updateGitGraphGrid();
-  // Stop the game loop if running
   gameLoopRunning = false;
-  // Optionally reset cat position and other variables if needed
 });
 
 tutorialButton.addEventListener("click", () => {
   tutorialScreen.style.display = "flex";
   reportScreen.style.display = "block";
+  document.getElementById("gameCanvas").style.display = 'none';
+  mobileControls.style.display = 'none';
   let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups <p> press -> <- to move left and right and ^ to jump </p> Spam any letter key when infront of the computer to code! <p>Your goal is to help Script commit 1000 lines or more a day without being pet by your vibe coding owner!</p><p>Commit malicious code and help Script earn her master hacker fedora!</p></span>`;
-  reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
+  reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Clear GitGraph</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
+
+  setTimeout(() => {
+    document.getElementById("resetSeriesBtn").onclick = () => {
+      gitGraphResults = [];
+      updateGitGraphGrid();
+      reportScreen.style.display = "none";
+      startButton.style.display = "inline-block";
+    };
+  }, 100);
+  setTimeout(() => {
+    document.getElementById("closeBtn").onclick = () => {
+      reportScreen.style.display = "none";
+      startButton.style.display = "inline-block";
+      startButton.style.display = "inline-block";
+    };
+  }, 100);
+});
+
+
+// Mobile controls setup
+const leftBtn = document.getElementById('leftBtn');
+const rightBtn = document.getElementById('rightBtn');
+const jumpBtn = document.getElementById('jumpBtn');
+const meowBtn = document.getElementById('meowBtn');
+const typeBtn = document.getElementById('typeBtn');
+
+function setupMobileControls() {
+  leftBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    keys['ArrowLeft'] = true;
+  });
+  leftBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    keys['ArrowLeft'] = false;
+  });
+  rightBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    keys['ArrowRight'] = true;
+  });
+  rightBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    keys['ArrowRight'] = false;
+  });
+  jumpBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (!cat.isJumping) {
+      cat.velocityY = -10;
+      cat.isJumping = true;
+    }
+  });
+  meowBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const event = new KeyboardEvent('keydown', { key: ' ', code: 'Space' });
+    document.dispatchEvent(event);
+  });
+  typeBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const event = new KeyboardEvent('keydown', { key: 'z', code: 'KeyZ' });
+
+    document.dispatchEvent(event);
+  });
+  let lastSwipeX = null;
+  let swipeAccum = 0;
+  const swipeThreshold = 30; // px per key press
+
+  function handleSwipe(e) {
+    const touch = e.touches[0];
+    if (lastSwipeX !== null) {
+      const dx = touch.clientX - lastSwipeX;
+      swipeAccum += Math.abs(dx);
+      while (swipeAccum >= swipeThreshold) {
+        const event = new KeyboardEvent('keydown', { key: 'e', code: 'KeyE' });
+        document.dispatchEvent(event);
+        swipeAccum -= swipeThreshold;
+      }
+    }
+    lastSwipeX = touch.clientX;
+  }
+
+  function resetSwipe() {
+    lastSwipeX = null;
+    swipeAccum = 0;
+  }
+
+  const swipeArea = document.getElementById('mobileControls');
+  swipeArea.addEventListener('touchstart', (e) => {
+    lastSwipeX = e.touches[0].clientX;
+    swipeAccum = 0;
+  });
+
+  const swipeArea2 = document.getElementById('gameCanvas');
+    swipeArea2.addEventListener('touchstart', (e) => {
+      lastSwipeX = e.touches[0].clientX;
+      swipeAccum = 0;
+    });
+
+  swipeArea.addEventListener('touchmove', handleSwipe);
+  swipeArea.addEventListener('touchend', resetSwipe);
+  swipeArea2.addEventListener('touchmove', handleSwipe);
+  swipeArea2.addEventListener('touchend', resetSwipe); // full screen? maybe feels better?
+
+  // Prevent default behavior for all mobile buttons
+  const allMobileButtons = document.querySelectorAll('.mobile-btn');
+  allMobileButtons.forEach(btn => {
+    btn.addEventListener('touchstart', e => e.preventDefault());
+    btn.addEventListener('touchmove', e => e.preventDefault());
+//    btn.addEventListener('touchend', e => e.preventDefault());
+  });
+}
+setupMobileControls();
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('gameCanvas').style.display = 'none';
+  document.getElementById('mobileControls').style.display = 'none';
+});
+
+// function scaleCanvasForScreen() {
+//   const canvas = document.getElementById("gameCanvas");
+//   if (window.innerWidth > 1200) {
+//     // Desktop: scale up visually
+//     canvas.style.transform = "scale(1.5)";
+//     canvas.style.transformOrigin = "center top";
+//   } else {
+//     // Mobile: normal scale
+//     canvas.style.transform = "scale(1)";
+//     canvas.style.transformOrigin = "top left";
+//   }
+// }
+
+// // Run on load and resize
+// window.addEventListener('DOMContentLoaded', scaleCanvasForScreen);
+// window.addEventListener('resize', scaleCanvasForScreen);
+
+  // Optionally, update desk/monitor positions if needed
+
+
+// // Run on load and resize
+// window.addEventListener('DOMContentLoaded', scaleCanvasForScreen);
+// window.addEventListener('resize', scaleCanvasForScreen);
+
+// Place this in your main JS file
+function updateTutorialButtonText() {
+  const tutorialBtn = document.getElementById('tutorialButton');
+  if (window.innerWidth <= 900) {
+    tutorialBtn.textContent = 'Mobile Tutorial';
+  } else {
+    tutorialBtn.textContent = 'Tutorial';
+  }
+}
+function getTutorialText() {
+  if (window.innerWidth <= 900) {
+    return `<span style='font-size:1em; color:white; font-weight:bold;'>Mobile controls: Tap ↑ to jump, ← → to move, M to meow, T or Swipe anyhwere to code .<br>Help Script commit 1000+ lines a day!</span>`;
+  } else {
+    return `<span style='font-size:1em; color:white; font-weight:bold;'>Press SPACE to meow and push coffee cups.<br>Use arrow keys to move and jump.<br>Spam any letter key in front of the computer to code!<br>Your goal: Help Script commit 1000+ lines a day!</span>`;
+  }
+}
+
+tutorialButton.addEventListener("click", () => {
+  tutorialScreen.style.display = "flex";
+  reportScreen.style.display = "block";
+  document.getElementById("gameCanvas").style.display = 'none';
+  mobileControls.style.display = 'none';
+  let tutorialText = getTutorialText();
+  reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Clear GitGraph</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
 
   setTimeout(() => {
     document.getElementById("resetSeriesBtn").onclick = () => {
@@ -2336,6 +2655,56 @@ tutorialButton.addEventListener("click", () => {
   }, 100);
 });
 
+// Run on load and on resize
+window.addEventListener('DOMContentLoaded', updateTutorialButtonText);
+window.addEventListener('resize', updateTutorialButtonText);
+
+
+const fedoraCheckbox = document.getElementById('fedoraCheckbox');
+    fedoraCheckbox.addEventListener('change', (event) => {
+        catWearsFedora = event.target.checked;
+    });
+document.getElementById("whiteScriptCheckbox").addEventListener("change", function(e) {
+
+  if (e.target.checked) {
+    // Set script color to white to make Emmie
+
+    cat.color = "#f7f4edff";
+    tailColor = "#8b6f2cff"; // emmies light brown tail
+  } else {
+    // Reset to default (black)
+    cat.color = "#222";
+    tailColor = "#222"; // default tail color
+    tailWidth = 4; // reset tail widtth back to Script default
+  }
+});
+
+function placeCatUnderDoor(doorX, doorY, doorW, doorH) {
+  cat.x = doorX + doorW / 2 - cat.width / 2;
+  cat.y = doorY + doorH - cat.height - 10;
+}
+
+function updateSunglassesBox() {
+  const box = document.getElementById("sunglassesBox");
+  if (glassesCollected) {
+    box.style.visibility = "visible";
+    box.textContent = "🕶️";
+  } else {
+    box.style.visibility = "hidden";
+    box.textContent = "";
+  }
+}
+
 updateGitGraphGrid();
 scoreboard.style.display = "none";
 gameLoopRunning = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const closeBtn = document.getElementById("close-glasses-message");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      document.getElementById("glasses-message").style.display = "none";
+    });
+  }
+});
+
