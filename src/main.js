@@ -74,7 +74,7 @@ function spawnCoffeeCups() {
   const numCups = 1 + Math.floor(Math.random() * 3); // 1-3 cups
   let spots = [];
   // Only shelf spots (no desk spots)
-  [...shelves, ...randomShelves].forEach((shelf) => {
+  [...shelves, ...randomShelves, ...higherRandomShelves].forEach((shelf) => {
     spots.push({
       x: shelf.x + 20 + Math.random() * (shelf.width - 40),
       y: shelf.y - 18 + Math.random() * 4,
@@ -691,6 +691,7 @@ function updateGitGraphGrid() {
 
 let shelves = [];
 let randomShelves = [];
+let higherRandomShelves = [];
 
 const cat = {
   x: 50,
@@ -909,15 +910,43 @@ function endHandsMonitorAndTriggerWalkBack() {
 
 function spawnRandomShelves() {
   randomShelves = [];
-  const numShelves = Math.floor(Math.random() * 3); // 0-3,
-  for (let i = 0; i < numShelves; i++) {
-    // Define allowed x/y ranges (avoid overlapping desk/door/monitor)
-    // Example: x: 80 to 600, y: 120 to 500
+  const numShelves = Math.floor(Math.random() * 3); // 0-3
+  const minDistance = 80; // minimum x distance between shelves
+
+  let attempts = 0;
+  while (randomShelves.length < numShelves && attempts < 50) {
     const x = 80 + Math.random() * 520;
     const y = 180 + Math.random() * 30;
-    const width = 60 + Math.random() * 40; // 60-140px
+    const width = 60 + Math.random() * 40;
     const height = 20;
-    randomShelves.push({ x, y, width, height, color: "#7a5c3c" });
+
+    // Check x distance from all existing shelves
+    let tooClose = randomShelves.some(shelf => Math.abs(shelf.x - x) < minDistance);
+    if (!tooClose) {
+      randomShelves.push({ x, y, width, height, color: "#7a5c3c" });
+    }
+    attempts++;
+  }
+}
+
+function spawnHigherRandomShelves() {
+  higherRandomShelves = [];
+  const numShelves = Math.floor(Math.random() * 3); // 0-3
+  const minDistance = 80; // minimum x distance between shelves
+
+  let attempts = 0;
+  while (higherRandomShelves.length < numShelves && attempts < 50) {
+    const x = 80 + Math.random() * 520;
+    const y = 100 + Math.random() * 50;
+    const width = 20 + Math.random() * 60;
+    const height = 20;
+
+    // Check x distance from all existing shelves
+    let tooClose = higherRandomShelves.some(shelf => Math.abs(shelf.x - x) < minDistance);
+    if (!tooClose) {
+      higherRandomShelves.push({ x, y, width, height, color: "#7a5c3c" });
+    }
+    attempts++;
   }
 }
 
@@ -993,6 +1022,26 @@ function update() {
           }
         }
       });
+      higherRandomShelves.forEach((shelf) => {
+              if (
+                cup.x + 20 > shelf.x &&
+                cup.x < shelf.x + shelf.width &&
+                cup.y + 20 > shelf.y &&
+                cup.y < shelf.y + shelf.height &&
+                cup.vy > 0
+              ) {
+                playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2 });
+                cup.y = shelf.y - 20;
+                cup.vy *= -0.35;
+                cup.vx *= 0.6;
+                if (Math.abs(cup.vy) < 1.2) {
+                  cup.vy = 0;
+                  cup.airborne = false;
+                }
+              }
+            });
+
+
     }
   });
   // Remove cups that landed
@@ -1200,6 +1249,22 @@ function update() {
       onGround = true;
     }
   });
+
+    // Shelf collision detection
+    shelves.concat(higherRandomShelves).forEach((shelf) => {
+      if (
+        cat.x < shelf.x + shelf.width &&
+        cat.x + cat.width > shelf.x &&
+        cat.y + cat.height > shelf.y &&
+        cat.y < shelf.y + shelf.height &&
+        cat.velocityY >= 0
+      ) {
+        cat.y = shelf.y - cat.height;
+        cat.velocityY = 0;
+        cat.isJumping = false;
+        onGround = true;
+      }
+    });
 
   // Movement
   if (keys["ArrowLeft"]) {
@@ -1747,6 +1812,10 @@ function draw() {
     ctx.fillStyle = shelf.color;
     ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
   });
+  higherRandomShelves.forEach((shelf) => {
+      ctx.fillStyle = shelf.color;
+      ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
+    });
   // Draw little black legs from the furthest right shelf to the desk
   const rightShelf = shelves.reduce((a, b) => (a.x > b.x ? a : b));
   const numLegs = 2;
@@ -2580,6 +2649,10 @@ startButton.addEventListener("click", () => {
   document.getElementById("gameCanvas").style.display = 'block';
   // Spawn coffee cups for this round
   spawnRandomShelves(); // Spawn random shelves each round
+  // Only spawn higher shelves if at least one random shelf exists
+  if (randomShelves.length > 0) {
+    spawnHigherRandomShelves();
+  }
   spawnCoffeeCups();
   if (gitGraphResults.length === maxGames) return; // Don't start if series complete
   // --- FULL GAME RESET ---
