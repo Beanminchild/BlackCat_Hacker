@@ -152,6 +152,16 @@ canvas {
       top: 2vw;
       right: 2vw;
     }
+    #reportScreen{
+      max-width: 90vw;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1.1em;
+      padding: 6vw 4vw;
+      border-radius: 6vw;
+      margin: 4vw auto;
+      word-break: break-word;
+    }
   }
 
   #mobileControls {
