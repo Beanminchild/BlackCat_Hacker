@@ -2334,7 +2334,8 @@ document.addEventListener("keydown", (e) => {
   }
 });
 // Add at the top
-const codeParticleChords = [392, 294, 220, 261.63]; // G, D, Am, C
+//const codeParticleChords = [392, 294, 220, 261.63]; // G, D, Am, C
+const codeParticleChords = [349.23, 392.00, 329.63, 220.00]; // F, G, Em, Am
 let codeParticleChordIndex = 0;
 
 const bassMeowNotes = [

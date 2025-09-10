@@ -1,6 +1,7 @@
 body {
   margin: 0;
   overflow: hidden;
+  touch-action: none;
   background-color: #222;
 }
 canvas {
@@ -91,8 +92,8 @@ canvas {
 }
 
 .mobile-btn {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 65px;
   margin: 0 5px;
   background-color: #444;
   border: none;
