@@ -2469,7 +2469,7 @@ function animateScore(points) {
 
 function endGame() {
   stopBackgroundMusic();
-  playSoundEffect({ type: "gameOver", volume: 0.3 });
+ // playSoundEffect({ type: "gameOver", volume: 0.3 });
 
   playGameOverProgression();
   gameStarted = false;
