@@ -28,6 +28,7 @@ function showTimer(show) {
 }
 
 function endRound() {
+  
   clearInterval(timerInterval);
   showTimer(false); 
   gameStarted = false;
@@ -327,6 +328,310 @@ function playHighRankCelebration() {
     time += note.duration + 0.01; // 80ms gap between notes
   });
 }
+
+// ...existing code...
+
+let bgMusicInterval = null;
+let bgMusicStep = 0;
+let bgMusicLoopCount = 0;
+let bridgeActive = false;
+let bridgeRepeatCount = 0;
+let crescendoActive = false;
+let crescendoStep = 0;
+
+// Royal Road progression in C major: F, G, Em, Am
+const royalRoadChords = [
+  { root: 349.23 /2, type: 'major' }, // F
+  { root: 392.00/2, type: 'major' }, // G
+  { root: 329.63/2, type: 'minor' }, // E
+  { root: 220.00/2, type: 'minor' }, // A
+];
+
+// Simple bass notes for each chord
+const royalRoadBass = [
+  174.61 / 2, // F2
+  196.00 / 2, // G2
+  164.81 /2 , // E2
+  110.00 /2, // A2
+];
+
+// Melody notes for each chord (C major scale, fits royal road progression)
+const royalRoadMelody = [
+  [440 /2 , 523.25 / 2, 587.33 / 2],    // F chord: A4, C5, D5
+  [392 /2, 523.25 / 2, 659.25 / 2],    // G chord: G4, C5, E5
+  [329.63 /2 , 440 /2, 523.25 / 2],    // Em chord: E4, A4, C5
+  [220 /2, 392 / 2, 440 / 2],          // Am chord: A3, G4, A4
+];
+
+
+
+// Add to the list of available
+
+const royalRoadMelody2 = [
+  [440, 523.25, 587.33],    // F chord: A4, C5, D5
+  [392, 523.25, 659.25],    // G chord: G4, C5, E5
+  [329.63, 440, 523.25],    // Em chord: E4, A4, C5
+  [220, 392, 440],          // Am chord: A3, G4, A4
+];
+// Add more if you want
+const royalRoadMelodies = [royalRoadMelody, royalRoadMelody2];
+
+// --- Bridge Section ---
+// A short, contrasting progression and melody
+const bridgeChords = [
+  { root: 293.66, type: 'm7' },   // Dm7
+  { root: 392.00, type: '7' },    // G7
+  { root: 261.63, type: 'maj7' }, // Cmaj7
+  { root: 220.00, type: 'm7' },   // Am7
+];
+const bridgeBass = [
+  130.81, // C3
+  146.83, // D3
+  164.81, // E3
+  196.00, // G3
+];
+
+
+const bridgeMelody = [
+  [659.25, 523.25, 392],    // C chord: E5, C5, G4
+  [587.33, 440, 293.66],    // Dm chord: D5, A4, D4
+  [523.25, 392, 329.63],    // Em chord: C5, G4, E4
+  [784, 659.25, 392],       // G chord: G5, E5, G4
+];
+
+// Define multiple bridge melody arrays
+const bridgeMelody1 = [
+  [659.25, 523.25, 392],    // C chord: E5, C5, G4
+  [587.33, 440, 293.66],    // Dm chord: D5, A4, D4
+  [523.25, 392, 329.63],    // Em chord: C5, G4, E4
+  [784, 659.25, 392],       // G chord: G5, E5, G4
+];
+const bridgeMelody2 = [
+  [523.25, 659.25, 392],    // C chord: C5, E5, G4
+  [440, 587.33, 293.66],    // Dm chord: A4, D5, D4
+  [392, 523.25, 329.63],    // Em chord: G4, C5, E4
+  [659.25, 784, 392],       // G chord: E5, G5, G4
+];
+const bridgeMelodyImpactSite = [
+  [659.25, 880, 1046.5, 784],      // C chord: E5, A5, C6, G5 (big sweep up)
+  [587.33, 932.33, 1174.66, 880], // Dm chord: D5, A#5, D6, A5
+  [523.25, 784, 1046.5, 659.25],  // Em chord: C5, G5, C6, E5
+  [784, 1046.5, 1318.5, 880],     // G chord: G5, C6, E6, A5
+];
+
+// Rickroll bridge melody: long, sweeping, satisfying conclusion
+const bridgeMelodyRickroll = [
+  // ...existing Rickroll phrases...
+  [440, 587.33, 493.88, 739.99, 739.99, 659.25], // Never gonna give you up
+  [440, 587.33, 659.25, 659.25, 587.33, 554.37, 493.88], // Never gonna let you down
+  [440, 587.33, 587.33, 659.25, 554.37, 440, 440, 659.25, 587.33], // Never gonna run around...
+  [440, 587.33, 739.99, 739.99, 659.25], // Never gonna make you cry
+  [440, 587.33, 440, 554.37, 587.33, 554.37, 493.88], // Never gonna say goodbye
+  [440, 587.33, 587.33, 659.25, 554.37, 440, 440, 659.25, 587.33], // Never gonna tell a lie...
+
+  [659.25, 587.33, 523.25, 440, 493.88, 554.37, 587.33, 659.25], // And hurt you
+];
+
+// Add to bridgeMelodies array for use in background music
+
+const bridgeMelodyPop = [
+  [659.25, 784, 659.25, 587.33],      // C chord: E5, G5, E5, D5
+  [587.33, 698.46, 587.33, 523.25],   // Dm chord: D5, F5, D5, C5
+  [523.25, 659.25, 523.25, 440],      // Em chord: C5, E5, C5, A4
+  [784, 880, 784, 659.25],            // G chord: G5, A5, G5, E5
+];
+const bridgeMelodySmoothBridge = [
+  [293.66, 349.23, 392.00, 440],      // D4, F4, G4, A4 (ascending, builds tension)
+  [392.00, 440, 493.88, 523.25],      // G4, A4, B4, C5 (rising, resolves to C)
+  [349.23, 392.00, 329.63, 261.63],   // F4, G4, E4, C4 (descending, gentle release)
+  [220.00, 261.63, 329.63, 349.23],   // A3, C4, E4, F4 (lands on F, matches main melody start)
+];
+// // Add more arrays as desired
+// const bridgeMelody3 = [
+//   [392, 523.25, 659.25],
+//   [293.66, 440, 587.33],
+//   [329.63, 392, 523.25],
+//   [392, 659.25, 784],
+// ];
+const bridgeMelodies = [bridgeMelody1, bridgeMelody2, bridgeMelodyImpactSite, bridgeMelodyPop, bridgeMelodyRickroll, bridgeMelodySmoothBridge];
+// Percussive click (hi-hat style)
+function playPercussion() {
+  if (!audioCtx)
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = "triangle";
+  osc.frequency.value = 400; // Low frequency for click
+  gain.gain.value = 0.3; // Soft percussion
+  osc.connect(gain).connect(audioCtx.destination);
+  gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+  gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.06);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.06);
+  osc.onended = () => osc.disconnect();
+}
+
+// Play a chord (triad) using playSoundEffect
+function playChord(root, type = 'major', volume = 0.25) {
+  const third = type === 'major' ? root * Math.pow(2, 4/12) : root * Math.pow(2, 3/12);
+  const fifth = root * Math.pow(2, 7/12);
+  playSoundEffect({ pitch: root, duration: 0.05, volume, randomize: false });
+  playSoundEffect({ pitch: third, duration: 0.05, volume, randomize: false });
+  playSoundEffect({ pitch: fifth, duration: 0.05, volume, randomize: false });
+}
+
+// Play melody notes (arpeggio style)
+function playMelody(notes) {
+  notes.forEach((note, i) => {
+    setTimeout(() => {
+      playSoundEffect({
+        pitch: note,
+        duration: 0.50,
+        volume: 0.05,
+        type: "score",
+        randomize: false,
+        scale: null,
+      });
+    }, i * 120);
+  });
+}
+
+// ...existing code...
+
+
+
+function startBackgroundMusic() {
+  if (bgMusicInterval) return;
+  bgMusicStep = 0;
+  bgMusicLoopCount = 0;
+  bridgeActive = false;
+  bridgeRepeatCount = 0;
+  crescendoActive = false;
+  crescendoStep = 0;
+
+  // Select a random bridge melody for this bridge section
+  let currentBridgeMelody = bridgeMelodies[Math.floor(Math.random() * bridgeMelodies.length)];
+  // Select a random main melody for this main section
+  let currentRoyalRoadMelody = royalRoadMelodies[Math.floor(Math.random() * royalRoadMelodies.length)];
+
+  bgMusicInterval = setInterval(() => {
+    // Every 4 loops, play bridge for 2 loops
+    if (!bridgeActive && !crescendoActive && bgMusicLoopCount > 0 && bgMusicLoopCount % 4 === 0) {
+      bridgeActive = true;
+      bridgeRepeatCount = 0;
+      bgMusicStep = 0;
+      // Pick a new random bridge melody each time bridge starts
+      currentBridgeMelody = bridgeMelodies[Math.floor(Math.random() * bridgeMelodies.length)];
+    }
+
+    // Pick a new random main melody each time main section starts
+    if (!bridgeActive && bgMusicStep === 0) {
+      currentRoyalRoadMelody = royalRoadMelodies[Math.floor(Math.random() * royalRoadMelodies.length)];
+    }
+
+    if (bridgeActive) {
+      const chordIdx = bgMusicStep % bridgeChords.length;
+      const chord = bridgeChords[chordIdx];
+      //playChord(chord.root, chord.type, 0.05);
+      //playSoundEffect({ pitch: bridgeBass[chordIdx], duration: 0.22, volume: 0.07, type: "meow", randomize: false });
+      //playPercussion();
+      //setTimeout(playPercussion, 180);
+      playMelody(currentBridgeMelody[chordIdx]);
+      bgMusicStep++;
+      if (bgMusicStep >= bridgeChords.length) {
+        bgMusicStep = 0;
+        bridgeRepeatCount++;
+        if (bridgeRepeatCount >= 2) {
+          bridgeActive = false;
+          bgMusicLoopCount++;
+        }
+      }
+    } else {
+      const chordIdx = bgMusicStep % royalRoadChords.length;
+      const chord = royalRoadChords[chordIdx];
+      //playChord(chord.root, chord.type, 0.08);
+      playSoundEffect({ pitch: royalRoadBass[chordIdx], duration: 0.22, volume: 0.07, type: "score", randomize: false });
+      playMelody(currentRoyalRoadMelody[chordIdx]);
+      bgMusicStep++;
+      if (bgMusicStep >= royalRoadChords.length) {
+        bgMusicStep = 0;
+        bgMusicLoopCount++;
+      }
+    }
+  }, 480); // 480ms per chord
+}
+
+
+
+
+function startLaidBackMusic() {
+  // Pick one type for this interval
+    const soundType = Math.random() < 0.5 ? "meow" : "score";
+    const soundDuration = Math.random() < 0.5 ? 0.9 : 0.3;
+  if (bgMusicInterval) return;
+  bgMusicStep = 0;
+  bgMusicLoopCount = 0;
+
+  // Lower, softer orchestral string-like notes
+  const laidBackChords = [
+    { root: 174.61, type: 'major' }, // F2
+    { root: 196.00, type: 'major' }, // G2
+    { root: 164.81, type: 'minor' }, // E2
+    { root: 110.00, type: 'minor' }, // A2
+  ];
+  const laidBackMelody = [
+    [220, 261.63, 293.66],    // F chord: A3, C4, D4
+    [196, 261.63, 329.63],    // G chord: G3, C4, E4
+    [164.81, 220, 261.63],    // Em chord: E3, A3, C4
+    [110, 196, 220],          // Am chord: A2, G3, A3
+  ];
+
+  bgMusicInterval = setInterval(() => {
+    const chordIdx = bgMusicStep % laidBackChords.length;
+    const chord = laidBackChords[chordIdx];
+
+    
+
+    playSoundEffect({
+      pitch: chord.root,
+      duration: soundDuration,
+      volume: 0.07,
+      type: soundType,
+      randomize: false,
+      scale: null,
+    });
+
+    laidBackMelody[chordIdx].forEach((note, i) => {
+      setTimeout(() => {
+        playSoundEffect({
+          pitch: note,
+          duration: soundDuration,
+          volume: 0.04,
+          type: soundType,
+          randomize: false,
+          scale: null,
+        });
+      }, i * 220);
+    });
+
+    bgMusicStep++;
+    if (bgMusicStep >= laidBackChords.length) {
+      bgMusicStep = 0;
+      bgMusicLoopCount++;
+    }
+  }, 1200); // much slower tempo
+}
+    function stopBackgroundMusic() {
+    if (bgMusicInterval) {
+      clearInterval(bgMusicInterval);
+      bgMusicInterval = null;
+    }
+    // Optionally, stop all currently playing sounds
+    if (audioCtx) {
+      audioCtx.close();
+      audioCtx = null;
+    }
+  }
 
 // playSoundEffect({ type: 'meow', pitch: 466, duration: 0.15 }); // Harmonized meow
 // playSoundEffect({ type: 'score', pitch: 659, duration: 0.12 }); // Harmonized score blip
@@ -638,7 +943,7 @@ function update() {
       if (cup.y + 20 > desk.y && cup.vy > 0) {
         cup.y = desk.y - 20;
         // Trigger spill and scrubStain at cup location
-        playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2 });
+        playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2, volume: 0.15 });
         if (!scrubStainActive) {
           triggerScrubStain(cup.x + 10, desk.y - 10);
         }
@@ -659,7 +964,7 @@ function update() {
           cup.y < shelf.y + shelf.height &&
           cup.vy > 0
         ) {
-          playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2 });
+          playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2, volume: 0.15 });
           cup.y = shelf.y - 20;
           cup.vy *= -0.35;
           cup.vx *= 0.6;
@@ -826,7 +1131,7 @@ function update() {
             type: "alert",
             pitch: 220 + Math.random() * 100,
             duration: 0.12,
-            volume: 0.15,
+            volume: 0.05,
           });
         }
         // --- GAME OVER if cat is in front of monitor when hands are there ---
@@ -2093,6 +2398,8 @@ function animateScore(points) {
 }
 
 function endGame() {
+  stopBackgroundMusic();
+  playSoundEffect({ type: "gameOver", volume: 0.3 });
 
   playGameOverProgression();
   gameStarted = false;
@@ -2276,7 +2583,14 @@ startButton.addEventListener("click", () => {
   if (gitGraphResults.length === maxGames) return; // Don't start if series complete
   // --- FULL GAME RESET ---
   chaseSuccessCount = 0;
-  gameStarted = true;
+  gameStarted = true; 
+     // Randomly select background music style
+  if (Math.random() < 0.5) {
+    startBackgroundMusic();
+  } else {
+    startLaidBackMusic();
+  }
+
   startScreen.style.display = "none";
   gameOverScreen.style.display = "none";
   scoreboard.style.display = "block";
@@ -2326,6 +2640,7 @@ startButton.addEventListener("click", () => {
 });
 
 restartButton.addEventListener("click", () => {
+  stopBackgroundMusic();
   startScreen.style.display = "flex";
   gameOverScreen.style.display = "none";
   scoreboard.style.display = "none";
