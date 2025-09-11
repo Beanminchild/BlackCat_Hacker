@@ -34,6 +34,14 @@ canvas {
   border: none;
   cursor: pointer;
 }
+#logsButton{
+    padding: 20px 20px;
+     font-size: 24px;
+     background-color: #555;
+     color: white;
+     border: none;
+     cursor: pointer;
+}
 #scoreboard {
   position: absolute;
   top: 20px;
@@ -147,6 +155,8 @@ canvas {
       font-size: 3vw;
       padding: 2vw 5vw;
     }
+    #logsButton
+
     #scoreboard {
       font-size: 3vw;
       top: 2vw;

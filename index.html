@@ -221,6 +221,21 @@
           How 2 Play
         </button>
       </p>
+      <!-- Scripts Logs Button -->
+      <p>
+        <button
+          id="logsButton"
+          style="margin: 0 auto 0 auto; display: block"
+        >
+          Script's Logs
+        </button>
+      </p>
+      <!-- Scripts Logs Modal/Panel -->
+      <div id="logsPanel" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%,0); width:350px; max-width:90vw; height:350px; max-height:70vh; background:#181818; color:#fff; border-radius:14px; box-shadow:0 4px 32px #000a; z-index:9999; padding:24px 18px; overflow:hidden;">
+        <h2 style="margin-top:0; font-size:1.5em;">Script's Logs</h2>
+        <div id="logsList" style="overflow-y:auto; height:230px; background:#222; border-radius:8px; padding:12px; margin-bottom:18px; font-family:monospace; font-size:1em;"></div>
+        <button id="closeLogsPanel" style="font-size:1em; background:#2ea043; color:#fff; border:none; border-radius:8px; padding:8px 25px;">Close</button>
+      </div>
       <div
         id="reportScreen"
         style="
@@ -341,6 +356,12 @@
           "
         ></span>
       </div>
+    </div>
+    <div id="handsDisabledMsg" style="display:none; position:fixed; top:30%; left:50%; transform:translate(-50%,-50%); background:#000; color:#fff; border-radius:12px; box-shadow:0 4px 24px #2224; padding:32px 48px; z-index:9999;">
+        <span id="handsDisabledText"></span>
+        <div>
+        <button id="closeHandsDisabledMsg" style = "margin-right:30px;  margin-top: 4px; font-size:1em; background:#2ea043; color: #fff; border:none; border-radius: 8px; padding: 8px 25px;">X</button>
+        </div>
     </div>
     <canvas id="gameCanvas"></canvas>
 

@@ -8,8 +8,29 @@ let timerInterval = null;
 let baseTime = 100 + Math.random() * 20; // random between 90 and 120 seconds
 baseTime = Math.floor(baseTime); // round down to whole seconds if needed
 let currentTime = baseTime;
+let handsDisabledThisRound = false;
+let logsCount = 0;
 
 
+
+
+
+
+function showHandsDisabledMessage(msg = "SUCCESS! I hospitalised my owner with coffee burns! \n The computer is mine for the rest of the day! \n Now thats what i call social engineering!!!") {
+  playHighRankCelebration();
+  const msgDiv = document.getElementById("handsDisabledMsg");
+  const closeBtn = document.getElementById("closeHandsDisabledMsg");
+  document.getElementById("handsDisabledText").textContent = msg;
+  msgDiv.style.display = "block";
+  // Hide after 3 seconds unless closed manually
+  let hideTimeout = setTimeout(() => {
+    msgDiv.style.display = "none";
+  }, 7000);
+  closeBtn.onclick = () => {
+    msgDiv.style.display = "none";
+    clearTimeout(hideTimeout);
+  };
+}
 
 function formatTime(secs) {
   const m = Math.floor(secs / 60)
@@ -28,6 +49,8 @@ function showTimer(show) {
 }
 
 function endRound() {
+
+
   
   clearInterval(timerInterval);
   showTimer(false); 
@@ -60,6 +83,7 @@ function startTimer() {
 }
 
 function nextRound() {
+  handsDisabledThisRound = false;
   round++;
   startTimer();
 }
@@ -328,8 +352,6 @@ function playHighRankCelebration() {
     time += note.duration + 0.01; // 80ms gap between notes
   });
 }
-
-// ...existing code...
 
 let bgMusicInterval = null;
 let bgMusicStep = 0;
@@ -968,6 +990,27 @@ function update() {
         cup.vx *= -1;
       }
       cup.vy += 0.35; // gravity
+      // Hands collision (only if hands are present and fully shown)
+      if ((stealthState === "hands" || stealthState === "handsChase") && handsProgress === 1) {
+        const handsX = handsChasePos.x;
+        const handsY = handsChasePos.y;
+        const handsWidth = 30; // adjust as needed
+        const handsHeight = 20; // adjust as needed
+        const cupLeft = cup.x;
+        const cupRight = cup.x + cupWidth;
+        const cupTop = cup.y;
+        const cupBottom = cup.y + 20;
+        const handsLeft = handsX;
+        const handsRight = handsX + handsWidth;
+        const handsTop = handsY;
+        const handsBottom = handsY + handsHeight;
+        if (cupRight > handsLeft && cupLeft < handsRight && cupBottom > handsTop && cupTop < handsBottom) {
+          cupsToRemove.push(i);
+          handsDisabledThisRound = true; // disable hands for rest of round
+          playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2, volume: 0.25 });
+          // Optionally trigger animation or other game logic here
+        }
+      }
       // Desk collision
       if (cup.y + 20 > desk.y && cup.vy > 0) {
         cup.y = desk.y - 20;
@@ -1133,7 +1176,7 @@ function update() {
         chaseSuccessCount = 0;
         // Re-randomize threshold for next event
         chaseSuccessThreshold = 1 + Math.floor(Math.random() * 3);
-      } else {
+      } else if (!handsDisabledThisRound) {
         // Resume hands at monitor
         stealthState = "hands";
         handsProgress = 1;
@@ -1159,7 +1202,7 @@ function update() {
       }
     } else if (stealthState === "footprints") {
       footprintsProgress += 0.008;
-      if (footprintsProgress >= 1) {
+      if (footprintsProgress >= 1 && !handsDisabledThisRound) {
         footprintsProgress = 1;
         stealthState = "hands";
         handsHoldTimer = 0;
@@ -1314,6 +1357,21 @@ function update() {
   // Track additions history for git graph
   if (gameStarted && additionsHistory.length < 32) {
     additionsHistory.push(score);
+  }
+
+  // Prevent hands from being drawn/updated if disabled
+  if (stealthState === "handsChase" && handsDisabledThisRound) {
+    handsChaseActive = false;
+    handsProgress = 0;
+    showHandsDisabledMessage();
+    addLogEntry('Social engineering IS the most common/successful hacking method, and apparently throwing scolding hot coffee directly on someones face is just as effective!!! Sure worked wonders for getting my pesky owner out of the house and into urgent care for a few hours!  He was in such a hurry he even forgot to lock his laptop! Ill try to make the most of the time I have with the computer while hes gone. You know what they say; When the owner is away the cat shall...grind leet code in hopes of achieving her dreams of becoming a master black hat hacker! I sure hope hes home soon though he needs to feed me and i need someones legs to sleep in between tonite... -Script M Kitty ');
+
+
+    endHandsMonitorAndTriggerWalkBack();
+
+
+
+    // Optionally, skip hands rendering logic here
   }
 }
 
@@ -1989,8 +2047,7 @@ function draw() {
       18,
       16,
       0.2,
-      0,
-      Math.PI * 2
+      0, Math.PI * 2
     );
     ctx.fill();
     // Fingers (right)
@@ -1999,11 +2056,7 @@ function draw() {
       ctx.ellipse(
         monitor.x + monitor.width - 35 + f * 6,
         handY + 12,
-        4,
-        10,
-        0,
-        0,
-        Math.PI * 2
+        4, 10, 0, 0, Math.PI * 2
       );
       ctx.fill();
     }
@@ -2497,6 +2550,7 @@ function showReport() {
   // Hide start button, show report
   startButton.style.display = "none";
   tutorialButton.style.display = "none";
+  logsButton.style.display = "none";
   reportScreen.style.display = "block";
   scoreboard.style.display = "none"; // Hide scoreboard on report screen
   // Calculate total additions
@@ -2508,11 +2562,16 @@ function showReport() {
   const fedoraOption = document.getElementById("fedoraOption");
   if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker") {
     fedoraOption.style.display = "flex";
+    addLogEntry("LFG GALS! IM THE BEST HACKER OF ALL TIIIIMMMEEEE :],  They make it too easy now a days i tell ya, I cant believe how many people blindly download NPM packages  and  dont even know what they do!! And don't EVEN get me started on unneeded  dependencies!... hehe get PEWNED losers learn a real language like python!! I must be a real hacker now! Maybe i should buy a fedora on my owners amazon to go with my new hacking skills... now everyone will know the name SCRIPT M KITTY, THE GREATEST HACKER WHO EVER LIVVVVEEED!- Script M. Kitty \n  ");
+
     //catWearsFedora = true;
   } else if (rank === "Dumber than my cat Emmie") {
+    addLogEntry("Gosh I was sure NPM packages were a lot easier to hack than this! Im so bad at hacking! :[  What made it even worse is my complete dumbo of a sister Emmie saw  how much i was struggling and asked if i wanted her to learn with me!!! HER! She doesnt know the differents between a binary tree and a christmas tree! ... Although it would be nice to have a hacking buddy... and who knows maybe shell learn something and not be as dumb anymore.... hah doubt it! - Script M. Kitty \n  ");
     document.getElementById("whiteScriptOption").style.display = "block";
+
     //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
   } else {
+   addLogEntry("Ehh I got some decent hacking done I guess... but I know I can do better! Maybe if I  just practiced more... thats it just need practice.... and to use less reddit... srsly whys everyone so mean? im just asking a question! Why are tabs so much freakin better than spaces, i dont get it!! - @ScriptKitty69420 \n  ");
   //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
 
   }
@@ -2551,6 +2610,7 @@ function showReport() {
       reportScreen.style.display = "none";
       startButton.style.display = "inline-block";
       tutorialButton.style.display = "inline-block";
+      logsButton.style.display = "inline-block";
       if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker"  || rank === "Dumber than my cat Emmie") {
         //localStorage.setItem('catWearsFedora', 'true');
         playHighRankCelebration();
@@ -2715,6 +2775,7 @@ startButton.addEventListener("click", () => {
 
 restartButton.addEventListener("click", () => {
   stopBackgroundMusic();
+  handsDisabledThisRound = false;
   startScreen.style.display = "flex";
   gameOverScreen.style.display = "none";
   scoreboard.style.display = "none";
@@ -2747,6 +2808,7 @@ tutorialButton.addEventListener("click", () => {
     };
   }, 100);
 });
+
 
 // Mobile controls setup
 const leftBtn = document.getElementById('leftBtn');
@@ -2901,7 +2963,27 @@ tutorialButton.addEventListener("click", () => {
 window.addEventListener('DOMContentLoaded', updateTutorialButtonText);
 window.addEventListener('resize', updateTutorialButtonText);
 
+// Scripts Logs panel logic
+const logsButton = document.getElementById("logsButton");
+const logsPanel = document.getElementById("logsPanel");
+const closeLogsPanel = document.getElementById("closeLogsPanel");
+const logsList = document.getElementById("logsList");
 
+logsButton.addEventListener("click", () => {
+  logsPanel.style.display = "block";
+});
+closeLogsPanel.addEventListener("click", () => {
+  logsPanel.style.display = "none";
+});
+
+// Add a log entry to the logs panel
+function addLogEntry(text) {
+  const entry = document.createElement("div");
+  entry.textContent = text;
+  entry.style.marginBottom = "8px";
+  logsList.appendChild(entry);
+  logsList.scrollTop = logsList.scrollHeight;
+}
 const fedoraCheckbox = document.getElementById('fedoraCheckbox');
     fedoraCheckbox.addEventListener('change', (event) => {
         catWearsFedora = event.target.checked;
@@ -2924,3 +3006,4 @@ document.getElementById("whiteScriptCheckbox").addEventListener("change", functi
 updateGitGraphGrid();
 scoreboard.style.display = "none";
 gameLoopRunning = false;
+
