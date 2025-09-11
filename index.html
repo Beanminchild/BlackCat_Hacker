@@ -188,28 +188,19 @@
             grid-row: 2;
           "
         ></canvas>
-      </div>
-      <div
-        id="fedoraOption"
-        style="margin-bottom: 20px; display: none; align-items: center"
-      >
-        <input
-          type="checkbox"
-          id="fedoraCheckbox"
-          style="margin-right: 10px"
-        /><label
-          for="fedoraCheckbox"
-          style="color: white; font-family: sans-serif"
-          >Script wears Fedora</label
-        >
-      </div>
-        <!-- In your home screen HTML -->
-        <div id="whiteScriptOption" style="display:none; margin:12px 0;">
-          <label for = "whiteScriptCheckbox" style="color: white; font-family: sans-serif;">
-            <input type="checkbox" id="whiteScriptCheckbox">
-            Play as Emmie
-          </label>
-        </div>
+     <div id="optionsContainer" style="display: none; align-items: center; gap: 24px;">
+       <div id="fedoraOption" style="margin-bottom: 0; align-items: center;">
+         <input type="checkbox" id="fedoraCheckbox" style="margin-right: 10px" />
+         <label for="fedoraCheckbox" style="color: white; font-family: sans-serif">Script wears Fedora</label>
+       </div>
+       <div id="whiteScriptOption" style="align-items: center; margin: 0;">
+         <label for="whiteScriptCheckbox" style="color: white; font-family: sans-serif;">
+           <input type="checkbox" id="whiteScriptCheckbox">
+           Play as Emmie
+         </label>
+       </div>
+     </div>
+     </div>
       <button id="startButton" style="margin: 0 auto 0 auto; display: block">
         Start Game
       </button>
@@ -221,20 +212,18 @@
           How 2 Play
         </button>
       </p>
-      <!-- Scripts Logs Button -->
-      <p>
         <button
-          id="logsButton"
-          style="margin: 0 auto 0 auto; display: block"
+                id="logsButton"
+                style="margin: 0 auto 0 auto; display: flex; align-items: center;"
         >
-          Script's Logs
+            Script's Logs
         </button>
-      </p>
       <!-- Scripts Logs Modal/Panel -->
-      <div id="logsPanel" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%,0); width:350px; max-width:90vw; height:350px; max-height:70vh; background:#181818; color:#fff; border-radius:14px; box-shadow:0 4px 32px #000a; z-index:9999; padding:24px 18px; overflow:hidden;">
+      <div id="logsPanel" style="display:none; position:flex; top:10%; left:50%; transform:translateX(-50%,0); width:350px; max-width:90vw; height:350px; max-height:70vh; background:#181818; color:#fff; border-radius:14px; box-shadow:0 4px 32px #000a; z-index:9999; padding:24px 18px; overflow:hidden;">
+          <button id="closeLogsPanel" style="font-size:1em; background:#2ea043; color:#fff; border:none; border-radius:8px; padding:8px 12px;">X</button>
         <h2 style="margin-top:0; font-size:1.5em;">Script's Logs</h2>
         <div id="logsList" style="overflow-y:auto; height:230px; background:#222; border-radius:8px; padding:12px; margin-bottom:18px; font-family:monospace; font-size:1em;"></div>
-        <button id="closeLogsPanel" style="font-size:1em; background:#2ea043; color:#fff; border:none; border-radius:8px; padding:8px 25px;">Close</button>
+
       </div>
       <div
         id="reportScreen"
@@ -366,7 +355,7 @@
     <canvas id="gameCanvas"></canvas>
 
     <!-- Mobile Game Controls -->
-    <div id="mobileControls">
+    <div id="mobileControls" style="display: none;">
       <div class="mobile-control-group left-controls">
         <button id="leftBtn" class="mobile-btn">←</button>
         <button id="rightBtn" class="mobile-btn">→</button>

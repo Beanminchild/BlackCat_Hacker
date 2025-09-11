@@ -13,7 +13,10 @@ let logsCount = 0;
 
 
 
-
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('gameCanvas').style.display = 'none';
+  document.getElementById('mobileControls').style.display = 'none';
+});
 
 
 function showHandsDisabledMessage(msg = "SUCCESS! I hospitalised my owner with coffee burns! \n The computer is mine for the rest of the day! \n Now thats what i call social engineering!!!") {
@@ -617,7 +620,7 @@ function startLaidBackMusic() {
     playSoundEffect({
       pitch: chord.root,
       duration: soundDuration,
-      volume: 0.07,
+      volume: 0.08,
       type: soundType,
       randomize: false,
       scale: null,
@@ -628,7 +631,7 @@ function startLaidBackMusic() {
         playSoundEffect({
           pitch: note,
           duration: soundDuration,
-          volume: 0.04,
+          volume: 0.08,
           type: soundType,
           randomize: false,
           scale: null,
@@ -655,9 +658,28 @@ function startLaidBackMusic() {
     }
   }
 
-// playSoundEffect({ type: 'meow', pitch: 466, duration: 0.15 }); // Harmonized meow
-// playSoundEffect({ type: 'score', pitch: 659, duration: 0.12 }); // Harmonized score blip
-// playSoundEffect({ type: 'scrub', pitch: 554, duration: 0.2 }); // Harmonized scrub sound
+// Final Fantasy menu select chime
+function playFFMenuChime() {
+  playSoundEffect({
+    type: "score",      // triangle or square waveform
+    pitch: 1046.5,      // C6, bright/high note
+    duration: 0.09,
+    volume: 0.18,
+    randomize: false,
+    scale: null,
+  });
+  setTimeout(() => {
+    playSoundEffect({
+      type: "score",
+      pitch: 784,       // G5, lower note
+      duration: 0.11,
+      volume: 0.16,
+      randomize: false,
+      scale: null,
+    });
+  }, 80); // 80ms delay between notes
+}
+
 
 function updateGitGraphGrid() {
   const squares = gitGraphGrid.querySelectorAll(".gitGraphSquare");
@@ -994,8 +1016,8 @@ function update() {
       if ((stealthState === "hands" || stealthState === "handsChase") && handsProgress === 1) {
         const handsX = handsChasePos.x;
         const handsY = handsChasePos.y;
-        const handsWidth = 30; // adjust as needed
-        const handsHeight = 20; // adjust as needed
+        const handsWidth = 20; // adjust as needed
+        const handsHeight = 10; // adjust as needed
         const cupLeft = cup.x;
         const cupRight = cup.x + cupWidth;
         const cupTop = cup.y;
@@ -1365,7 +1387,7 @@ function update() {
     handsProgress = 0;
     showHandsDisabledMessage();
     addLogEntry('Social engineering IS the most common/successful hacking method, and apparently throwing scolding hot coffee directly on someones face is just as effective!!! Sure worked wonders for getting my pesky owner out of the house and into urgent care for a few hours!  He was in such a hurry he even forgot to lock his laptop! Ill try to make the most of the time I have with the computer while hes gone. You know what they say; When the owner is away the cat shall...grind leet code in hopes of achieving her dreams of becoming a master black hat hacker! I sure hope hes home soon though he needs to feed me and i need someones legs to sleep in between tonite... -Script M Kitty ');
-
+    logsCount++
 
     endHandsMonitorAndTriggerWalkBack();
 
@@ -2389,7 +2411,7 @@ document.addEventListener("keydown", (e) => {
         isMeow: true,
       });
     } else {
-      animateScore(1000);
+      animateScore(1);
     }
     tipTapping = true;
     clearTimeout(tipTapTimeout);
@@ -2563,17 +2585,17 @@ function showReport() {
   if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker") {
     fedoraOption.style.display = "flex";
     addLogEntry("LFG GALS! IM THE BEST HACKER OF ALL TIIIIMMMEEEE :],  They make it too easy now a days i tell ya, I cant believe how many people blindly download NPM packages  and  dont even know what they do!! And don't EVEN get me started on unneeded  dependencies!... hehe get PEWNED losers learn a real language like python!! I must be a real hacker now! Maybe i should buy a fedora on my owners amazon to go with my new hacking skills... now everyone will know the name SCRIPT M KITTY, THE GREATEST HACKER WHO EVER LIVVVVEEED!- Script M. Kitty \n  ");
-
+    logsCount++
     //catWearsFedora = true;
   } else if (rank === "Dumber than my cat Emmie") {
     addLogEntry("Gosh I was sure NPM packages were a lot easier to hack than this! Im so bad at hacking! :[  What made it even worse is my complete dumbo of a sister Emmie saw  how much i was struggling and asked if i wanted her to learn with me!!! HER! She doesnt know the differents between a binary tree and a christmas tree! ... Although it would be nice to have a hacking buddy... and who knows maybe shell learn something and not be as dumb anymore.... hah doubt it! - Script M. Kitty \n  ");
     document.getElementById("whiteScriptOption").style.display = "block";
-
+    logsCount++
     //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
   } else {
-   addLogEntry("Ehh I got some decent hacking done I guess... but I know I can do better! Maybe if I  just practiced more... thats it just need practice.... and to use less reddit... srsly whys everyone so mean? im just asking a question! Why are tabs so much freakin better than spaces, i dont get it!! - @ScriptKitty69420 \n  ");
+   addLogEntry("Ehh I got some decent hacking done I guess... but I know I can do better! Maybe if I  just practiced more... thats it just need practice.... and to use less reddit... srsly whys everyone so mean? im just asking a question! Why are tabs so much freakin better than spaces, i dont get it!! I guess Im making enough progress that i should  probably consider making up a super cool hacker handle for my github and dischord... hmmm i think i have a pretty original one let me try it on and see how i feel- @8====>ScriptKitty69420 \n  ");
   //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
-
+   logsCount++
   }
 
   let rankColor =
@@ -2605,6 +2627,7 @@ function showReport() {
   // Reset button
   setTimeout(() => {
     document.getElementById("resetSeriesBtn").onclick = () => {
+      playFFMenuChime();
       gitGraphResults = [];
       updateGitGraphGrid();
       reportScreen.style.display = "none";
@@ -2728,6 +2751,7 @@ startButton.addEventListener("click", () => {
   startScreen.style.display = "none";
   gameOverScreen.style.display = "none";
   scoreboard.style.display = "block";
+
   score = 0;
   deletionsScore = 0;
   gitAdditions.textContent = 0;
@@ -2774,6 +2798,12 @@ startButton.addEventListener("click", () => {
 });
 
 restartButton.addEventListener("click", () => {
+
+  if(logsCount >= 4){
+          addLogEntry("The more I hack the more I realize that I have good days i have okay days and sometimes just flat out bad days... but the bad days dont make me a bad hacker anymore then the good days make me a master... being a hacker seems to be a lifelong  journey and not a destination to reach... maybe i should just focus on enjoying doing what i love and stop listening to people on the internet telling me what i need to do to be valid.. the goal should never have been to be seen as a  master it should just be to get a little bit better than i was yesterday and enjoy the process  ... after all no one can tell me who i am,  i  already know it! Im Script! I love puzzles and solving hard problems, I love working with computers and im a HACKER!  and as long as i know that, its enough. <3   - Script M. Kitty BLACKCATHACKER \n  ");
+          addLogEntry("THANK YA AH SO MUCCCH FOR A PLAYING MY GAME WHAOOOOOOO - Zach End \n")
+          addLogEntry("You can now play as legally distinct Louiegy.")
+        }
   stopBackgroundMusic();
   handsDisabledThisRound = false;
   startScreen.style.display = "flex";
@@ -2786,9 +2816,15 @@ restartButton.addEventListener("click", () => {
 });
 
 tutorialButton.addEventListener("click", () => {
+  playFFMenuChime();
+
   tutorialScreen.style.display = "flex";
   reportScreen.style.display = "block";
+  document.getElementById("startButton").style.display = "none";
+  document.getElementById("logsButton").style.display = "none";
   document.getElementById("gameCanvas").style.display = 'none';
+  document.getElementById("tutorialButton").style.display = "none";
+  document.getElementById("gitGraphGrid").style.display = "none";
   mobileControls.style.display = 'none';
   let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups <p> press -> <- to move left and right and ^ to jump </p> Spam any letter key when infront of the computer to code! <p>Your goal is to help Script commit 1000 lines or more a day without being pet by your vibe coding owner!</p><p>Commit malicious code and help Script earn her master hacker fedora!</p></span>`;
   reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Clear GitGraph</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
@@ -2798,13 +2834,23 @@ tutorialButton.addEventListener("click", () => {
       gitGraphResults = [];
       updateGitGraphGrid();
       reportScreen.style.display = "none";
-      startButton.style.display = "inline-block";
+        document.getElementById("logsButton").style.display = "inline-block";
+        startButton.style.display = "inline-block";
+       document.getElementById("tutorialButton").style.display = "inline-block";
+       document.getElementById("gitGraphGrid").style.display = "grid";
+      playFFMenuChime();
+
     };
   }, 100);
   setTimeout(() => {
     document.getElementById("closeBtn").onclick = () => {
+      document.getElementById("startButton").style.display = "inline-block";
+      document.getElementById("logsButton").style.display = "inline-block";
+      document.getElementById("tutorialButton").style.display = "inline-block";
+        document.getElementById("gitGraphGrid").style.display = "grid";
       reportScreen.style.display = "none";
       startButton.style.display = "inline-block";
+      playFFMenuChime();
     };
   }, 100);
 });
@@ -2902,10 +2948,7 @@ function setupMobileControls() {
 }
 setupMobileControls();
 
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('gameCanvas').style.display = 'none';
-  document.getElementById('mobileControls').style.display = 'none';
-});
+
 
 // function scaleCanvasForScreen() {
 //   const canvas = document.getElementById("gameCanvas");
@@ -2942,7 +2985,7 @@ function updateTutorialButtonText() {
 }
 function getTutorialText() {
   if (window.innerWidth <= 900) {
-    return `<span style='font-size:1em; color:white; font-weight:bold;'>Mobile controls: Tap ↑ to jump, ← → to move, M to meow, T or Swipe anyhwere to code .<br>Help Script commit 1000+ lines a day!</span>`;
+    return `<span style='font-size:1em; color:white; font-weight:bold;'>Mobile controls: Tap ↑ to jump, ← → to move, M to meow, T or Swipe anywhere to code .<br>Help Script commit 1000+ lines a day! Tip: when in front of the computer swiping your finger in little cirlces on the screen is the fastest way to code!</span>`;
   } else {
     return `<span style='font-size:1em; color:white; font-weight:bold;'>Press SPACE to meow and push coffee cups.<br>Use arrow keys to move and jump.<br>Spam any letter key in front of the computer to code!<br>Your goal: Help Script commit 1000+ lines a day!</span>`;
   }
@@ -2954,9 +2997,17 @@ tutorialButton.addEventListener("click", () => {
   document.getElementById("gameCanvas").style.display = 'none';
   mobileControls.style.display = 'none';
   let tutorialText = getTutorialText();
-  reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Clear GitGraph</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
-
-  // ...rest of your button setup code...
+  reportScreen.innerHTML = `
+    <div style="position:relative;">
+      <button id='closeBtn' style="position:absolute; top:-30px; left:0px; font-size:1em; background:#2ea043; color:#fff; border:none; border-radius:8px; padding:8px 12px;">X</button>
+      <h2 style="margin-left:0px;">cat -s tutorial.txt</h2>
+      <div>${tutorialText}</div>
+      <div style='margin-top:18px;'>
+        <button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Clear GitGraph</button>
+      </div>
+      <div><p></div>
+    </div>
+  `;
 });
 
 // Run on load and on resize
@@ -2971,9 +3022,19 @@ const logsList = document.getElementById("logsList");
 
 logsButton.addEventListener("click", () => {
   logsPanel.style.display = "block";
+  playFFMenuChime();
+  document.getElementById("tutorialButton").style.display = 'none';
+  document.getElementById("startButton").style.display = 'none';
+  document.getElementById("logsButton").style.display = 'none';
+  document.getElementById("gitGraphGrid").style.display = 'none';
 });
 closeLogsPanel.addEventListener("click", () => {
   logsPanel.style.display = "none";
+  document.getElementById("tutorialButton").style.display = 'block';
+    document.getElementById("startButton").style.display = 'block';
+    document.getElementById("logsButton").style.display = 'block';
+    document.getElementById("gitGraphGrid").style.display = 'grid';
+    playFFMenuChime();
 });
 
 // Add a log entry to the logs panel
@@ -2990,18 +3051,28 @@ const fedoraCheckbox = document.getElementById('fedoraCheckbox');
     });
 document.getElementById("whiteScriptCheckbox").addEventListener("change", function(e) {
   if (e.target.checked) {
+
     // Set script color to white to make Emmie
     
     cat.color = "#f7f4edff";
     tailColor = "#8b6f2cff"; // emmies light brown tail
   } else {
     // Reset to default (black)
+
     cat.color = "#222";
     tailColor = "#222"; // default tail color
     tailWidth = 4; // reset tail widtth back to Script default
   }
 });
 
+
+
+if (logsList) {
+  const defaultEntry = document.createElement("div");
+  defaultEntry.textContent = "Hello World! I'm Script M. Kitty, the Master Blackcat Hacker! 🐱💻 ...well future master... i dont really know how to hack yet and i have the small extra hurdle of being a cat and not owning a computer :p HOWEVER, i have a master plan...ive noticed my dunce of an owner NEVER locks his computer so, starting from this day on I will try to sneak in as much hacking practice as i can while hes not looking! My goal is to commit 1000 lines of malicious  code to NPM package repositories a day. If I can do that for a week straight maybe, just maybe, the world will recognize me as the great hacker i know im destined to be. I need to be carful as to  not get petted by my owner ... he gets cuteness aggression HARD and once he starts petting me he cant stop! I mean i understand why, im ADORABLE!! :b Definitely cuter than my sister Emmie by a long shot- ... anyways i digress the point is if he pets me i wont be able to get any more practice that day so i need to plan my practice strategically to keep his grubby little paws OFF me! This is the first day of the rest of my hacker life im so excited! ALRIGHT, LETS DO THIS... LEROOOOOOOYYYY JEEEEEEENKIIIIINNNNNNSSSSS - Script M. Kitty \n";
+  defaultEntry.style.marginBottom = "8px";
+  logsList.appendChild(defaultEntry);
+}
 
 updateGitGraphGrid();
 scoreboard.style.display = "none";

@@ -155,7 +155,24 @@ canvas {
       font-size: 3vw;
       padding: 2vw 5vw;
     }
-    #logsButton
+    #logsButton {
+      font-size: 1.1em;
+      padding: 10px 18px;
+      border-radius: 8px;
+      max-width: 90vw;
+      width: auto;
+    }
+
+    #logsMenu {
+      max-width: 90vw;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1.1em;
+      padding: 6vw 4vw;
+      border-radius: 6vw;
+      margin: 4vw auto;
+       word-break: break-word;
+    }
 
     #scoreboard {
       font-size: 3vw;
