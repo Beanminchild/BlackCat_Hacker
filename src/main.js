@@ -1,10 +1,38 @@
 let keys = {};
 let catWearsFedora = false;
+let whiteScriptOption = false;
+let tailColor = "#222"; // allow different tail colors for Emmie, Script tail by default
+let tailWidth = 4; // default tail width for script, enables fluffy  tail for Emmie
 let round = 1;
 let timerInterval = null;
-let baseTime = 100 + Math.random() * 20; // random between 90 and 120 seconds
+let baseTime = 60 + Math.random() * 20; // 60-80 seconds
 baseTime = Math.floor(baseTime); // round down to whole seconds if needed
 let currentTime = baseTime;
+let handsDisabledThisRound = false;
+let logsCount = 0;
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('gameCanvas').style.display = 'none';
+  document.getElementById('mobileControls').style.display = 'none';
+});
+
+
+function showHandsDisabledMessage(msg = "SUCCESS! I hospitalised my owner with coffee burns! \n The computer is mine for the rest of the day! \n Now thats what i call social engineering!!!") {
+  playHighRankCelebration();
+  const msgDiv = document.getElementById("handsDisabledMsg");
+  const closeBtn = document.getElementById("closeHandsDisabledMsg");
+  document.getElementById("handsDisabledText").textContent = msg;
+  msgDiv.style.display = "block";
+  // Hide after 3 seconds unless closed manually
+  let hideTimeout = setTimeout(() => {
+    msgDiv.style.display = "none";
+  }, 7000);
+  closeBtn.onclick = () => {
+    msgDiv.style.display = "none";
+    clearTimeout(hideTimeout);
+  };
+}
+
 function formatTime(secs) {
   const m = Math.floor(secs / 60)
     .toString()
@@ -22,8 +50,11 @@ function showTimer(show) {
 }
 
 function endRound() {
+
+
+  
   clearInterval(timerInterval);
-  showTimer(false);
+  showTimer(false); 
   gameStarted = false;
   gameOverScreen.style.display = "flex";
   gameOverScreen.setAttribute("data-reason", "timeout");
@@ -31,15 +62,16 @@ function endRound() {
   document.getElementById("restartButton").innerHTML = "Next Day";
   finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${deletionsScore} deletions</span>`;
   drawGitGraph();
-  if (gitGraphResults.length < maxGames) {
-    gitGraphResults.push({ score, deletions: deletionsScore });
+    // --- Store result and update grid ---
+    if (gitGraphResults.length < maxGames) {
+      gitGraphResults.push({ score, deletions: deletionsScore });
+    }
+    updateGitGraphGrid();
+    // --- If 7 games played, show report ---
+    if (gitGraphResults.length === maxGames) {
+      setTimeout(showReport, 1500); // Give a moment for last game over
+    }
   }
-  updateGitGraphGrid();
-  //        if (gitGraphResults.length === maxGames) {
-  //            setTimeout(showReport, 1200); // Give a moment to the last game over
-  //            playHighRankCelebration()
-  //        }
-}
 function startTimer() {
   showTimer(true);
   updateTimerDisplay();
@@ -53,6 +85,7 @@ function startTimer() {
 }
 
 function nextRound() {
+  handsDisabledThisRound = false;
   round++;
   startTimer();
 }
@@ -61,13 +94,13 @@ function nextRound() {
 // Call startTimer() at the start of each round in your game logic.
 // --- Coffee Cup Mechanic ---
 let coffeeCups = [];
-const coffeeEmoji = "\u{2615}";
+const coffeeEmoji = "☕";
 function spawnCoffeeCups() {
   coffeeCups = [];
   const numCups = 1 + Math.floor(Math.random() * 3); // 1-3 cups
   let spots = [];
   // Only shelf spots (no desk spots)
-  [...shelves, ...randomShelves].forEach((shelf) => {
+  [...shelves, ...randomShelves, ...higherRandomShelves].forEach((shelf) => {
     spots.push({
       x: shelf.x + 20 + Math.random() * (shelf.width - 40),
       y: shelf.y - 18 + Math.random() * 4,
@@ -130,6 +163,10 @@ const ctx = canvas.getContext("2d");
 canvas.width = 800;
 canvas.height = 600;
 
+
+
+
+
 // Stealth mechanic variables
 let stealthState = "idle"; // idle, doorOpening, footprints, hands, handsWait, footstepsBack, doorClosing, handsChase, scrubStain
 let scrubStainTimer = 0;
@@ -168,6 +205,7 @@ const tutorialScreen = document.getElementById("reportScreen");
 const gitGraphGrid = document.getElementById("gitGraphGrid");
 const reportScreen = document.getElementById("reportScreen");
 const scoreboard = document.getElementById("scoreboard");
+const mobileControls = document.getElementById('mobileControls');
 
 // Sound API for harmonized, customizable effects
 const aMajorScale = [440, 494, 554, 587, 659, 740, 831, 880]; // A major scale frequencies
@@ -317,9 +355,330 @@ function playHighRankCelebration() {
   });
 }
 
-// playSoundEffect({ type: 'meow', pitch: 466, duration: 0.15 }); // Harmonized meow
-// playSoundEffect({ type: 'score', pitch: 659, duration: 0.12 }); // Harmonized score blip
-// playSoundEffect({ type: 'scrub', pitch: 554, duration: 0.2 }); // Harmonized scrub sound
+let bgMusicInterval = null;
+let bgMusicStep = 0;
+let bgMusicLoopCount = 0;
+let bridgeActive = false;
+let bridgeRepeatCount = 0;
+let crescendoActive = false;
+let crescendoStep = 0;
+
+// Royal Road progression in C major: F, G, Em, Am
+const royalRoadChords = [
+  { root: 349.23 /2, type: 'major' }, // F
+  { root: 392.00/2, type: 'major' }, // G
+  { root: 329.63/2, type: 'minor' }, // E
+  { root: 220.00/2, type: 'minor' }, // A
+];
+
+// Simple bass notes for each chord
+const royalRoadBass = [
+  174.61 / 2, // F2
+  196.00 / 2, // G2
+  164.81 /2 , // E2
+  110.00 /2, // A2
+];
+
+// Melody notes for each chord (C major scale, fits royal road progression)
+const royalRoadMelody = [
+  [440 /2 , 523.25 / 2, 587.33 / 2],    // F chord: A4, C5, D5
+  [392 /2, 523.25 / 2, 659.25 / 2],    // G chord: G4, C5, E5
+  [329.63 /2 , 440 /2, 523.25 / 2],    // Em chord: E4, A4, C5
+  [220 /2, 392 / 2, 440 / 2],          // Am chord: A3, G4, A4
+];
+
+
+
+// Add to the list of available
+
+const royalRoadMelody2 = [
+  [440, 523.25, 587.33],    // F chord: A4, C5, D5
+  [392, 523.25, 659.25],    // G chord: G4, C5, E5
+  [329.63, 440, 523.25],    // Em chord: E4, A4, C5
+  [220, 392, 440],          // Am chord: A3, G4, A4
+];
+// Add more if you want
+const royalRoadMelodies = [royalRoadMelody, royalRoadMelody2];
+
+// --- Bridge Section ---
+// A short, contrasting progression and melody
+const bridgeChords = [
+  { root: 293.66, type: 'm7' },   // Dm7
+  { root: 392.00, type: '7' },    // G7
+  { root: 261.63, type: 'maj7' }, // Cmaj7
+  { root: 220.00, type: 'm7' },   // Am7
+];
+const bridgeBass = [
+  130.81, // C3
+  146.83, // D3
+  164.81, // E3
+  196.00, // G3
+];
+
+
+const bridgeMelody = [
+  [659.25, 523.25, 392],    // C chord: E5, C5, G4
+  [587.33, 440, 293.66],    // Dm chord: D5, A4, D4
+  [523.25, 392, 329.63],    // Em chord: C5, G4, E4
+  [784, 659.25, 392],       // G chord: G5, E5, G4
+];
+
+// Define multiple bridge melody arrays
+const bridgeMelody1 = [
+  [659.25, 523.25, 392],    // C chord: E5, C5, G4
+  [587.33, 440, 293.66],    // Dm chord: D5, A4, D4
+  [523.25, 392, 329.63],    // Em chord: C5, G4, E4
+  [784, 659.25, 392],       // G chord: G5, E5, G4
+];
+const bridgeMelody2 = [
+  [523.25, 659.25, 392],    // C chord: C5, E5, G4
+  [440, 587.33, 293.66],    // Dm chord: A4, D5, D4
+  [392, 523.25, 329.63],    // Em chord: G4, C5, E4
+  [659.25, 784, 392],       // G chord: E5, G5, G4
+];
+const bridgeMelodyImpactSite = [
+  [659.25, 880, 1046.5, 784],      // C chord: E5, A5, C6, G5 (big sweep up)
+  [587.33, 932.33, 1174.66, 880], // Dm chord: D5, A#5, D6, A5
+  [523.25, 784, 1046.5, 659.25],  // Em chord: C5, G5, C6, E5
+  [784, 1046.5, 1318.5, 880],     // G chord: G5, C6, E6, A5
+];
+
+// Rickroll bridge melody: long, sweeping, satisfying conclusion
+const bridgeMelodyRickroll = [
+  // ...existing Rickroll phrases...
+  [440, 587.33, 493.88, 739.99, 739.99, 659.25], // Never gonna give you up
+  [440, 587.33, 659.25, 659.25, 587.33, 554.37, 493.88], // Never gonna let you down
+  [440, 587.33, 587.33, 659.25, 554.37, 440, 440, 659.25, 587.33], // Never gonna run around...
+  [440, 587.33, 739.99, 739.99, 659.25], // Never gonna make you cry
+  [440, 587.33, 440, 554.37, 587.33, 554.37, 493.88], // Never gonna say goodbye
+  [440, 587.33, 587.33, 659.25, 554.37, 440, 440, 659.25, 587.33], // Never gonna tell a lie...
+
+  [659.25, 587.33, 523.25, 440, 493.88, 554.37, 587.33, 659.25], // And hurt you
+];
+
+// Add to bridgeMelodies array for use in background music
+
+const bridgeMelodyPop = [
+  [659.25, 784, 659.25, 587.33],      // C chord: E5, G5, E5, D5
+  [587.33, 698.46, 587.33, 523.25],   // Dm chord: D5, F5, D5, C5
+  [523.25, 659.25, 523.25, 440],      // Em chord: C5, E5, C5, A4
+  [784, 880, 784, 659.25],            // G chord: G5, A5, G5, E5
+];
+const bridgeMelodySmoothBridge = [
+  [293.66, 349.23, 392.00, 440],      // D4, F4, G4, A4 (ascending, builds tension)
+  [392.00, 440, 493.88, 523.25],      // G4, A4, B4, C5 (rising, resolves to C)
+  [349.23, 392.00, 329.63, 261.63],   // F4, G4, E4, C4 (descending, gentle release)
+  [220.00, 261.63, 329.63, 349.23],   // A3, C4, E4, F4 (lands on F, matches main melody start)
+];
+// // Add more arrays as desired
+// const bridgeMelody3 = [
+//   [392, 523.25, 659.25],
+//   [293.66, 440, 587.33],
+//   [329.63, 392, 523.25],
+//   [392, 659.25, 784],
+// ];
+const bridgeMelodies = [bridgeMelody1, bridgeMelody2, bridgeMelodyImpactSite, bridgeMelodyPop, bridgeMelodyRickroll, bridgeMelodySmoothBridge];
+// Percussive click (hi-hat style)
+function playPercussion() {
+  if (!audioCtx)
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = "triangle";
+  osc.frequency.value = 400; // Low frequency for click
+  gain.gain.value = 0.3; // Soft percussion
+  osc.connect(gain).connect(audioCtx.destination);
+  gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+  gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.06);
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.06);
+  osc.onended = () => osc.disconnect();
+}
+
+// Play a chord (triad) using playSoundEffect
+function playChord(root, type = 'major', volume = 0.25) {
+  const third = type === 'major' ? root * Math.pow(2, 4/12) : root * Math.pow(2, 3/12);
+  const fifth = root * Math.pow(2, 7/12);
+  playSoundEffect({ pitch: root, duration: 0.05, volume, randomize: false });
+  playSoundEffect({ pitch: third, duration: 0.05, volume, randomize: false });
+  playSoundEffect({ pitch: fifth, duration: 0.05, volume, randomize: false });
+}
+
+// Play melody notes (arpeggio style)
+function playMelody(notes) {
+  notes.forEach((note, i) => {
+    setTimeout(() => {
+      playSoundEffect({
+        pitch: note,
+        duration: 0.50,
+        volume: 0.05,
+        type: "score",
+        randomize: false,
+        scale: null,
+      });
+    }, i * 120);
+  });
+}
+
+// ...existing code...
+
+
+
+function startBackgroundMusic() {
+  if (bgMusicInterval) return;
+  bgMusicStep = 0;
+  bgMusicLoopCount = 0;
+  bridgeActive = false;
+  bridgeRepeatCount = 0;
+  crescendoActive = false;
+  crescendoStep = 0;
+
+  // Select a random bridge melody for this bridge section
+  let currentBridgeMelody = bridgeMelodies[Math.floor(Math.random() * bridgeMelodies.length)];
+  // Select a random main melody for this main section
+  let currentRoyalRoadMelody = royalRoadMelodies[Math.floor(Math.random() * royalRoadMelodies.length)];
+
+  bgMusicInterval = setInterval(() => {
+    // Every 4 loops, play bridge for 2 loops
+    if (!bridgeActive && !crescendoActive && bgMusicLoopCount > 0 && bgMusicLoopCount % 4 === 0) {
+      bridgeActive = true;
+      bridgeRepeatCount = 0;
+      bgMusicStep = 0;
+      // Pick a new random bridge melody each time bridge starts
+      currentBridgeMelody = bridgeMelodies[Math.floor(Math.random() * bridgeMelodies.length)];
+    }
+
+    // Pick a new random main melody each time main section starts
+    if (!bridgeActive && bgMusicStep === 0) {
+      currentRoyalRoadMelody = royalRoadMelodies[Math.floor(Math.random() * royalRoadMelodies.length)];
+    }
+
+    if (bridgeActive) {
+      const chordIdx = bgMusicStep % bridgeChords.length;
+      const chord = bridgeChords[chordIdx];
+      //playChord(chord.root, chord.type, 0.05);
+      //playSoundEffect({ pitch: bridgeBass[chordIdx], duration: 0.22, volume: 0.07, type: "meow", randomize: false });
+      //playPercussion();
+      //setTimeout(playPercussion, 180);
+      playMelody(currentBridgeMelody[chordIdx]);
+      bgMusicStep++;
+      if (bgMusicStep >= bridgeChords.length) {
+        bgMusicStep = 0;
+        bridgeRepeatCount++;
+        if (bridgeRepeatCount >= 2) {
+          bridgeActive = false;
+          bgMusicLoopCount++;
+        }
+      }
+    } else {
+      const chordIdx = bgMusicStep % royalRoadChords.length;
+      const chord = royalRoadChords[chordIdx];
+      //playChord(chord.root, chord.type, 0.08);
+      playSoundEffect({ pitch: royalRoadBass[chordIdx], duration: 0.22, volume: 0.07, type: "score", randomize: false });
+      playMelody(currentRoyalRoadMelody[chordIdx]);
+      bgMusicStep++;
+      if (bgMusicStep >= royalRoadChords.length) {
+        bgMusicStep = 0;
+        bgMusicLoopCount++;
+      }
+    }
+  }, 480); // 480ms per chord
+}
+
+
+
+
+function startLaidBackMusic() {
+  // Pick one type for this interval
+    const soundType = Math.random() < 0.5 ? "meow" : "score";
+    const soundDuration = Math.random() < 0.5 ? 0.9 : 0.3;
+  if (bgMusicInterval) return;
+  bgMusicStep = 0;
+  bgMusicLoopCount = 0;
+
+  // Lower, softer orchestral string-like notes
+  const laidBackChords = [
+    { root: 174.61, type: 'major' }, // F2
+    { root: 196.00, type: 'major' }, // G2
+    { root: 164.81, type: 'minor' }, // E2
+    { root: 110.00, type: 'minor' }, // A2
+  ];
+  const laidBackMelody = [
+    [220, 261.63, 293.66],    // F chord: A3, C4, D4
+    [196, 261.63, 329.63],    // G chord: G3, C4, E4
+    [164.81, 220, 261.63],    // Em chord: E3, A3, C4
+    [110, 196, 220],          // Am chord: A2, G3, A3
+  ];
+
+  bgMusicInterval = setInterval(() => {
+    const chordIdx = bgMusicStep % laidBackChords.length;
+    const chord = laidBackChords[chordIdx];
+
+    
+
+    playSoundEffect({
+      pitch: chord.root,
+      duration: soundDuration,
+      volume: 0.08,
+      type: soundType,
+      randomize: false,
+      scale: null,
+    });
+
+    laidBackMelody[chordIdx].forEach((note, i) => {
+      setTimeout(() => {
+        playSoundEffect({
+          pitch: note,
+          duration: soundDuration,
+          volume: 0.08,
+          type: soundType,
+          randomize: false,
+          scale: null,
+        });
+      }, i * 220);
+    });
+
+    bgMusicStep++;
+    if (bgMusicStep >= laidBackChords.length) {
+      bgMusicStep = 0;
+      bgMusicLoopCount++;
+    }
+  }, 1200); // much slower tempo
+}
+    function stopBackgroundMusic() {
+    if (bgMusicInterval) {
+      clearInterval(bgMusicInterval);
+      bgMusicInterval = null;
+    }
+    // Optionally, stop all currently playing sounds
+    if (audioCtx) {
+      audioCtx.close();
+      audioCtx = null;
+    }
+  }
+
+// Final Fantasy menu select chime
+function playFFMenuChime() {
+  playSoundEffect({
+    type: "score",      // triangle or square waveform
+    pitch: 1046.5,      // C6, bright/high note
+    duration: 0.09,
+    volume: 0.18,
+    randomize: false,
+    scale: null,
+  });
+  setTimeout(() => {
+    playSoundEffect({
+      type: "score",
+      pitch: 784,       // G5, lower note
+      duration: 0.11,
+      volume: 0.16,
+      randomize: false,
+      scale: null,
+    });
+  }, 80); // 80ms delay between notes
+}
+
 
 function updateGitGraphGrid() {
   const squares = gitGraphGrid.querySelectorAll(".gitGraphSquare");
@@ -375,6 +734,7 @@ function updateGitGraphGrid() {
 
 let shelves = [];
 let randomShelves = [];
+let higherRandomShelves = [];
 
 const cat = {
   x: 50,
@@ -384,7 +744,7 @@ const cat = {
   speed: 5,
   velocityY: 0,
   isJumping: false,
-  color: "black",
+  color: "#222",
 };
 
 // Door position and size (moved to global scope for scrubStain)
@@ -593,25 +953,53 @@ function endHandsMonitorAndTriggerWalkBack() {
 
 function spawnRandomShelves() {
   randomShelves = [];
-  const numShelves = Math.floor(Math.random() * 3); // 0-3,
-  for (let i = 0; i < numShelves; i++) {
-    // Define allowed x/y ranges (avoid overlapping desk/door/monitor)
-    // Example: x: 80 to 600, y: 120 to 500
+  const numShelves = Math.floor(Math.random() * 3); // 0-3
+  const minDistance = 80; // minimum x distance between shelves
+
+  let attempts = 0;
+  while (randomShelves.length < numShelves && attempts < 50) {
     const x = 80 + Math.random() * 520;
     const y = 180 + Math.random() * 30;
-    const width = 60 + Math.random() * 40; // 60-140px
+    const width = 60 + Math.random() * 40;
     const height = 20;
-    randomShelves.push({ x, y, width, height, color: "#7a5c3c" });
+
+    // Check x distance from all existing shelves
+    let tooClose = randomShelves.some(shelf => Math.abs(shelf.x - x) < minDistance);
+    if (!tooClose) {
+      randomShelves.push({ x, y, width, height, color: "#7a5c3c" });
+    }
+    attempts++;
   }
 }
 
-function update() {
+function spawnHigherRandomShelves() {
+  higherRandomShelves = [];
+  const numShelves = Math.floor(Math.random() * 3); // 0-3
+  const minDistance = 80; // minimum x distance between shelves
+
+  let attempts = 0;
+  while (higherRandomShelves.length < numShelves && attempts < 50) {
+    const x = 80 + Math.random() * 520;
+    const y = 100 + Math.random() * 50;
+    const width = 20 + Math.random() * 60;
+    const height = 20;
+
+    // Check x distance from all existing shelves
+    let tooClose = higherRandomShelves.some(shelf => Math.abs(shelf.x - x) < minDistance);
+    if (!tooClose) {
+      higherRandomShelves.push({ x, y, width, height, color: "#7a5c3c" });
+    }
+    attempts++;
+  }
+}
+
+function update(delta = 0.016) {
   // Update coffee cups
   let cupsToRemove = [];
   coffeeCups.forEach((cup, i) => {
     if (cup.airborne) {
-      cup.x += cup.vx;
-      cup.y += cup.vy;
+      cup.x += cup.vx * delta * 60;
+      cup.y += cup.vy * delta * 60;
       // Bounce coffee cups off canvas edges
       const cupWidth = 20;
       if (cup.x < 0) {
@@ -622,12 +1010,33 @@ function update() {
         cup.x = canvas.width - cupWidth;
         cup.vx *= -1;
       }
-      cup.vy += 0.35; // gravity
+      cup.vy += 0.35 * delta * 60; // gravity
+      // Hands collision (only if hands are present and fully shown)
+      if ((stealthState === "hands" || stealthState === "handsChase") && handsProgress === 1) {
+        const handsX = handsChasePos.x;
+        const handsY = handsChasePos.y;
+        const handsWidth = 10; // adjust as needed
+        const handsHeight = 5; // adjust as needed
+        const cupLeft = cup.x;
+        const cupRight = cup.x + cupWidth;
+        const cupTop = cup.y;
+        const cupBottom = cup.y + 20;
+        const handsLeft = handsX;
+        const handsRight = handsX + handsWidth;
+        const handsTop = handsY;
+        const handsBottom = handsY + handsHeight;
+        if (cupRight > handsLeft && cupLeft < handsRight && cupBottom > handsTop && cupTop < handsBottom) {
+          cupsToRemove.push(i);
+          handsDisabledThisRound = true; // disable hands for rest of round
+          playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2, volume: 0.25 });
+          // Optionally trigger animation or other game logic here
+        }
+      }
       // Desk collision
       if (cup.y + 20 > desk.y && cup.vy > 0) {
         cup.y = desk.y - 20;
         // Trigger spill and scrubStain at cup location
-        playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2 });
+        playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2, volume: 0.15 });
         if (!scrubStainActive) {
           triggerScrubStain(cup.x + 10, desk.y - 10);
         }
@@ -648,7 +1057,7 @@ function update() {
           cup.y < shelf.y + shelf.height &&
           cup.vy > 0
         ) {
-          playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2 });
+          playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2, volume: 0.15 });
           cup.y = shelf.y - 20;
           cup.vy *= -0.35;
           cup.vx *= 0.6;
@@ -677,6 +1086,26 @@ function update() {
           }
         }
       });
+      higherRandomShelves.forEach((shelf) => {
+              if (
+                cup.x + 20 > shelf.x &&
+                cup.x < shelf.x + shelf.width &&
+                cup.y + 20 > shelf.y &&
+                cup.y < shelf.y + shelf.height &&
+                cup.vy > 0
+              ) {
+                playSoundEffect({ type: "scrub", pitch: 554, duration: 0.2 });
+                cup.y = shelf.y - 20;
+                cup.vy *= -0.35;
+                cup.vx *= 0.6;
+                if (Math.abs(cup.vy) < 1.2) {
+                  cup.vy = 0;
+                  cup.airborne = false;
+                }
+              }
+            });
+
+
     }
   });
   // Remove cups that landed
@@ -721,10 +1150,14 @@ function update() {
   if (stealthState === "handsChase") {
     // --- Hands chase the cat ---
     if (!handsChaseActive) {
-      // Initialize chase
+      // Initialize chasef
       handsChaseActive = true;
       handsChaseStart = now;
       handsChaseTimer = 0;
+      if (tailColor == "#8b6f2cff") {  // checking tail color is emmie (only cat with fluffy tail)// could i check the checkbox state instead? yes but too long. 
+        playHighRankCelebration(); // Use high-rank sound to celebreate Emmies unique Fluffy tail!
+        tailWidth = 14; // Emmie's fluffy tail
+      }
       // Start hands at monitor
       handsChasePos.x = monitor.x + monitor.width / 2;
       handsChasePos.y = monitor.y + monitor.height - 10;
@@ -754,6 +1187,7 @@ function update() {
     if (handsChaseTimer > 7000) {
       // Hands return to monitor, but count as a successful avoidance
       handsChaseActive = false;
+      tailWidth = 4;  // reset tail width in case it was Emmie
       chaseSuccessCount++;
       meowCount = 0;
       meowTarget = 0;
@@ -763,7 +1197,7 @@ function update() {
         chaseSuccessCount = 0;
         // Re-randomize threshold for next event
         chaseSuccessThreshold = 1 + Math.floor(Math.random() * 3);
-      } else {
+      } else if (!handsDisabledThisRound) {
         // Resume hands at monitor
         stealthState = "hands";
         handsProgress = 1;
@@ -789,7 +1223,7 @@ function update() {
       }
     } else if (stealthState === "footprints") {
       footprintsProgress += 0.008;
-      if (footprintsProgress >= 1) {
+      if (footprintsProgress >= 1 && !handsDisabledThisRound) {
         footprintsProgress = 1;
         stealthState = "hands";
         handsHoldTimer = 0;
@@ -810,7 +1244,7 @@ function update() {
             type: "alert",
             pitch: 220 + Math.random() * 100,
             duration: 0.12,
-            volume: 0.15,
+            volume: 0.05,
           });
         }
         // --- GAME OVER if cat is in front of monitor when hands are there ---
@@ -827,12 +1261,14 @@ function update() {
       }
     } else if (stealthState === "footstepsBack") {
       footstepsBackProgress += 0.012; // a bit faster than forward
+      tailWidth = 4; // reset tail width in case it was Emmie
       if (footstepsBackProgress >= 1) {
         footstepsBackProgress = 1;
         stealthState = "doorClosing";
         doorCloseProgress = 0;
       }
     } else if (stealthState === "doorClosing") {
+      tailWidth = 4; // reset tail width in case it was Emmie
       doorCloseProgress += 0.02;
       if (doorCloseProgress >= 1) {
         doorCloseProgress = 1;
@@ -850,8 +1286,8 @@ function update() {
   }
 
   // Gravity
-  cat.velocityY += 0.5;
-  cat.y += cat.velocityY;
+  cat.velocityY += 0.5 * delta * 60; // scale gravity to match previous behavior
+  cat.y += cat.velocityY * delta * 60;
 
   // Keep cat on the desk
   let onGround = false;
@@ -878,12 +1314,28 @@ function update() {
     }
   });
 
+    // Shelf collision detection
+    shelves.concat(higherRandomShelves).forEach((shelf) => {
+      if (
+        cat.x < shelf.x + shelf.width &&
+        cat.x + cat.width > shelf.x &&
+        cat.y + cat.height > shelf.y &&
+        cat.y < shelf.y + shelf.height &&
+        cat.velocityY >= 0
+      ) {
+        cat.y = shelf.y - cat.height;
+        cat.velocityY = 0;
+        cat.isJumping = false;
+        onGround = true;
+      }
+    });
+
   // Movement
   if (keys["ArrowLeft"]) {
-    cat.x -= cat.speed;
+    cat.x -= cat.speed * delta * 60;
   }
   if (keys["ArrowRight"]) {
-    cat.x += cat.speed;
+    cat.x += cat.speed * delta * 60;
   }
 
   // Keep cat within bounds
@@ -927,9 +1379,25 @@ function update() {
   if (gameStarted && additionsHistory.length < 32) {
     additionsHistory.push(score);
   }
+
+  // Prevent hands from being drawn/updated if disabled
+  if (stealthState === "handsChase" && handsDisabledThisRound) {
+    handsChaseActive = false;
+    handsProgress = 0;
+    showHandsDisabledMessage();
+    addLogEntry('Social engineering IS the most common/successful hacking method, and apparently throwing scolding hot coffee directly on someones face is just as effective!!! Sure worked wonders for getting my pesky owner out of the house and into urgent care for a few hours!  He was in such a hurry he even forgot to lock his laptop! Ill try to make the most of the time I have with the computer while hes gone. You know what they say; When the owner is away the cat shall...grind leet code in hopes of achieving her dreams of becoming a master black hat hacker! I sure hope hes home soon though he needs to feed me and i need someones legs to sleep in between tonite... -Script M Kitty ');
+    logsCount++
+
+    endHandsMonitorAndTriggerWalkBack();
+
+
+
+    // Optionally, skip hands rendering logic here
+  }
 }
 
 function drawScrubStain() {
+   //tailWidth = 4; // reset tail width in case it was Emmie
   // Draw coffee stain at the triggered location
   if (scrubStainActive && scrubStainX !== null && scrubStainY !== null) {
     const stainX = scrubStainX;
@@ -1423,6 +1891,10 @@ function draw() {
     ctx.fillStyle = shelf.color;
     ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
   });
+  higherRandomShelves.forEach((shelf) => {
+      ctx.fillStyle = shelf.color;
+      ctx.fillRect(shelf.x, shelf.y, shelf.width, shelf.height);
+    });
   // Draw little black legs from the furthest right shelf to the desk
   const rightShelf = shelves.reduce((a, b) => (a.x > b.x ? a : b));
   const numLegs = 2;
@@ -1499,7 +1971,7 @@ function draw() {
   ctx.font = `${monitor.width}px serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
-  ctx.fillText("\u{1F4BB}", monitor.x + monitor.width / 2, monitor.y);
+  ctx.fillText('💻', monitor.x + monitor.width / 2, monitor.y);
 
   // --- HANDS CHASE DRAW ---
   if (stealthState === "handsChase" && handsChaseActive) {
@@ -1596,8 +2068,7 @@ function draw() {
       18,
       16,
       0.2,
-      0,
-      Math.PI * 2
+      0, Math.PI * 2
     );
     ctx.fill();
     // Fingers (right)
@@ -1606,11 +2077,7 @@ function draw() {
       ctx.ellipse(
         monitor.x + monitor.width - 35 + f * 6,
         handY + 12,
-        4,
-        10,
-        0,
-        0,
-        Math.PI * 2
+        4, 10, 0, 0, Math.PI * 2
       );
       ctx.fill();
     }
@@ -1636,7 +2103,7 @@ function draw() {
   if (codeMode) {
     // --- BACK VIEW ---
     // Body (back, rounder)
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(0, 8, 13, 11, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -1652,7 +2119,7 @@ function draw() {
     ctx.moveTo(6, -14);
     ctx.lineTo(3, -22);
     ctx.lineTo(0, -10);
-    ctx.strokeStyle = "#222";
+    ctx.strokeStyle = cat.color;
     ctx.lineWidth = 3;
     ctx.stroke();
     // Fedora (black hat)
@@ -1703,8 +2170,8 @@ function draw() {
     ctx.beginPath();
     ctx.moveTo(0, 18);
     ctx.bezierCurveTo(0, 32, 8, 38 + walkCycle, 0, 48 + walkCycle);
-    ctx.strokeStyle = "#222";
-    ctx.lineWidth = 4;
+    ctx.strokeStyle = tailColor;
+    ctx.lineWidth = tailWidth;
     ctx.stroke();
     ctx.restore();
     // Paws (tip-tapping)
@@ -1714,7 +2181,7 @@ function draw() {
     ctx.save();
     ctx.translate(-6, 18 + tap * 3);
     ctx.rotate(-0.2 + tap * 0.2);
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -1723,7 +2190,7 @@ function draw() {
     ctx.save();
     ctx.translate(6, 18 + tap2 * 3);
     ctx.rotate(0.2 - tap2 * 0.2);
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(0, 0, 3, 5, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -1732,7 +2199,7 @@ function draw() {
   } else {
     // --- SIDEWAYS VIEW ---
     // Body (sideways oval)
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = cat.color;
     ctx.beginPath();
     ctx.ellipse(2, 6, 14, 7, Math.PI / 12, 0, Math.PI * 2);
     ctx.fill();
@@ -1749,7 +2216,7 @@ function draw() {
     ctx.moveTo(11, -4);
     ctx.lineTo(13, -12);
     ctx.lineTo(16, 2);
-    ctx.strokeStyle = "#222";
+    ctx.strokeStyle = cat.color;
     ctx.lineWidth = 3;
     ctx.stroke();
 
@@ -1804,7 +2271,7 @@ function draw() {
     // Eye (single, side profile)
     ctx.beginPath();
     ctx.ellipse(19, -4, 1.5, 2, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "yellow";
     ctx.fill();
     ctx.beginPath();
     ctx.ellipse(19, -4, 0.7, 1, 0, 0, Math.PI * 2);
@@ -1827,12 +2294,12 @@ function draw() {
       0,
       -32 - walkCycle
     );
-    ctx.strokeStyle = "#222";
-    ctx.lineWidth = 4;
+    ctx.strokeStyle = tailColor;
+    ctx.lineWidth = tailWidth;
     ctx.stroke();
     ctx.restore();
     // Legs (sideways, move when walking)
-    ctx.strokeStyle = "#222";
+    ctx.strokeStyle = cat.color;
     ctx.lineWidth = 4;
     // Back leg
     ctx.beginPath();
@@ -2010,7 +2477,8 @@ document.addEventListener("keydown", (e) => {
   }
 });
 // Add at the top
-const codeParticleChords = [392, 294, 220, 261.63]; // G, D, Am, C
+//const codeParticleChords = [392, 294, 220, 261.63]; // G, D, Am, C
+const codeParticleChords = [349.23, 392.00, 329.63, 220.00]; // F, G, Em, Am
 let codeParticleChordIndex = 0;
 
 const bassMeowNotes = [
@@ -2074,6 +2542,9 @@ function animateScore(points) {
 }
 
 function endGame() {
+  stopBackgroundMusic();
+ // playSoundEffect({ type: "gameOver", volume: 0.3 });
+
   playGameOverProgression();
   gameStarted = false;
   clearInterval(timerInterval);
@@ -2100,6 +2571,7 @@ function showReport() {
   // Hide start button, show report
   startButton.style.display = "none";
   tutorialButton.style.display = "none";
+  logsButton.style.display = "none";
   reportScreen.style.display = "block";
   scoreboard.style.display = "none"; // Hide scoreboard on report screen
   // Calculate total additions
@@ -2111,9 +2583,18 @@ function showReport() {
   const fedoraOption = document.getElementById("fedoraOption");
   if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker") {
     fedoraOption.style.display = "flex";
-    catWearsFedora = true;
-  } else {
+    addLogEntry("LFG GALS! IM THE BEST HACKER OF ALL TIIIIMMMEEEE :],  They make it too easy now a days i tell ya, I cant believe how many people blindly download NPM packages  and  dont even know what they do!! And don't EVEN get me started on unneeded  dependencies!... hehe get PEWNED losers learn a real language like python!! I must be a real hacker now! Maybe i should buy a fedora on my owners amazon to go with my new hacking skills... now everyone will know the name SCRIPT M KITTY, THE GREATEST HACKER WHO EVER LIVVVVEEED!- Script M. Kitty \n  ");
+    logsCount++
+    //catWearsFedora = true;
+  } else if (rank === "Dumber than my cat Emmie") {
+    addLogEntry("Gosh I was sure NPM packages were a lot easier to hack than this! Im so bad at hacking! :[  What made it even worse is my complete dumbo of a sister Emmie saw  how much i was struggling and asked if i wanted her to learn with me!!! HER! She doesnt know the differents between a binary tree and a christmas tree! ... Although it would be nice to have a hacking buddy... and who knows maybe shell learn something and not be as dumb anymore.... hah doubt it! - Script M. Kitty \n  ");
+    document.getElementById("whiteScriptOption").style.display = "block";
+    logsCount++
     //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
+  } else {
+   addLogEntry("Ehh I got some decent hacking done I guess... but I know I can do better! Maybe if I  just practiced more... thats it just need practice.... and to use less reddit... srsly whys everyone so mean? im just asking a question! Why are tabs so much freakin better than spaces, i dont get it!! I guess Im making enough progress that i should  probably consider making up a super cool hacker handle for my github and dischord... hmmm i think i have a pretty original one let me try it on and see how i feel- @8====>ScriptKitty69420 \n  ");
+  //fedoraOption.style.display = 'none'; // i think if i remove this is will prevent the ehcm box from going away if the player does worse the next round
+   logsCount++
   }
 
   let rankColor =
@@ -2121,7 +2602,7 @@ function showReport() {
       "Dumber than my cat Emmie": "#888",
       "Copy-pawsta Cat": "#1e90ff",
       "Script Kitty": "#f7c325",
-      Pawthonista: "#a259e6",
+      "Pawthonista": "#a259e6",
       "Grey Cat Hacker": "#2ea043",
       "Master B|ackc4t_h@cker": "#2ea043",
     }[rank] || "#fff";
@@ -2145,12 +2626,14 @@ function showReport() {
   // Reset button
   setTimeout(() => {
     document.getElementById("resetSeriesBtn").onclick = () => {
+      playFFMenuChime();
       gitGraphResults = [];
       updateGitGraphGrid();
       reportScreen.style.display = "none";
       startButton.style.display = "inline-block";
       tutorialButton.style.display = "inline-block";
-      if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker") {
+      logsButton.style.display = "inline-block";
+      if (rank === "Master B|ackc4t_h@cker" || rank === "Grey Cat Hacker"  || rank === "Dumber than my cat Emmie") {
         //localStorage.setItem('catWearsFedora', 'true');
         playHighRankCelebration();
       }
@@ -2233,26 +2716,47 @@ document.addEventListener("keyup", (e) => {
 
 // --- Prevent multiple game loops from stacking ---
 let gameLoopRunning = false;
+let lastFrameTime = performance.now(); // Track last frame time
 function gameLoop() {
   if (!gameLoopRunning) return;
   // --- Multi-key scoring logic with combo ---
+  const now = performance.now();
+  let delta = (now - lastFrameTime) / 1000; // delta time in seconds
+  // Clamp delta to avoid huge jumps if tab is inactive
+  if (delta > 0.1) delta = 0.016;
+  lastFrameTime = now;
 
-  update();
+  update(delta);
   draw();
   requestAnimationFrame(gameLoop);
 }
 
 startButton.addEventListener("click", () => {
+
+  mobileControls.style.display = window.innerWidth <= 900 ? 'flex' : 'none';
+  document.getElementById("gameCanvas").style.display = 'block';
   // Spawn coffee cups for this round
   spawnRandomShelves(); // Spawn random shelves each round
+  // Only spawn higher shelves if at least one random shelf exists
+  if (randomShelves.length > 0) {
+    spawnHigherRandomShelves();
+  }
   spawnCoffeeCups();
   if (gitGraphResults.length === maxGames) return; // Don't start if series complete
   // --- FULL GAME RESET ---
   chaseSuccessCount = 0;
-  gameStarted = true;
+  gameStarted = true; 
+     // Randomly select background music style
+  if (Math.random() < 0.5) {
+    startBackgroundMusic();
+  } else {
+    startLaidBackMusic();
+  }
+
   startScreen.style.display = "none";
   gameOverScreen.style.display = "none";
-  scoreboard.style.display = "block"; // Show scoreboard only during game
+  scoreboard.style.display = "block";
+
   score = 0;
   deletionsScore = 0;
   gitAdditions.textContent = 0;
@@ -2298,44 +2802,284 @@ startButton.addEventListener("click", () => {
   }
 });
 
-const fedoraCheckbox = document.getElementById("fedoraCheckbox");
-fedoraCheckbox.addEventListener("change", (event) => {
-  catWearsFedora = event.target.checked;
-});
-
 restartButton.addEventListener("click", () => {
-  // Show the start screen and hide the game over screen, reset game state
+
+  if(logsCount >= 4){
+          addLogEntry("The more I hack the more I realize that I have good days i have okay days and sometimes just flat out bad days... but the bad days dont make me a bad hacker anymore then the good days make me a master... being a hacker seems to be a lifelong  journey and not a destination to reach... maybe i should just focus on enjoying doing what i love and stop listening to people on the internet telling me what i need to do to be valid.. the goal should never have been to be seen as a  master it should just be to get a little bit better than i was yesterday and enjoy the process  ... after all no one can tell me who i am,  i  already know it! Im Script! I love puzzles and solving hard problems, I love working with computers and im a HACKER!  and as long as i know that, its enough. <3   - Script M. Kitty BLACKCATHACKER \n  ");
+          addLogEntry("THANK YA AH SO MUCCCH FOR A PLAYING MY GAME WHAOOOOOOO - Zach End \n")
+          addLogEntry("You can now play as legally distinct Louiegy.")
+        }
+  stopBackgroundMusic();
+  handsDisabledThisRound = false;
   startScreen.style.display = "flex";
   gameOverScreen.style.display = "none";
-  scoreboard.style.display = "none"; // Hide scoreboard on start screen
+  scoreboard.style.display = "none";
+  document.getElementById("gameCanvas").style.display = 'none';
+  mobileControls.style.display = 'none';
   updateGitGraphGrid();
-  // Stop the game loop if running
   gameLoopRunning = false;
-  // Optionally reset cat position and other variables if needed
 });
 
 tutorialButton.addEventListener("click", () => {
+  playFFMenuChime();
+
   tutorialScreen.style.display = "flex";
   reportScreen.style.display = "block";
+  document.getElementById("startButton").style.display = "none";
+  document.getElementById("logsButton").style.display = "none";
+  document.getElementById("gameCanvas").style.display = 'none';
+  document.getElementById("tutorialButton").style.display = "none";
+  document.getElementById("gitGraphGrid").style.display = "none";
+  mobileControls.style.display = 'none';
   let tutorialText = `<span style='font-size:1em; color:white; font-weight:bold;'> Press SPACE to meow and push coffee cups <p> press -> <- to move left and right and ^ to jump </p> Spam any letter key when infront of the computer to code! <p>Your goal is to help Script commit 1000 lines or more a day without being pet by your vibe coding owner!</p><p>Commit malicious code and help Script earn her master hacker fedora!</p></span>`;
-  reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Reset Game</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
+  reportScreen.innerHTML = `<h2>cat -s tutorial.txt</h2><div>${tutorialText}</div><div style='margin-top:18px;'><button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Clear GitGraph</button></div><div><p><button id='closeBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Close</button></div>`;
 
   setTimeout(() => {
     document.getElementById("resetSeriesBtn").onclick = () => {
       gitGraphResults = [];
       updateGitGraphGrid();
       reportScreen.style.display = "none";
-      startButton.style.display = "inline-block";
+        document.getElementById("logsButton").style.display = "inline-block";
+        startButton.style.display = "inline-block";
+       document.getElementById("tutorialButton").style.display = "inline-block";
+       document.getElementById("gitGraphGrid").style.display = "grid";
+      playFFMenuChime();
+
     };
   }, 100);
   setTimeout(() => {
     document.getElementById("closeBtn").onclick = () => {
+      document.getElementById("startButton").style.display = "inline-block";
+      document.getElementById("logsButton").style.display = "inline-block";
+      document.getElementById("tutorialButton").style.display = "inline-block";
+        document.getElementById("gitGraphGrid").style.display = "grid";
       reportScreen.style.display = "none";
       startButton.style.display = "inline-block";
+      playFFMenuChime();
     };
   }, 100);
 });
 
+
+// Mobile controls setup
+const leftBtn = document.getElementById('leftBtn');
+const rightBtn = document.getElementById('rightBtn');
+const jumpBtn = document.getElementById('jumpBtn');
+const meowBtn = document.getElementById('meowBtn');
+const typeBtn = document.getElementById('typeBtn');
+
+function setupMobileControls() {
+  leftBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    keys['ArrowLeft'] = true;
+  });
+  leftBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    keys['ArrowLeft'] = false;
+  });
+  rightBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    keys['ArrowRight'] = true;
+  });
+  rightBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    keys['ArrowRight'] = false;
+  });
+  jumpBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (!cat.isJumping) {
+      cat.velocityY = -10;
+      cat.isJumping = true;
+    }
+  });
+  meowBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const event = new KeyboardEvent('keydown', { key: ' ', code: 'Space' });
+    document.dispatchEvent(event);
+  });
+  typeBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const event = new KeyboardEvent('keydown', { key: 'z', code: 'KeyZ' });
+
+    document.dispatchEvent(event);
+  });
+  let lastSwipeX = null;
+  let swipeAccum = 0;
+  const swipeThreshold = 30; // px per key press
+
+  function handleSwipe(e) {
+    const touch = e.touches[0];
+    if (lastSwipeX !== null) {
+      const dx = touch.clientX - lastSwipeX;
+      swipeAccum += Math.abs(dx);
+      while (swipeAccum >= swipeThreshold) {
+        const event = new KeyboardEvent('keydown', { key: 'e', code: 'KeyE' });
+        document.dispatchEvent(event);
+        swipeAccum -= swipeThreshold;
+      }
+    }
+    lastSwipeX = touch.clientX;
+  }
+
+  function resetSwipe() {
+    lastSwipeX = null;
+    swipeAccum = 0;
+  }
+
+  const swipeArea = document.getElementById('mobileControls');
+  swipeArea.addEventListener('touchstart', (e) => {
+    lastSwipeX = e.touches[0].clientX;
+    swipeAccum = 0;
+  });
+
+  const swipeArea2 = document.getElementById('gameCanvas');
+    swipeArea2.addEventListener('touchstart', (e) => {
+      lastSwipeX = e.touches[0].clientX;
+      swipeAccum = 0;
+    });
+
+  swipeArea.addEventListener('touchmove', handleSwipe);
+  swipeArea.addEventListener('touchend', resetSwipe);
+  swipeArea2.addEventListener('touchmove', handleSwipe);
+  swipeArea2.addEventListener('touchend', resetSwipe); // full screen? maybe feels better?
+
+  // Prevent default behavior for all mobile buttons
+  const allMobileButtons = document.querySelectorAll('.mobile-btn');
+  allMobileButtons.forEach(btn => {
+    btn.addEventListener('touchstart', e => e.preventDefault());
+    btn.addEventListener('touchmove', e => e.preventDefault());
+//    btn.addEventListener('touchend', e => e.preventDefault());
+  });
+}
+setupMobileControls();
+
+
+
+// function scaleCanvasForScreen() {
+//   const canvas = document.getElementById("gameCanvas");
+//   if (window.innerWidth > 1200) {
+//     // Desktop: scale up visually
+//     canvas.style.transform = "scale(1.5)";
+//     canvas.style.transformOrigin = "center top";
+//   } else {
+//     // Mobile: normal scale
+//     canvas.style.transform = "scale(1)";
+//     canvas.style.transformOrigin = "top left";
+//   }
+// }
+
+// // Run on load and resize
+// window.addEventListener('DOMContentLoaded', scaleCanvasForScreen);
+// window.addEventListener('resize', scaleCanvasForScreen);
+
+  // Optionally, update desk/monitor positions if needed
+
+
+// // Run on load and resize
+// window.addEventListener('DOMContentLoaded', scaleCanvasForScreen);
+// window.addEventListener('resize', scaleCanvasForScreen);
+
+// Place this in your main JS file
+function updateTutorialButtonText() {
+  const tutorialBtn = document.getElementById('tutorialButton');
+  if (window.innerWidth <= 900) {
+    tutorialBtn.textContent = 'Mobile Tutorial';
+  } else {
+    tutorialBtn.textContent = 'Tutorial';
+  }
+}
+function getTutorialText() {
+  if (window.innerWidth <= 900) {
+    return `<span style='font-size:1em; color:white; font-weight:bold;'>Mobile controls: Tap ↑ to jump, ← → to move, M to meow, T or Swipe anywhere to code .<br>Help Script commit 1000+ lines a day! Tip: when in front of the computer swiping your finger in little cirlces on the screen is the fastest way to code!</span>`;
+  } else {
+    return `<span style='font-size:1em; color:white; font-weight:bold;'>Press SPACE to meow and push coffee cups.<br>Use arrow keys to move and jump.<br>Spam any letter key in front of the computer to code!<br>Your goal: Help Script commit 1000+ lines a day!</span>`;
+  }
+}
+
+tutorialButton.addEventListener("click", () => {
+  tutorialScreen.style.display = "flex";
+  reportScreen.style.display = "block";
+  document.getElementById("gameCanvas").style.display = 'none';
+  mobileControls.style.display = 'none';
+  let tutorialText = getTutorialText();
+  reportScreen.innerHTML = `
+    <div style="position:relative;">
+      <button id='closeBtn' style="position:absolute; top:-30px; left:0px; font-size:1em; background:#2ea043; color:#fff; border:none; border-radius:8px; padding:8px 12px;">X</button>
+      <h2 style="margin-left:0px;">cat -s tutorial.txt</h2>
+      <div>${tutorialText}</div>
+      <div style='margin-top:18px;'>
+        <button id='resetSeriesBtn' style='font-size:1em; padding:8px 24px; border-radius:8px; border:none; background:#2ea043; color:white; cursor:pointer;'>Clear GitGraph</button>
+      </div>
+      <div><p></div>
+    </div>
+  `;
+});
+
+// Run on load and on resize
+window.addEventListener('DOMContentLoaded', updateTutorialButtonText);
+window.addEventListener('resize', updateTutorialButtonText);
+
+// Scripts Logs panel logic
+const logsButton = document.getElementById("logsButton");
+const logsPanel = document.getElementById("logsPanel");
+const closeLogsPanel = document.getElementById("closeLogsPanel");
+const logsList = document.getElementById("logsList");
+
+logsButton.addEventListener("click", () => {
+  logsPanel.style.display = "block";
+  playFFMenuChime();
+  document.getElementById("tutorialButton").style.display = 'none';
+  document.getElementById("startButton").style.display = 'none';
+  document.getElementById("logsButton").style.display = 'none';
+  document.getElementById("gitGraphGrid").style.display = 'none';
+});
+closeLogsPanel.addEventListener("click", () => {
+  logsPanel.style.display = "none";
+  document.getElementById("tutorialButton").style.display = 'block';
+    document.getElementById("startButton").style.display = 'block';
+    document.getElementById("logsButton").style.display = 'block';
+    document.getElementById("gitGraphGrid").style.display = 'grid';
+    playFFMenuChime();
+});
+
+// Add a log entry to the logs panel
+function addLogEntry(text) {
+  const entry = document.createElement("div");
+  entry.textContent = text;
+  entry.style.marginBottom = "8px";
+  logsList.appendChild(entry);
+  logsList.scrollTop = logsList.scrollHeight;
+}
+const fedoraCheckbox = document.getElementById('fedoraCheckbox');
+    fedoraCheckbox.addEventListener('change', (event) => {
+        catWearsFedora = event.target.checked;
+    });
+document.getElementById("whiteScriptCheckbox").addEventListener("change", function(e) {
+  if (e.target.checked) {
+
+    // Set script color to white to make Emmie
+    
+    cat.color = "#f7f4edff";
+    tailColor = "#8b6f2cff"; // emmies light brown tail
+  } else {
+    // Reset to default (black)
+
+    cat.color = "#222";
+    tailColor = "#222"; // default tail color
+    tailWidth = 4; // reset tail widtth back to Script default
+  }
+});
+
+
+
+if (logsList) {
+  const defaultEntry = document.createElement("div");
+  defaultEntry.textContent = "Hello World! I'm Script M. Kitty, the Master Blackcat Hacker! 🐱💻 ...well future master... i dont really know how to hack yet and i have the small extra hurdle of being a cat and not owning a computer :p HOWEVER, i have a master plan...ive noticed my dunce of an owner NEVER locks his computer so, starting from this day on I will try to sneak in as much hacking practice as i can while hes not looking! My goal is to commit 1000 lines of malicious  code to NPM package repositories a day. If I can do that for a week straight maybe, just maybe, the world will recognize me as the great hacker i know im destined to be. I need to be carful as to  not get petted by my owner ... he gets cuteness aggression HARD and once he starts petting me he cant stop! I mean i understand why, im ADORABLE!! :b Definitely cuter than my sister Emmie by a long shot- ... anyways i digress the point is if he pets me i wont be able to get any more practice that day so i need to plan my practice strategically to keep his grubby little paws OFF me! This is the first day of the rest of my hacker life im so excited! ALRIGHT, LETS DO THIS... LEROOOOOOOYYYY JEEEEEEENKIIIIINNNNNNSSSSS - Script M. Kitty \n";
+  defaultEntry.style.marginBottom = "8px";
+  logsList.appendChild(defaultEntry);
+}
+
 updateGitGraphGrid();
 scoreboard.style.display = "none";
 gameLoopRunning = false;
+

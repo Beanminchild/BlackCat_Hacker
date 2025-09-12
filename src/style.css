@@ -1,6 +1,7 @@
 body {
   margin: 0;
   overflow: hidden;
+  touch-action: none;
   background-color: #222;
 }
 canvas {
@@ -9,7 +10,9 @@ canvas {
   margin: 0 auto;
   position: relative;
   z-index: 1;
+
 }
+
 #startScreen {
   position: absolute;
   top: 0;
@@ -31,6 +34,14 @@ canvas {
   border: none;
   cursor: pointer;
 }
+#logsButton{
+    padding: 20px 20px;
+     font-size: 24px;
+     background-color: #555;
+     color: white;
+     border: none;
+     cursor: pointer;
+}
 #scoreboard {
   position: absolute;
   top: 20px;
@@ -48,4 +59,143 @@ canvas {
 #gitCube {
   z-index: 22;
   position: relative;
+}
+
+.gitGraphSquare {
+  width: 32px !important;
+  height: 32px !important;
+  background: #181818 !important;
+  border-radius: 6px;
+  border: 2px solid #222;
+  box-shadow: 0 2px 6px #0004;
+  display: block;
+}
+
+
+/* Mobile controls */
+#mobileControls {
+  display: none;
+  position: relative;
+  width: 100%;
+  padding: 15px 0;
+  justify-content: space-between;
+  background-color: #222;
+  z-index: 30;
+}
+
+.mobile-control-group {
+  display: flex;
+}
+
+.left-controls {
+  margin-left: 20px;
+}
+
+.right-controls {
+  margin-right: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+}
+
+.mobile-btn {
+  width: 70px;
+  height: 65px;
+  margin: 0 5px;
+  background-color: #444;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-btn:active {
+  background-color: #666;
+}
+
+#jumpBtn {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+#meowBtn {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+#typeBtn {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+@media (max-width: 900px) {
+  #gameCanvas {
+    width: 100vw;
+    height: 60vh;
+  }
+  @media (max-width: 900px) {
+    body {
+      overflow: hidden;
+    }
+    #startScreen {
+      width: 100vw;
+      min-height: 100vh;
+      font-size: 2.5vw;
+      padding: 2vh 0;
+    }
+    #startButton,
+    #tutorialButton {
+      font-size: 3vw;
+      padding: 2vw 5vw;
+    }
+    #logsButton {
+      font-size: 1.1em;
+      padding: 10px 18px;
+      border-radius: 8px;
+      max-width: 90vw;
+      width: auto;
+    }
+
+    #logsMenu {
+      max-width: 90vw;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1.1em;
+      padding: 6vw 4vw;
+      border-radius: 6vw;
+      margin: 4vw auto;
+       word-break: break-word;
+    }
+
+    #scoreboard {
+      font-size: 3vw;
+      top: 2vw;
+      right: 2vw;
+    }
+    #reportScreen{
+      max-width: 90vw;
+      max-height: 60vh;
+      overflow-y: auto;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1.1em;
+      padding: 6vw 4vw;
+      border-radius: 6vw;
+      margin: 4vw auto;
+      word-break: break-word;
+    }
+  }
+
+  #mobileControls {
+    display: flex;
+  }
+
+
 }

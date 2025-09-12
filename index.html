@@ -1,5 +1,7 @@
 <html>
   <head>
+    <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="stylesheet" href="./src/style.css" />
   </head>
   <body>
@@ -187,20 +189,26 @@
           "
         ></canvas>
       </div>
-      <div
-        id="fedoraOption"
-        style="margin-bottom: 20px; display: none; align-items: center"
-      >
-        <input
-          type="checkbox"
-          id="fedoraCheckbox"
-          style="margin-right: 10px"
-        /><label
-          for="fedoraCheckbox"
-          style="color: white; font-family: sans-serif"
-          >Script wears Fedora</label
+        <div  id="fedoraOption"
+                style="margin-bottom: 20px; display: none; align-items: center"
         >
-      </div>
+            <input
+                    type="checkbox"
+                    id="fedoraCheckbox"
+                    style="margin-right: 10px"
+            /><label
+                for="fedoraCheckbox"
+                style="color: white; font-family: sans-serif"
+        >Script wears Fedora</label
+        >
+        </div>
+        <!-- In your home screen HTML -->
+        <div id="whiteScriptOption" style="display:none; margin:12px 0;">
+            <label for = "whiteScriptCheckbox" style="color: white; font-family: sans-serif;">
+                <input type="checkbox" id="whiteScriptCheckbox">
+                Play as Emmie
+            </label>
+        </div>
       <button id="startButton" style="margin: 0 auto 0 auto; display: block">
         Start Game
       </button>
@@ -212,6 +220,19 @@
           How 2 Play
         </button>
       </p>
+        <button
+                id="logsButton"
+                style="margin: 0 auto 0 auto; display: flex; align-items: center;"
+        >
+            Script's Logs
+        </button>
+      <!-- Scripts Logs Modal/Panel -->
+      <div id="logsPanel" style="display:none; position:flex; top:10%; left:50%; transform:translateX(-50%,0); width:350px; max-width:90vw; height:350px; max-height:70vh; background:#181818; color:#fff; border-radius:14px; box-shadow:0 4px 32px #000a; z-index:9999; padding:24px 18px; overflow:hidden;">
+          <button id="closeLogsPanel" style="font-size:1em; background:#2ea043; color:#fff; border:none; border-radius:8px; padding:8px 12px;">X</button>
+        <h2 style="margin-top:0; font-size:1.5em;">Script's Logs</h2>
+        <div id="logsList" style="overflow-y:auto; height:230px; background:#222; border-radius:8px; padding:12px; margin-bottom:18px; font-family:monospace; font-size:1em;"></div>
+
+      </div>
       <div
         id="reportScreen"
         style="
@@ -333,7 +354,26 @@
         ></span>
       </div>
     </div>
+    <div id="handsDisabledMsg" style="display:none; position:fixed; top:30%; left:50%; transform:translate(-50%,-50%); background:#000; color:#fff; border-radius:12px; box-shadow:0 4px 24px #2224; padding:32px 48px; z-index:9999;">
+        <span id="handsDisabledText"></span>
+        <div>
+        <button id="closeHandsDisabledMsg" style = "margin-right:30px;  margin-top: 4px; font-size:1em; background:#2ea043; color: #fff; border:none; border-radius: 8px; padding: 8px 25px;">X</button>
+        </div>
+    </div>
     <canvas id="gameCanvas"></canvas>
+
+    <!-- Mobile Game Controls -->
+    <div id="mobileControls" style="display: none;">
+      <div class="mobile-control-group left-controls">
+        <button id="leftBtn" class="mobile-btn">←</button>
+        <button id="rightBtn" class="mobile-btn">→</button>
+      </div>
+      <div class="mobile-control-group right-controls">
+        <button id="jumpBtn" class="mobile-btn">↑</button>
+        <button id="meowBtn" class="mobile-btn">M</button>
+        <button id="typeBtn" class="mobile-btn">T</button>
+      </div>
+    </div>
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>
