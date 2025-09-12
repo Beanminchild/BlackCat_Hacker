@@ -11,8 +11,6 @@ let currentTime = baseTime;
 let handsDisabledThisRound = false;
 let logsCount = 0;
 
-
-
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('gameCanvas').style.display = 'none';
   document.getElementById('mobileControls').style.display = 'none';
@@ -994,13 +992,13 @@ function spawnHigherRandomShelves() {
   }
 }
 
-function update() {
+function update(delta = 0.016) {
   // Update coffee cups
   let cupsToRemove = [];
   coffeeCups.forEach((cup, i) => {
     if (cup.airborne) {
-      cup.x += cup.vx;
-      cup.y += cup.vy;
+      cup.x += cup.vx * delta * 60;
+      cup.y += cup.vy * delta * 60;
       // Bounce coffee cups off canvas edges
       const cupWidth = 20;
       if (cup.x < 0) {
@@ -1011,13 +1009,13 @@ function update() {
         cup.x = canvas.width - cupWidth;
         cup.vx *= -1;
       }
-      cup.vy += 0.35; // gravity
+      cup.vy += 0.35 * delta * 60; // gravity
       // Hands collision (only if hands are present and fully shown)
       if ((stealthState === "hands" || stealthState === "handsChase") && handsProgress === 1) {
         const handsX = handsChasePos.x;
         const handsY = handsChasePos.y;
-        const handsWidth = 20; // adjust as needed
-        const handsHeight = 10; // adjust as needed
+        const handsWidth = 10; // adjust as needed
+        const handsHeight = 5; // adjust as needed
         const cupLeft = cup.x;
         const cupRight = cup.x + cupWidth;
         const cupTop = cup.y;
@@ -1287,8 +1285,8 @@ function update() {
   }
 
   // Gravity
-  cat.velocityY += 0.5;
-  cat.y += cat.velocityY;
+  cat.velocityY += 0.5 * delta * 60; // scale gravity to match previous behavior
+  cat.y += cat.velocityY * delta * 60;
 
   // Keep cat on the desk
   let onGround = false;
@@ -1333,10 +1331,10 @@ function update() {
 
   // Movement
   if (keys["ArrowLeft"]) {
-    cat.x -= cat.speed;
+    cat.x -= cat.speed * delta * 60;
   }
   if (keys["ArrowRight"]) {
-    cat.x += cat.speed;
+    cat.x += cat.speed * delta * 60;
   }
 
   // Keep cat within bounds
@@ -2717,11 +2715,17 @@ document.addEventListener("keyup", (e) => {
 
 // --- Prevent multiple game loops from stacking ---
 let gameLoopRunning = false;
+let lastFrameTime = performance.now(); // Track last frame time
 function gameLoop() {
   if (!gameLoopRunning) return;
   // --- Multi-key scoring logic with combo ---
+  const now = performance.now();
+  let delta = (now - lastFrameTime) / 1000; // delta time in seconds
+  // Clamp delta to avoid huge jumps if tab is inactive
+  if (delta > 0.1) delta = 0.016;
+  lastFrameTime = now;
 
-  update();
+  update(delta);
   draw();
   requestAnimationFrame(gameLoop);
 }

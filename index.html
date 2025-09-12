@@ -188,19 +188,27 @@
             grid-row: 2;
           "
         ></canvas>
-     <div id="optionsContainer" style="display: none; align-items: center; gap: 24px;">
-       <div id="fedoraOption" style="margin-bottom: 0; align-items: center;">
-         <input type="checkbox" id="fedoraCheckbox" style="margin-right: 10px" />
-         <label for="fedoraCheckbox" style="color: white; font-family: sans-serif">Script wears Fedora</label>
-       </div>
-       <div id="whiteScriptOption" style="align-items: center; margin: 0;">
-         <label for="whiteScriptCheckbox" style="color: white; font-family: sans-serif;">
-           <input type="checkbox" id="whiteScriptCheckbox">
-           Play as Emmie
-         </label>
-       </div>
-     </div>
-     </div>
+      </div>
+        <div  id="fedoraOption"
+                style="margin-bottom: 20px; display: none; align-items: center"
+        >
+            <input
+                    type="checkbox"
+                    id="fedoraCheckbox"
+                    style="margin-right: 10px"
+            /><label
+                for="fedoraCheckbox"
+                style="color: white; font-family: sans-serif"
+        >Script wears Fedora</label
+        >
+        </div>
+        <!-- In your home screen HTML -->
+        <div id="whiteScriptOption" style="display:none; margin:12px 0;">
+            <label for = "whiteScriptCheckbox" style="color: white; font-family: sans-serif;">
+                <input type="checkbox" id="whiteScriptCheckbox">
+                Play as Emmie
+            </label>
+        </div>
       <button id="startButton" style="margin: 0 auto 0 auto; display: block">
         Start Game
       </button>
