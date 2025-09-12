@@ -48,5 +48,10 @@ What is Script coding?
 Is this game good?
  - no
 
+# Thanks
+
+Special thanks to Ben for ls13 compression which helped me in being to add a lot more content whilst staying under the 13kb limit
+
+Thanks to the whole jsk13 team for setting up this competion and their constant support throughout!
 
 
