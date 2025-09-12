@@ -5,7 +5,7 @@ let tailColor = "#222"; // allow different tail colors for Emmie, Script tail by
 let tailWidth = 4; // default tail width for script, enables fluffy  tail for Emmie
 let round = 1;
 let timerInterval = null;
-let baseTime = 100 + Math.random() * 20; // random between 90 and 120 seconds
+let baseTime = 60 + Math.random() * 20; // 60-80 seconds
 baseTime = Math.floor(baseTime); // round down to whole seconds if needed
 let currentTime = baseTime;
 let handsDisabledThisRound = false;
@@ -62,15 +62,16 @@ function endRound() {
   document.getElementById("restartButton").innerHTML = "Next Day";
   finalScores.innerHTML = `<span style='color:#2ea043;'>+${score} additions</span> &nbsp; <span style='color:#f85149;'>-${deletionsScore} deletions</span>`;
   drawGitGraph();
-  if (gitGraphResults.length < maxGames) {
-    gitGraphResults.push({ score, deletions: deletionsScore });
+    // --- Store result and update grid ---
+    if (gitGraphResults.length < maxGames) {
+      gitGraphResults.push({ score, deletions: deletionsScore });
+    }
+    updateGitGraphGrid();
+    // --- If 7 games played, show report ---
+    if (gitGraphResults.length === maxGames) {
+      setTimeout(showReport, 1500); // Give a moment for last game over
+    }
   }
-  updateGitGraphGrid();
-  //        if (gitGraphResults.length === maxGames) {
-  //            setTimeout(showReport, 1200); // Give a moment to the last game over
-  //            playHighRankCelebration()
-  //        }
-}
 function startTimer() {
   showTimer(true);
   updateTimerDisplay();
